@@ -1,0 +1,16 @@
+Package: unusualprofile
+Type: Package
+Title: Calculates Conditional Mahalanobis Distances
+Version: 0.1.0
+Author: Feng Ji & W. Joel Schneider
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: lavaan, magrittr, tidyverse, glue, mvtnorm, purrrlyr, knitr, dplyr, tidyr, tibble, stats, rlang, purrr
+Authors@R: c(
+    person("Feng", "Ji", email = "fengji@berkeley.edu", role = "cre"),
+    person("W. Joel", "Schneider", email = "schneider@temple.edu", role = "aut"))
