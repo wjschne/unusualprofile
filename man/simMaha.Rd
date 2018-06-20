@@ -14,7 +14,7 @@ simMaha(dPar, SimModel, n = 100)
 \item{n}{The number of cases}
 }
 \value{
-all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized
+all parameters, a lavaan object with specified parameters and data generated for each condition by calling simStandarized
 }
 \description{
 Create a tibble to hold everything for simulation

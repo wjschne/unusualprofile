@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{sim2glue}
 \alias{sim2glue}
-\title{Function to make a lavaan fomula into a model for simulation that takes a vector of parameters as input}
+\title{Function to make a lavaan formula into a model for simulation that takes a vector of parameters as input}
 \usage{
 sim2glue(SimModel)
 }
@@ -13,7 +13,7 @@ sim2glue(SimModel)
 Lavaan object without specified coefficients
 }
 \description{
-Function to make a lavaan fomula into a model for simulation that takes a vector of parameters as input
+Function to make a lavaan formula into a model for simulation that takes a vector of parameters as input
 }
 \examples{
 SimModel <- "

@@ -4,8 +4,8 @@
 #' @export
 #' @param Dep The names of variables you would like to condition on.
 #' @param Ind  The names of variables of your interest.
-#' @param d  Data set created by using simStandarized.
-#' @return Correlation between the conditional mahalanobis distance calclulated by using the true scores and the conditional mahalanobis calculated by using estimated factor scores
+#' @param d  Dataset created by using simStandarized.
+#' @return Correlation between the conditional Mahalanobis distance calculated by using the true scores and the conditional Mahalanobis calculated by using estimated factor scores
 #' @examples
 #' SimModel <- "
 #' Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3
@@ -68,7 +68,7 @@ Sim2Free <- function(m){
     paste(collapse = "\n")
 }
 
-#' Function to make a lavaan fomula into a model for simulation that takes a vector of parameters as input
+#' Function to make a lavaan formula into a model for simulation that takes a vector of parameters as input
 #' @export
 #' @param SimModel Population relations among variables represented by Lavaan Syntax.
 #' @return Lavaan object without specified coefficients
@@ -91,10 +91,10 @@ sim2glue <- function(SimModel){
     filter(.data$lhs != .data$rhs) %>%
     rowid_to_column(var = "ID") %>%
     mutate(ustart = paste0("{para",
-                                  "[",
-                                  sprintf( "%02d", .data$ID ),
-                                  "]",
-                                  "} * ")) %>%
+                           "[",
+                           sprintf( "%02d", .data$ID ),
+                           "]",
+                           "} * ")) %>%
     group_by(.data$op, .data$lhs) %>%
     summarise(rhs = paste(.data$ustart, .data$rhs, collapse = " + ")) %>%
     arrange(desc(.data$op)) %>%
@@ -122,7 +122,7 @@ glue2simf <- function(SimModel, para){
 #' @param SimModel Population relations among variables represented by Lavaan Syntax
 #' @param dPar Parameters we would like to test in simulation studies
 #' @param n The number of cases
-#' @return all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized
+#' @return all parameters, a lavaan object with specified parameters and data generated for each condition by calling simStandarized
 #' @examples
 #' SimModel <- "
 #' Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3
@@ -147,14 +147,14 @@ simMaha <- function(dPar, SimModel, n = 100){
                       n = n))
 }
 
-#' Simluate data and cor between true conditonal mahananobis distance and the estimated
+#' Simulate data and cor between true conditional Mahalanobis distance and the estimated
 #' @export
 #' @param SimModel Population relations among variables represented by Lavaan Syntax
 #' @param dPar Parameters we would like to test in simulation studies
 #' @param Dep The names of variables you would like to condition on
 #' @param Ind  The names of variables of your interest
 #' @param n The number of cases
-#' @return all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized and the accuracy index for each ondition
+#' @return all parameters, lavaan object with specified parameters and data generated for each condition by calling simStandarized and the accuracy index for each condition
 #' @examples
 #' SimModel <- "
 #' Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3
@@ -187,7 +187,7 @@ simCor <- function(dPar, SimModel, Dep, Ind = NULL, n = 100){
 #' @param to ending point for the parameters
 #' @param n number of cases
 #' @param k  number of variables.
-#' @return all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized and the accuracy index for each ondition
+#' @return all parameters, lavaan object with specified parameters and data generated for each condition by calling simStandarized and the accuracy index for each condition
 #' @examples
 #' makePara(1000, 9000, n = 10, k = 15)
 

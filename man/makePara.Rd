@@ -16,7 +16,7 @@ makePara(from, to, n, k)
 \item{k}{number of variables.}
 }
 \value{
-all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized and the accuracy index for each ondition
+all parameters, lavaan object with specified parameters and data generated for each condition by calling simStandarized and the accuracy index for each condition
 }
 \description{
 function to make a set of parameters that follows beta distribution

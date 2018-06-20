@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{maha}
 \alias{maha}
-\title{Wrapper for finding out mahalanobis distance between variables: this one gives everything for practioners to use when they only have population relatons and their clients' data}
+\title{Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data}
 \usage{
 maha(Model, Dep, Ind = NULL, d)
 }
@@ -19,7 +19,7 @@ maha(Model, Dep, Ind = NULL, d)
 conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
 }
 \description{
-Wrapper for finding out mahalanobis distance between variables: this one gives everything for practioners to use when they only have population relatons and their clients' data
+Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data
 }
 \examples{
 SimModel <- "

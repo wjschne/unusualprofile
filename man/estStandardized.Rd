@@ -18,7 +18,7 @@ Standardized estimated factor scores.
 Estimate factor scores for a given profile and population model.
 }
 \examples{
-m = "LatantVariable =~ 0.8 * ObservedVar1 + 0.8 * ObservedVar2 + 0.8 * Observed3"
+m = "LatentVariable =~ 0.8 * ObservedVar1 + 0.8 * ObservedVar2 + 0.8 * Observed3"
 d <- simStandardized(m, 1000) #simulate 1000 cases (profiles)
 
 # Pick up the first three cases for illustration

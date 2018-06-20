@@ -11,10 +11,10 @@ CM_cor(Dep, Ind = NULL, d)
 
 \item{Ind}{The names of variables of your interest.}
 
-\item{d}{Data set created by using simStandarized.}
+\item{d}{Dataset created by using simStandarized.}
 }
 \value{
-Correlation between the conditional mahalanobis distance calclulated by using the true scores and the conditional mahalanobis calculated by using estimated factor scores
+Correlation between the conditional Mahalanobis distance calculated by using the true scores and the conditional Mahalanobis calculated by using estimated factor scores
 }
 \description{
 Automatically calculate the accuracy of one condition.

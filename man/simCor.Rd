@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{simCor}
 \alias{simCor}
-\title{Simluate data and cor between true conditonal mahananobis distance and the estimated}
+\title{Simulate data and cor between true conditional Mahalanobis distance and the estimated}
 \usage{
 simCor(dPar, SimModel, Dep, Ind = NULL, n = 100)
 }
@@ -18,10 +18,10 @@ simCor(dPar, SimModel, Dep, Ind = NULL, n = 100)
 \item{n}{The number of cases}
 }
 \value{
-all parameters, lavaan object with specified parameters and data genereged for each condition by calling simStandarized and the accuracy index for each ondition
+all parameters, lavaan object with specified parameters and data generated for each condition by calling simStandarized and the accuracy index for each condition
 }
 \description{
-Simluate data and cor between true conditonal mahananobis distance and the estimated
+Simulate data and cor between true conditional Mahalanobis distance and the estimated
 }
 \examples{
 SimModel <- "
