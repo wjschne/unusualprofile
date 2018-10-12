@@ -56,7 +56,7 @@ $$d_{cM}^{2} \sim\chi^{2}(k)$$
 
 # A worked example
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.align='center'}
 knitr::include_graphics("reading_tutorial.svg")
 ```
 
@@ -115,13 +115,18 @@ d_case %>%
       "$\\text{P}(d_{CM})$"
     )
   ) %>%
-  knitr::kable(digits = c(0,0,0,0,1,3,3), align = "lcccccc")
+  knitr::kable(
+    digits = c(0,0,0,0,1,3,3), 
+    align = "lcccccc", 
+    caption = "Comparing the Unusualness of Two Cases")
 ```
 
 
 
 
-We can use the proposed method to make sense of observed scores. If the observed scores of the three tests measuring Gc are all 130, we can calculate the (unconditional) Mahalanobis distance to show that the profile of the three scores would be less usual than about 80% of the population (see Table). If the observed scores of the three tests measuring Gc are 115, 130 and 145, the profile would be less usual than 99.8% of population. We can see from this case that although they have equal averages, their unusualness is quite different. The problem with the traditional Mahalanobis distance is that both profiles are unusual because the scores, on average, are 2 standard deviations above the mean. With the proposed conditional Mahalanobis distance (conditioned on the estimated factor score of 130.9), we would see in Table 3 that Case 2, with a variable profile, is still more unusual than 98.5% of profiles with the same factor score. Case 1—with equal scores conditioned on an equally weighted factor score—is the least unusual profile possible.  Thus, with the conditional Mahalanobis distance, one can distinguish between profiles that are unusual because of elevation and those that are unusual because of variability in their shape.
+We can use the proposed method to make sense of observed scores. If the observed scores of the three tests measuring Gc are all 130, we can calculate the (unconditional) Mahalanobis distance to show that the profile of the three scores would be more unusual than about 80% of the population (see Table). If the observed scores of the three tests measuring Gc are 115, 130 and 145, the profile would be less usual than 99.8% of population. We can see from this case that although they have equal averages, their unusualness is quite different. 
+
+The problem with the traditional Mahalanobis distance is that both profiles are unusual because the scores, on average, are 2 standard deviations above the mean. With the proposed conditional Mahalanobis distance (conditioned on the estimated factor score of 130.9), we would see in Table 3 that Case 2, with a variable profile, is still more unusual than 98.5% of profiles with the same factor score. Case 1---with equal scores conditioned on an equally weighted factor score---is the least unusual profile possible.  Thus, with the conditional Mahalanobis distance, one can distinguish between profiles that are unusual because of elevation and those that are unusual because of variability in their shape.
 
 # References
 
