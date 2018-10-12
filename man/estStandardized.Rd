@@ -4,26 +4,23 @@
 \alias{estStandardized}
 \title{Estimate factor scores for a given profile and population model.}
 \usage{
-estStandardized(m, d)
+estStandardized(d, m)
 }
 \arguments{
-\item{m}{Lavaan Syntax Object.}
+\item{d}{observed z-scores in matrix or data.frame}
 
-\item{d}{Observed Z scores.}
+\item{m}{Structural model represented by lavaan Syntax}
 }
 \value{
-Standardized estimated factor scores.
+simStandardized output list with estimated factor scores from d
 }
 \description{
 Estimate factor scores for a given profile and population model.
 }
 \examples{
-m = "LatentVariable =~ 0.8 * ObservedVar1 + 0.8 * ObservedVar2 + 0.8 * Observed3"
-d <- simStandardized(m, 1000) #simulate 1000 cases (profiles)
+m = "latent_1 =~ 0.8 * ob_1 + 0.8 * ob_2 + 0.8 * ob_3"
+d <- data.frame(ob_1 = 1, ob_2 = -0.5, ob_3 = 1.2)
 
-# Pick up the first three cases for illustration
-demo_individual_exp <- d$Data[1:3,]
-
-# Estimate factor scores based on the three cases as well as the population model in m
-estStandardized(m,  demo_individual_exp)
+# Estimate factor scores based on this case
+estStandardized(d = d, m = m)
 }

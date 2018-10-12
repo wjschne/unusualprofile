@@ -7,22 +7,22 @@
 simStandardized(m, n = 1000, ObservedOnly = FALSE)
 }
 \arguments{
-\item{m}{Lavaan Syntax Object.}
+\item{m}{Structural model represented by lavaan Syntax}
 
-\item{n}{Number of simulated cases.}
+\item{n}{Number of simulated cases}
 
 \item{ObservedOnly}{Return only observed data}
 }
 \value{
-Latent scores, errors, disturbances, and observed scores.
+Latent scores, errors, disturbances, and observed scores
 }
 \description{
 Function that takes a lavaan model with standardized parameters and simulates latent scores, errors, disturbances, and observed scores
 }
 \examples{
 # Lavaan model
-m = "LatantVariable =~ 0.8 * ObservedVar1 + 0.8 * ObservedVar2 + 0.8 * Observed3"
+m = "Latent_1 =~ 0.8 * Ob_1 + 0.8 * Ob_2"
 
-# simulate 100 cases
-d <- simStandardized(m, n = 100)
+# simulate 10 cases
+simStandardized(m, n = 10)
 }

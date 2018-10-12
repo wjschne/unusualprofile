@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data — maha • unusualprofile</title>
+<title>Function to evaluate the accuracy of dCM with estimated factor scores — dCM_cor • unusualprofile</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -32,9 +32,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data — maha" />
+<meta property="og:title" content="Function to evaluate the accuracy of dCM with estimated factor scores — dCM_cor" />
 
-<meta property="og:description" content="Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data" />
+<meta property="og:description" content="Function to evaluate the accuracy of dCM with estimated factor scores" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,29 +106,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data</h1>
+    <h1>Function to evaluate the accuracy of dCM with estimated factor scores</h1>
     
-    <div class="hidden name"><code>maha.Rd</code></div>
+    <div class="hidden name"><code>dCM_cor.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data</p>
+    <p>Function to evaluate the accuracy of dCM with estimated factor scores</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>maha</span>(<span class='no'>d</span>, <span class='no'>m</span>, <span class='no'>Dep</span>, <span class='kw'>Ind</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>dCM_cor</span>(<span class='no'>m</span>, <span class='no'>Dep</span>, <span class='no'>Ind</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>d</th>
-      <td><p>Profiles of interest.</p></td>
-    </tr>
-    <tr>
       <th>m</th>
-      <td><p>Structural model represented by lavaan Syntax.</p></td>
+      <td><p>Lavaan Syntax Object</p></td>
     </tr>
     <tr>
       <th>Dep</th>
@@ -138,52 +134,30 @@
       <th>Ind</th>
       <td><p>The names of variables of your interest.</p></td>
     </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Sample size of simulated data</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.</p>
+    <p>Correlation between the conditional Mahalanobis distance calculated by using the true scores and the conditional Mahalanobis calculated by using estimated factor scores</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Standardized structural model in lavaan syntax</span>
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='st'>"
+    <pre class="examples"><div class='input'><span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='st'>"
 Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
 Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
+Gs =~ 0.70 * Gs_1 + 0.80 * Gs_2 + 0.80 * Gs_3
 Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
 Math =~ 0.40 * Math_1 + 0.90 * Math_2 + 0.70 * Math_3
-Gc ~ 0.60 * Gf
+Gc ~ 0.60 * Gf + 0.10 * Gs
+Gf ~ 0.50 * Gs
 Read ~ 0.40 * Gc + 0.10 * Gf
-Math ~ 0.20 * Gc + 0.30 * Gf
+Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
 "</span>
-
-<span class='co'># Put observed scores in data.frame</span>
-<span class='no'>d_demo</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
-          <span class='kw'>Gc_1</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
-          <span class='kw'>Gc_2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-          <span class='kw'>Gc_3</span> <span class='kw'>=</span> -<span class='fl'>0.2</span>,
-          <span class='kw'>Gf_1</span> <span class='kw'>=</span> <span class='fl'>1.1</span>,
-          <span class='kw'>Gf_2</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
-          <span class='kw'>Gf_3</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-          <span class='kw'>Read_1</span> <span class='kw'>=</span> -<span class='fl'>0.5</span>,
-          <span class='kw'>Read_2</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
-          <span class='kw'>Read_3</span> <span class='kw'>=</span> -<span class='fl'>1.4</span>,
-          <span class='kw'>Math_1</span> <span class='kw'>=</span> <span class='fl'>1.1</span>,
-          <span class='kw'>Math_2</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
-          <span class='kw'>Math_3</span> <span class='kw'>=</span> <span class='fl'>0.7</span>
-)
-<span class='fu'>maha</span>(<span class='kw'>d</span> <span class='kw'>=</span> <span class='no'>d_demo</span>,
-     <span class='kw'>m</span> <span class='kw'>=</span> <span class='no'>m</span>,
-     <span class='kw'>Dep</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>),
-     <span class='kw'>Ind</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>))</div><div class='output co'>#&gt; $dCM
-#&gt; [1] 1.649632
-#&gt; 
-#&gt; $df
-#&gt; [1] 2
-#&gt; 
-#&gt; $p
-#&gt; [1] 0.7435041
-#&gt; </div></pre>
+<span class='fu'>dCM_cor</span>(<span class='no'>m</span>, <span class='kw'>Dep</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>), <span class='kw'>Ind</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>, <span class='st'>"Gs"</span>), <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; [1] 0.8055439</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

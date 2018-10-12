@@ -11,8 +11,8 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,6 +30,8 @@
 
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Function that takes a lavaan model with standardized parameters and simulates latent scores, errors, disturbances, and observed scores — simStandardized" />
 
 <meta property="og:description" content="Function that takes a lavaan model with standardized parameters and simulates latent scores, errors, disturbances, and observed scores" />
@@ -76,6 +78,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/my-vignette.html">Introduction to unusualprofile package</a>
+    </li>
+  </ul>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -110,11 +124,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>Lavaan Syntax Object.</p></td>
+      <td><p>Structural model represented by lavaan Syntax</p></td>
     </tr>
     <tr>
       <th>n</th>
-      <td><p>Number of simulated cases.</p></td>
+      <td><p>Number of simulated cases</p></td>
     </tr>
     <tr>
       <th>ObservedOnly</th>
@@ -124,15 +138,118 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Latent scores, errors, disturbances, and observed scores.</p>
+    <p>Latent scores, errors, disturbances, and observed scores</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Lavaan model</span>
-<span class='no'>m</span> <span class='kw'>=</span> <span class='st'>"LatantVariable =~ 0.8 * ObservedVar1 + 0.8 * ObservedVar2 + 0.8 * Observed3"</span>
+<span class='no'>m</span> <span class='kw'>=</span> <span class='st'>"Latent_1 =~ 0.8 * Ob_1 + 0.8 * Ob_2"</span>
 
-<span class='co'># simulate 100 cases</span>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>simStandardized</span>(<span class='no'>m</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div></pre>
+<span class='co'># simulate 10 cases</span>
+<span class='fu'>simStandardized</span>(<span class='no'>m</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; $Data
+#&gt;      Latent_1          Ob_1        Ob_2     e_Ob_1      e_Ob_2 Latent_1_FS
+#&gt; 1  -1.6979356 -1.2322417187 -0.63035386  0.1261068  0.72799462  -0.9085832
+#&gt; 2   0.2827422  0.4851303533  0.63714377  0.2589366  0.41094999   0.5474508
+#&gt; 3   0.5372324  0.5591502340  0.23139205  0.1293643 -0.19839386   0.3856304
+#&gt; 4  -1.2872789 -0.5530686638 -1.57165654  0.4767545 -0.54183340  -1.0364513
+#&gt; 5   0.5396882  0.0762645730  1.14173419 -0.3554860  0.70998359   0.5941457
+#&gt; 6  -1.0362650 -0.1682714284 -0.63884507  0.6607406  0.19016693  -0.3937154
+#&gt; 7   0.7806475  0.5442048664 -0.21156361 -0.0803131 -0.83608157   0.1622640
+#&gt; 8   0.7894043  1.2363100750 -0.12542552  0.6047866 -0.75694897   0.5418949
+#&gt; 9  -0.2016445 -0.6562433760 -0.07055059 -0.4949277  0.09076504  -0.3545336
+#&gt; 10 -0.9831427 -0.0002976762 -0.69044202  0.7862165  0.09607212  -0.3369462
+#&gt;     e_Ob_1_FS  e_Ob_2_FS
+#&gt; 1  -0.8422919  0.1608545
+#&gt; 2   0.0786162  0.3319719
+#&gt; 3   0.4177432 -0.1285204
+#&gt; 4   0.4601540 -1.2374925
+#&gt; 5  -0.6650867  1.1106960
+#&gt; 6   0.2445014 -0.5397880
+#&gt; 7   0.6906561 -0.5689581
+#&gt; 8   1.3379903 -0.9315691
+#&gt; 9  -0.6210274  0.3551272
+#&gt; 10  0.4487655 -0.7014751
+#&gt; 
+#&gt; $vObserved
+#&gt; [1] "Ob_1" "Ob_2"
+#&gt; 
+#&gt; $vError
+#&gt; [1] "e_Ob_1" "e_Ob_2"
+#&gt; 
+#&gt; $R
+#&gt;          Latent_1 Ob_1 Ob_2 e_Ob_1 e_Ob_2
+#&gt; Latent_1      1.0 0.80 0.80    0.0    0.0
+#&gt; Ob_1          0.8 1.00 0.64    0.6    0.0
+#&gt; Ob_2          0.8 0.64 1.00    0.0    0.6
+#&gt; e_Ob_1        0.0 0.60 0.00    1.0    0.0
+#&gt; e_Ob_2        0.0 0.00 0.60    0.0    1.0
+#&gt; 
+#&gt; $A
+#&gt;          Latent_1 Ob_1 Ob_2
+#&gt; Latent_1      0.0    0    0
+#&gt; Ob_1          0.8    0    0
+#&gt; Ob_2          0.8    0    0
+#&gt; 
+#&gt; $S
+#&gt;          Latent_1 Ob_1 Ob_2
+#&gt; Latent_1        1 0.00 0.00
+#&gt; Ob_1            0 0.36 0.00
+#&gt; Ob_2            0 0.00 0.36
+#&gt; 
+#&gt; $iterations
+#&gt; [1] 2
+#&gt; 
+#&gt; $vLatent
+#&gt; [1] "Latent_1"
+#&gt; 
+#&gt; $vDisturbance
+#&gt; character(0)
+#&gt; 
+#&gt; $vFactorScores
+#&gt; [1] "Latent_1_FS" "e_Ob_1_FS"   "e_Ob_2_FS"  
+#&gt; 
+#&gt; $FactorScoreCoef
+#&gt;       Latent_1     e_Ob_1     e_Ob_2
+#&gt; Ob_1 0.4878049  1.0162602 -0.6504065
+#&gt; Ob_2 0.4878049 -0.6504065  1.0162602
+#&gt; 
+#&gt; $R_all
+#&gt;              Latent_1      Ob_1      Ob_2     e_Ob_1     e_Ob_2 Latent_1_FS
+#&gt; Latent_1    1.0000000 0.8000000 0.8000000  0.0000000  0.0000000   0.8834522
+#&gt; Ob_1        0.8000000 1.0000000 0.6400000  0.6000000  0.0000000   0.9055385
+#&gt; Ob_2        0.8000000 0.6400000 1.0000000  0.0000000  0.6000000   0.9055385
+#&gt; e_Ob_1      0.0000000 0.6000000 0.0000000  1.0000000  0.0000000   0.3312946
+#&gt; e_Ob_2      0.0000000 0.0000000 0.6000000  0.0000000  1.0000000   0.3312946
+#&gt; Latent_1_FS 0.8834522 0.9055385 0.9055385  0.3312946  0.3312946   1.0000000
+#&gt; e_Ob_1_FS   0.3748170 0.7683749 0.0000000  0.7808688 -0.4997560   0.4242641
+#&gt; e_Ob_2_FS   0.3748170 0.0000000 0.7683749 -0.4997560  0.7808688   0.4242641
+#&gt;              e_Ob_1_FS  e_Ob_2_FS
+#&gt; Latent_1     0.3748170  0.3748170
+#&gt; Ob_1         0.7683749  0.0000000
+#&gt; Ob_2         0.0000000  0.7683749
+#&gt; e_Ob_1       0.7808688 -0.4997560
+#&gt; e_Ob_2      -0.4997560  0.7808688
+#&gt; Latent_1_FS  0.4242641  0.4242641
+#&gt; e_Ob_1_FS    1.0000000 -0.6400000
+#&gt; e_Ob_2_FS   -0.6400000  1.0000000
+#&gt; 
+#&gt; $R_FS
+#&gt;           Latent_1     e_Ob_1     e_Ob_2
+#&gt; Latent_1 1.0000000  0.4242641  0.4242641
+#&gt; e_Ob_1   0.4242641  1.0000000 -0.6400000
+#&gt; e_Ob_2   0.4242641 -0.6400000  1.0000000
+#&gt; 
+#&gt; $FactorScoreValidity
+#&gt;  Latent_1    e_Ob_1    e_Ob_2 
+#&gt; 0.7804878 0.6097561 0.6097561 
+#&gt; 
+#&gt; $FactorScoreSE
+#&gt; se.Latent_1   se.e_Ob_1   se.e_Ob_2 
+#&gt;   0.4685213   0.6246950   0.6246950 
+#&gt; 
+#&gt; $Model
+#&gt; [1] "Latent_1 =~ 0.8 * Ob_1 + 0.8 * Ob_2"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

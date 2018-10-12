@@ -4,16 +4,23 @@
 \alias{CMahalanobis}
 \title{Calculate the conditional Mahalanobis distance for any variables.}
 \usage{
-CMahalanobis(Dep, Ind = NULL, R, d)
+CMahalanobis(d, R, Dep, Ind = NULL, UseFactorScores_Ind = F,
+  UseFactorScores_Dep = F, IncludeDiagnostics = F)
 }
 \arguments{
-\item{Dep}{The names of variables you would like to condition on.}
-
-\item{Ind}{The names of variables of your interest.}
+\item{d}{Data.frame with the independent and dependent variables.}
 
 \item{R}{Conditional correlation among variables.}
 
-\item{d}{Profiles of interest.}
+\item{Dep}{Vector of names of the dependent variables in your profile.}
+
+\item{Ind}{Vector of names of independent variables you would like to control for.}
+
+\item{UseFactorScores_Ind}{Use the factor scores for the independent variables}
+
+\item{UseFactorScores_Dep}{Use the factor scores for the dependent variables}
+
+\item{IncludeDiagnostics}{Return additional diagnostic information}
 }
 \value{
 conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
@@ -22,7 +29,7 @@ conditional Mahalanobis distance, percentiles for each case based on the Chi-squ
 Calculate the conditional Mahalanobis distance for any variables.
 }
 \examples{
-SimModel <- "
+m <- "
 Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3
 Gf =~ 0.8 * Gf1 + 0.9 * Gf2 + 0.8 * Gf3
 Gs =~ 0.7 * Gs1 + 0.8 * Gs2 + 0.8 * Gs3
@@ -32,6 +39,9 @@ Gc ~ 0.6 * Gf + 0.1 * Gs
 Gf ~ 0.5 * Gs
 Read ~ 0.4 * Gc + 0.1 * Gf
 Math ~ 0.2 * Gc + 0.3 * Gf + 0.1 * Gs"
-d_demo <- simStandardized(SimModel, 10)
-CMahalanobis(c("Math", "Read"),c("Gf", "Gs", "Gc"),d_demo$R_all,d_demo$Data)
+d_demo <- simStandardized(m = m, n = 10)
+CMahalanobis(d = d_demo$Data,
+             R = d_demo$R_all,
+             Dep = c("Math", "Read"),
+             Ind = c("Gf", "Gs", "Gc"))
 }

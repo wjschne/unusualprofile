@@ -4,16 +4,16 @@
 \alias{maha}
 \title{Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data}
 \usage{
-maha(Model, Dep, Ind = NULL, d)
+maha(d, m, Dep, Ind = NULL)
 }
 \arguments{
-\item{Model}{Population relations among variables represented by Lavaan Syntax.}
+\item{d}{Profiles of interest.}
+
+\item{m}{Structural model represented by lavaan Syntax.}
 
 \item{Dep}{The names of variables you would like to condition on.}
 
 \item{Ind}{The names of variables of your interest.}
-
-\item{d}{Profiles of interest.}
 }
 \value{
 conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
@@ -22,16 +22,34 @@ conditional Mahalanobis distance, percentiles for each case based on the Chi-squ
 Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data
 }
 \examples{
-SimModel <- "
-Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3
-Gf =~ 0.8 * Gf1 + 0.9 * Gf2 + 0.8 * Gf3
-Gs =~ 0.7 * Gs1 + 0.8 * Gs2 + 0.8 * Gs3
-Read =~ 0.66 * Read1 + 0.85 * Read2 + 0.91 * Read3
-Math =~ 0.4 * Math1 + 0.9 * Math2 + 0.7 * Math3
-Gc ~ 0.6 * Gf + 0.1 * Gs
-Gf ~ 0.5 * Gs
-Read ~ 0.4 * Gc + 0.1 * Gf
-Math ~ 0.2 * Gc + 0.3 * Gf + 0.1 * Gs"
-d_demo <- simStandardized(SimModel, 10)
-maha(SimModel, Dep = c("Math", "Read"),Ind = c("Gc", "Gf", "Gs") , d_demo$Data)
+# Standardized structural model in lavaan syntax
+m <- "
+Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
+Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
+Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
+Math =~ 0.40 * Math_1 + 0.90 * Math_2 + 0.70 * Math_3
+Gc ~ 0.60 * Gf
+Read ~ 0.40 * Gc + 0.10 * Gf
+Math ~ 0.20 * Gc + 0.30 * Gf
+"
+
+# Put observed scores in data.frame
+d_demo <- data.frame(
+          Gc_1 = -1,
+          Gc_2 = 0.5,
+          Gc_3 = -0.2,
+          Gf_1 = 1.1,
+          Gf_2 = 1.3,
+          Gf_3 = 2,
+          Read_1 = -0.5,
+          Read_2 = -1,
+          Read_3 = -1.4,
+          Math_1 = 1.1,
+          Math_2 = 1.3,
+          Math_3 = 0.7
+)
+maha(d = d_demo,
+     m = m,
+     Dep = c("Math", "Read"),
+     Ind = c("Gc", "Gf"))
 }
