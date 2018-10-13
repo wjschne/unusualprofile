@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduction to unusualprofile package • unusualprofile</title>
+<title>Introduction to the unusualprofile package • unusualprofile</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Introduction to unusualprofile package">
+<meta property="og:title" content="Introduction to the unusualprofile package">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -53,7 +53,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/my-vignette.html">Introduction to unusualprofile package</a>
+      <a href="../articles/tutorial_unusualprofile.html">Introduction to the unusualprofile package</a>
     </li>
   </ul>
 </li>
@@ -70,13 +70,13 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Introduction to unusualprofile package</h1>
+      <h1>Introduction to the unusualprofile package</h1>
                         <h4 class="author">Feng Ji</h4>
             
-            <h4 class="date">2018-10-11</h4>
+            <h4 class="date">2018-10-12</h4>
       
       
-      <div class="hidden name"><code>my-vignette.Rmd</code></div>
+      <div class="hidden name"><code>tutorial_unusualprofile.Rmd</code></div>
 
     </div>
 
@@ -103,7 +103,11 @@
 <div id="a-worked-example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#a-worked-example" class="anchor"></a>A worked example</h1>
-<p><img src="reading_tutorial.svg" width="100%" height="100%"></p>
+<div class="figure" style="text-align: center">
+<img src="reading_tutorial.svg" alt="Figure 1. Test Scores and Estimated Factor Scores of Two Hypothetical Cases" width="100%" height="100%"><p class="caption">
+Figure 1. Test Scores and Estimated Factor Scores of Two Hypothetical Cases
+</p>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(magrittr)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(unusualprofile)</a>
@@ -158,8 +162,12 @@
 <a class="sourceLine" id="cb1-52" data-line-number="52">      <span class="st">"$</span><span class="ch">\\</span><span class="st">text{P}(d_{CM})$"</span></a>
 <a class="sourceLine" id="cb1-53" data-line-number="53">    )</a>
 <a class="sourceLine" id="cb1-54" data-line-number="54">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-55" data-line-number="55"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>), <span class="dt">align =</span> <span class="st">"lcccccc"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb1-55" data-line-number="55"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(</a>
+<a class="sourceLine" id="cb1-56" data-line-number="56">    <span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">3</span>), </a>
+<a class="sourceLine" id="cb1-57" data-line-number="57">    <span class="dt">align =</span> <span class="st">"lcccccc"</span>, </a>
+<a class="sourceLine" id="cb1-58" data-line-number="58">    <span class="dt">caption =</span> <span class="st">"Table 1. Comparing the Unusualness of Two Cases"</span>)</a></code></pre></div>
 <table class="table">
+<caption>Table 1. Comparing the Unusualness of Two Cases</caption>
 <thead><tr class="header">
 <th align="left"><span class="math inline">\(\text{Case}\)</span></th>
 <th align="center"><span class="math inline">\(Gc_1\)</span></th>
@@ -190,7 +198,8 @@
 </tr>
 </tbody>
 </table>
-<p>We can use the proposed method to make sense of observed scores. If the observed scores of the three tests measuring Gc are all 130, we can calculate the (unconditional) Mahalanobis distance to show that the profile of the three scores would be less usual than about 80% of the population (see Table). If the observed scores of the three tests measuring Gc are 115, 130 and 145, the profile would be less usual than 99.8% of population. We can see from this case that although they have equal averages, their unusualness is quite different. The problem with the traditional Mahalanobis distance is that both profiles are unusual because the scores, on average, are 2 standard deviations above the mean. With the proposed conditional Mahalanobis distance (conditioned on the estimated factor score of 130.9), we would see in Table 3 that Case 2, with a variable profile, is still more unusual than 98.5% of profiles with the same factor score. Case 1—with equal scores conditioned on an equally weighted factor score—is the least unusual profile possible. Thus, with the conditional Mahalanobis distance, one can distinguish between profiles that are unusual because of elevation and those that are unusual because of variability in their shape.</p>
+<p>We can use the proposed method to make sense of observed scores. If the observed scores of the three tests measuring Gc are all 130, we can calculate the (unconditional) Mahalanobis distance to show that the profile of the three scores would be more unusual than about 80% of the population (see Table 1). If the observed scores of the three tests measuring Gc are 115, 130 and 145, the profile would be less usual than 99.8% of population. We can see from this case that although they have equal averages, their unusualness is quite different.</p>
+<p>The problem with the traditional Mahalanobis distance is that both profiles are unusual because the scores, on average, are 2 standard deviations above the mean. With the proposed conditional Mahalanobis distance (conditioned on the estimated factor score of 130.9), we would see in Table 3 that Case 2, with a variable profile, is still more unusual than 98.5% of profiles with the same factor score. Case 1—with equal scores conditioned on an equally weighted factor score—is the least unusual profile possible. Thus, with the conditional Mahalanobis distance, one can distinguish between profiles that are unusual because of elevation and those that are unusual because of variability in their shape.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

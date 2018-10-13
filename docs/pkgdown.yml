@@ -2,5 +2,5 @@ pandoc: 2.2.1
 pkgdown: 1.1.0
 pkgdown_sha: ~
 articles:
-  my-vignette: my-vignette.html
+  tutorial_unusualprofile: tutorial_unusualprofile.html
 
