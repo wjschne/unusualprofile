@@ -38,3 +38,5 @@ Suggests: testthat,
     ggplot2,
     ggnormalviolin
 VignetteBuilder: knitr
+URL: https://github.com/wjschne/unusualprofile
+BugReports: https://github.com/wjschne/unusualprofile/issues
