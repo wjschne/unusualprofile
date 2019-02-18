@@ -1,10 +1,12 @@
 ---
 title: "Introduction to the unusualprofile package"
-author: "Feng Ji"
+author: "Feng Ji & W. Joel Schneider"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib
 csl: apa.csl
+font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
+font-family: 'Titillium Web'
 vignette: >
   %\VignetteIndexEntry{Introduction to the unusualprofile package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,114 +21,752 @@ knitr::opts_chunk$set(
   out.height = "100%",
   out.width = "100%",
   fig.width = 7,
-  fig.height = 7
+  fig.height = 7, 
+  message = FALSE,
+  warning = FALSE,
+  cache = F
 )
+
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(stringr)
+library(tibble)
+library(magrittr)
+library(unusualprofile)
+library(simstandard)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(extrafont)
+
+myfont <- "Titillium Web"
+theme_set(theme_minimal(16, base_family = myfont))
+update_geom_defaults(geom = "text",
+                     new = list(family = myfont))
+update_geom_defaults(geom = "label",
+                     new = list(family = myfont))
+update_geom_defaults(geom = "point",
+                     new = list(pch = 16))
+#Rounds proportions to significant digits both near 0 and 1
+PropRound <- function(p, maxDigits = 10) {
+  d <- rep(2, length(p))
+  pp <- rep(0, length(p))
+  for (i in seq(1, length(p))) {
+    if (p[i] > 0.99 | p[i] < 0.01) {
+      d[i] <-
+        min(maxDigits, 1 - 1 - floor(log10(abs(
+          ifelse(p[i] < 0.5, p[i], 1 - p[i])
+        ))))
+    }
+    pp[i] = formatC(round(p[i], digits = d[i]), digits = d[i], flag = "")
+    if (round(p[i], digits = maxDigits) == 0) {
+      pp[i] = 0
+    }
+    if (round(p[i], digits = maxDigits) == 1) {
+      pp[i] = 1
+    }
+    gsub(" ", "", pp[i])
+  }
+
+  return(gsub(" ", "", pp))
+}
+
+numText <- function(x, digits = 2) {
+  str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
+}
 ```
 
-# Motivation
+```{css, echo = FALSE}
+@import url('http://fonts.googleapis.com/css?family=Titillium+Web');
+body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px}
 
-This package automates the process of making sense of psychoeducational test batteries results for practitioners/school psychologists, using latent-variable-based methods [@ji2018].
+```
+
+
+The unusualprofile package automates the process of making sense of psychoeducational test batteries results for practitioners/school psychologists, using latent-variable-based methods [@ji2018].
+
+# Univariate Outliers
+
+A univariate outlier is unusually far from most of the other scores in a distribution. You can easily find spot a large outlier in a histogram:
+
+```{r, echo= FALSE}
+
+set.seed(1)
+data.frame(x = c(rnorm(100), 10)) %>% 
+  mutate(Outlier = between(x,-5,5) %>%
+           factor(levels = c(FALSE, TRUE),
+                  labels = c("Outlier", 
+                             "Non-Outliers"))) %>% 
+  ggplot(aes(x = x, fill = Outlier)) + 
+  geom_histogram(binwidth = 0.5) + 
+  scale_fill_manual(NULL, values = c("firebrick", "gray40")) +
+  theme(legend.position = "none") +
+  xlab(NULL) + 
+  ylab(NULL) +
+  annotate(10,1, 
+           geom = "label", 
+           label = "Outlier", 
+           vjust = -0.5, 
+           label.size = 0, 
+           label.padding = unit(0,"mm")) 
+
+```
+
+
+# Multivariate Outliers
+
+A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the plot below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
+
+```{r, echo= FALSE, warning=FALSE}
+set.seed(5)
+d_mo <- mvtnorm::rmvnorm(n = 10000, sigma = matrix(c(1,0.95,0.95,1),2))
+d_mo[100,] <- c(-1,1)
+d_mo <- data.frame(d_mo)
+colnames(d_mo) <- c("x","y")
+ggplot(d_mo, aes(x, y)) + 
+  geom_point(alpha = 0.1, size = 0.75) + 
+  geom_point(data = d_mo[100,],color = "firebrick") + 
+  coord_equal(xlim = c(-4,4), ylim = c(-4,4)) + 
+  theme(axis.title.y = element_text(angle = 0, vjust = .5, face = "italic"),
+        axis.title.x = element_text(face = "italic"))
+```
+
+Unfortunately, we cannot create scatterplots with more than three variables. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
+
+```{r, echo= FALSE}
+head(d_mo, 200) %>% 
+  rowid_to_column("id") %>%
+  as_tibble(.name_repair = "unique") %>% 
+  gather(key, value, -id) %>% 
+  mutate(Outlier = id == 100) %>%
+  arrange(-Outlier) %>% 
+  ggplot(aes(key, value, group = id)) + 
+  geom_line(alpha = 0.25, size = 0.25) +
+  geom_point(alpha = 0.25, size = 0.75) +
+  scale_size_manual(values = c(0.5,2)) + 
+  annotate(x = "x",  
+           y = -1, 
+           xend = "y", 
+           yend = 1, 
+           geom = "segment", 
+           color = "firebrick",
+           size = 1) +
+  annotate(x = c("x","y"), 
+           y = c(-1,1), 
+           color = "firebrick", 
+           geom = "point", 
+           size = 2) +
+  scale_x_discrete(NULL, expand = c(0.03,0)) + 
+  scale_y_continuous(NULL) +
+  theme(axis.text.x = element_text(face = "italic"))
+
+```
+
+Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, one of the profiles is much less flat, making it unusual in this context. 
+
+```{r, echo=FALSE}
+vnames <- paste0("x_",1:4)
+n <- 300
+rho <- matrix(0.99, nrow = 4, ncol = 4, dimnames = list(vnames, vnames))
+diag(rho) <- 1
+
+d_4 <- mvtnorm::rmvnorm(sigma = rho, n = n) %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  set_colnames(vnames)
+
+d_4[1,] <- c(1, 1, -1, 1)
+
+d_4 %>% 
+  mutate(id = 1:n) %>% 
+  gather(key, value, -id) %>% 
+  ggplot(aes(key, value, group = id)) + 
+  geom_line(alpha = 0.2, size = 0.25) + 
+  geom_point(alpha = 0.3, size = 0.75) + 
+  geom_line(data = . %>% filter(id == 1),
+            color = "firebrick", size = 0.5) +
+  geom_point(data = . %>% filter(id == 1),
+             size = 1.25, color = "firebrick") + 
+  scale_x_discrete(NULL, 
+                   expand = c(0.03,0), 
+                   labels = parse(text = paste0("italic(x)[",1:4,"]"))) + 
+  scale_y_continuous(NULL)
+```
+
+# Quantifying Unusualness
+
+The *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. It is a multidimensional extension of the Pythagorean Theorem. The reference point of interest is usually the vector means from each variable (i.e., the centroid). The Euclidean distance of point *p*~1~ = (1,1,-1,1) to the vector of *z*-score means *p*~2~ = (0,0,0,0) is
+
+$$\sqrt{(p_1-p_2)'(p_1-p_2)}=\sqrt{(1-0)^2+(1-0)^2+(-1-0)^2+(1-0)^2}=2$$
+
+The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the two variables are highly correlated, point (1,1,&minus;1,1) is much more unusual than point (1,1,1,1). Though fairly simple to calculate, the Euclidean distance is insensitive to the relationships among the variables, making it a poor choice for quantifying the unusualness of profiles of correlated variables.
+
+In 1936, P. R. Mahalanobis introduced a multidimensional distance related to the Euclidean distance, but one that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Computationally, the principal components need not be calculated explicitly. We simply need to invert the covariance matrix of the profile variables:
+
+$$d_{M}=\sqrt{(X-\mu_X)'\Sigma_X^{-1}(X-\mu_X)}$$
+
+>Where  
+$d_M$ is the Mahalanobis distance  
+$X$ is a vector of variable scores  
+$\mu_X$ is the vector of variable means of $X$ (i.e., the centroid of $X$)  
+$\Sigma_X$ is the covariance matrix of the variables in vector $X$
+
+If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each one, and then adding them together. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
+
+Thus, if there are *k* normally distributed variables in vector *X*,
+
+$$d_M ^ 2 \sim \chi^2(k)$$
+
+Thus, if we can assume the profile variables are multivariate normal, we can use the cumulative distribution function of the &chi;^2^ distribution to quantify how unusual a particular profile compares to the general population of profiles.
+
+
+# Conditional Mahalanobis Distances
+
+One the disadvantages of the Mahalanobis Distance is that it treats all the dimensions equivalently. For example, if four standardized variables are highly correlated, point (4,4,4,4) is unusual in that each point is 4 standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually high, but has the modal profile shape.^[A perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean of a normally distributed variable is *extremely average*.]
+
+## Distinguishing Profile Shape from Profile Elevation
+
+With positively correlated variables, the profile's elevation is so important that we might want to distinguish it from the profile shape when we quantify how unusual a profile is. Suppose that we compare all profiles that have the same elevation but have different profile shapes. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
+
+Imagine that four standardized variables correlate at 0.75, and we select a subset of cases in which the profiles have an elevation of 1. In the plot below, two score profiles with an elevation of 1 are shown. The red profile has an unremarkable flat shape, whereas the blue profile has more unusual shape.
+
+```{r, echo = FALSE}
+library(gganimate)
+library(ggnormalviolin)
+set.seed(1000)
+elevation <- 1
+lambda <- c(0.95, 0.90, 0.85, 0.60)
+Ryy <- lambda %*% t(lambda)
+diag(Ryy) <- 1
+round(rho,2) %>% as.character %>% writeClipboard()
+w <- cbind(diag(4), rep(1,4))
+rho <- cov2cor(t(w) %*% Ryy %*% w)
+Rxx <- matrix(1)
+Ryx <- rho[1:4, 5, drop = F]
+cov_cond <- Ryy - Ryx %*% solve(Rxx) %*% t(Ryx)
+# d <- mvtnorm::rmvnorm(n = 30, sigma = cov_cond)  + rho[5,1:4]
+
+d <- matrix(c(1.62, 1.75,-.19,
+              .82, .75, 1.07), nrow = 2, byrow = TRUE)
+d <- cbind(d, sum(rho[5, 1:4]) - rowSums(d))
+
+colnames(d) <- paste0("x",1:4)
+colnames(rho) <- rownames(rho) <- c("x1","x2","x3","x4","Composite")
+CM <- cond_maha(d %>% as_tibble(.name_repair = "unique") %>% mutate(Composite = 1), 
+          R = rho, 
+          v_dep = colnames(d)[-5], 
+          v_ind = "Composite")
+
+
+d %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rowid_to_column(var = "id") %>% 
+  mutate(id = factor(id),
+         pdM = PropRound(CM$dCM_p)) %>% 
+  gather("Variable","X",-id, -pdM) %>% 
+  ggplot(aes(Variable, X)) + 
+  geom_normalviolin(
+    aes(
+      x = id,
+      mu = mu, sigma = sigma), 
+    data = tibble(id = factor(c("x1","x2","x3","x4")),
+                  mu = rho[5,1:4],
+                  sigma = sqrt(diag(cov_cond))), 
+    inherit.aes = F,
+    alpha = 0.5, 
+    upper_limit = 3) +
+  geom_line(aes(group = id, 
+                color = id), 
+            alpha = 1, 
+            size = 1) + 
+  geom_hline(yintercept = 1) +
+  geom_point(aes(color = id), size = 2.5) +
+  geom_text(aes(label = numText(X,2),
+                color = id,
+                vjust = if_else(X > 1, -0.8, 1.5)),
+            size = 5) +
+  # geom_text(data = . %>% filter(Variable == "x1"), 
+  #           aes(label = paste0("italic(p) == ", pdM),
+  #               color = id), 
+  #           parse = TRUE,
+  #           hjust = 1.15, 
+  #           size = 5) +
+  scale_y_continuous(NULL, breaks = -3:3) +
+  scale_x_discrete(NULL, label = parse(text = paste0("italic(x)[",1:4,"]"))) +
+  scale_color_manual(values = c("steelblue","firebrick")) + 
+  annotate("text", 
+           x = 4.15, 
+           y = 1, 
+           label = "Composite == 1", 
+           parse = TRUE, 
+           vjust = -0.1,
+           size = 5) + 
+  annotate("label", x = 1.5, y = 2.75, label = paste0("More unusual than ", round(CM$dCM_p[1] * 100), "% of\nprofiles with the same elevation"), color = "steelblue", label.padding = unit(0, "lines"), label.size = 0, size = 6, lineheight = 0.85) +
+  annotate("label", x = 1.5, y = -0.75, label = paste0("More unusual than ", round(CM$dCM_p[2] * 100), "% of\nprofiles with the same elevation"), color = "firebrick", label.padding = unit(0, "lines"), label.size = 0, size = 6, lineheight = 0.85) +
+  annotate("segment", x = 1.5, y = -0.4, xend = 1.55, yend = 0.7, 
+           size = 1, color = "firebrick", 
+           arrow = arrow(length = unit(0.35,"cm"), 
+                         angle = 17, type = "closed")) +
+  annotate("segment", x = 1.5, y = 2.4, xend = 1.56, yend = 1.75, 
+           size = 1, color = "steelblue", 
+           arrow = arrow(length = unit(0.35,"cm"), 
+                         angle = 17, type = "closed")) + 
+  ggtitle("Two profiles with the same elevation but different shapes") + 
+  theme(legend.position = "none") +
+  coord_cartesian(ylim = c(-3,3))
+
+```
+
+```{r, eval=FALSE, echo=FALSE}
+d %>% 
+  as_tibble(.name_repair = "unique") %>% 
+  rowid_to_column(var = "id") %>% 
+  mutate(id = factor(id),
+         pdM = PropRound(CM$dCM_p)) %>% 
+  gather("Variable","X",-id, -pdM) %>% 
+  ggplot(aes(Variable, X)) + 
+  geom_normalviolin(
+    aes(
+      x = id,
+      mu = mu, sigma = sigma), 
+    data = tibble(id = factor(c("x1","x2","x3","x4")),
+                  mu = rho[5,1:4],
+                  sigma = sqrt(diag(cov_cond))), 
+    inherit.aes = F,
+    alpha = 0.5, 
+    upper_limit = 3) +
+  geom_line(aes(x = id, 
+                group = 1,
+      y = mu), color = "gray30",
+      data = tibble(id = factor(c("x1","x2","x3","x4")),
+                  mu = rho[5,1:4])) + 
+  geom_point(aes(x = id,
+      y = mu), size = 3, color = "gray30", pch = 16,
+      data = tibble(id = factor(c("x1","x2","x3","x4")),
+                  mu = rho[5,1:4])) + 
+  geom_text(aes(x = id,
+      y = mu, label = formatC(mu,2, format = "f")), size = 5, vjust = 1.5,
+      data = tibble(id = factor(c("x1","x2","x3","x4")),
+                  mu = rho[5,1:4])) + 
+  geom_hline(yintercept = 1) +
+  scale_y_continuous(NULL, breaks = -3:3) +
+  scale_x_discrete(NULL, label = parse(text = paste0("italic(x)[",1:4,"]"))) +
+  scale_color_manual(values = c("steelblue","firebrick")) + 
+  ggtitle("Conditional Distributions When Composite = 1") + 
+  theme(legend.position = "none") +
+  annotate("text", 
+           x = 4.15, 
+           y = 1, 
+           label = "Composite == 1", 
+           parse = TRUE, 
+           vjust = -0.1,
+           size = 5) +
+  coord_cartesian(ylim = c(-3, 3))
+```
+
+
+How can we calculate the Mahalanobis distance for profiles that all have the same elevation? First we need to calculate the composite score's correlation with each score.
+
+$$R_X = \begin{bmatrix}1 & 0.75 & 0.75 & 0.75\\
+0.75 & 1 & 0.75 & 0.75\\
+0.75 & 0.75 & 1 & 0.75\\
+0.75 & 0.75 & 0.75 & 1\\
+\end{bmatrix}$$
+
+$$w = \begin{bmatrix}1 & 0 & 0 & 0 & 1\\
+0 & 1 & 0 & 0 & 1\\
+0 & 0 & 1 & 0 & 1\\
+0 & 0 & 0 & 1 & 1\\
+\end{bmatrix}$$
+
+$$\Sigma = w'Rw$$
+$$D = \text{diag}(\Sigma)$$
+
+$$R_{All} = D^{-0.5}\Sigma D^{-0.5}$$
 
 # Estimating factor scores
 
 Factor scores are calculated using Thurstone's method [@thurstone1935vectors; @schneider2013if]:
 
-$$\hat{a}_{i}= R_{XX}\Lambda R_{YY}^{-1}y_{i}=R_{XY}R_{YY}^{-1}y_{i}$$
+$$\hat{a}= R_{XX}\Lambda R_{YY}^{-1}y=R_{XY}R_{YY}^{-1}y$$
 
 Where
 
-$\hat{a}_{i}$ is a random vector of the ith subject’s factor scores estimate on the common factors.  
+> $\hat{a}$ is a random vector of a person's estimated factor scores.  
 $R_{XX}$ is the correlation matrix among the latent factors.  
 $\Lambda$ is the factor-pattern matrix.  
 $R_{XY}$ is a correlation matrix between the common factors and the observed	variables.  
 $R_{YY}^{-1}$ is the inverse of the correlation matrix among the observed variables.  
-$y_{i}$ is a random vector of the ith subject’s standardized scores on the observed variables.
+$y$ is a random vector of a person's standardized scores on the observed variables.
 
 # Predicting individual's unusualness in population 
 
-$$d_{cM}=\sqrt{(Z_{o}-\hat{Z}_{o})'R_o^{-1}(Z_{o}-\hat{Z}_{o})}$$
-$\hat{Z}_{o}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the
-factor scores of cognitive abilities).  
-$Z_{o}$ is the vector of outcome scores (i.e., the factor scores of academic abilities estimated from our
-SEM).  
-$R_o^{-1}$ is the matrix of conditional variance among the factor scores (the composite correlation
-between factor scores calculated using population correlation among observed scores, that is, $\beta'\Sigma_{xx}\beta$,
-where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$. If multivariate normality can be assumed and there are $k$ outcome scores,  
-$$d_{cM}^{2} \sim\chi^{2}(k)$$  
+$$d_{C M}=\sqrt{(y-\hat{y})'R^{-1}(y-\hat{y})}$$
 
-# A worked example
+Where
 
-```{r, echo = FALSE, fig.align='center', fig.cap="Figure 1. Test Scores and Estimated Factor Scores of Two Hypothetical Cases"}
-knitr::include_graphics("reading_tutorial.svg")
+> $\hat{y}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the factor scores of cognitive abilities).  
+$y$ is the vector of outcome scores (i.e., the factor scores of academic abilities estimated from our SEM).  
+$R$ is the matrix of conditional variance among the factor scores (the composite correlation between factor scores calculated using population correlation among observed scores, that is, $\beta'\Sigma_{xx}\beta$,
+where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$. 
+
+
+If multivariate normality can be assumed and there are *k* outcome scores,
+
+$$d_{CM}^{2} \sim\chi^{2}(k)$$  
+
+# A Worked Example
+
+Suppose we have two cognitive predictors of reading, General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Each cognitive and academic ability is measured with three tests each. The theoretical model of how each variable relates to every other variable is shown below.
+
+```{r, echo = FALSE, fig.align='center', fig.cap="General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension"}
+knitr::include_graphics("Reading.svg")
 ```
 
-```{r, message=FALSE}
-library(tidyverse)
-library(magrittr)
+Here we load packages we will need and create a function for converting raw scores with a specific population mean and standard deviation to z-scores:
+
+```{r load}
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(purrr)
+library(knitr)
+library(kableExtra)
 library(unusualprofile)
 
-# Make data
-m = "Gc =~ 0.9 * Gc_1 + 0.9 * Gc_2 + 0.9 * Gc_3"
-d_data <- simStandardized(m = m,
-                          n = 10000)
+# Function to create z-scores
+zscore <- function(x, mean = 100, sd = 15) (x - mean) / sd
+```
 
-# Make case 1 and 2
-d_case <- matrix(
-  c(2, 2, 2,
-    1, 2, 3), 
-  2, byrow = T) %*%
-  cbind(diag(3), d_data$FactorScoreCoef[, "Gc"]) %>%
-  set_colnames(c(paste0("Gc_", 1:3), "Gc_FS")) %>%
-  as_tibble() %>%
-  mutate(Gc = Gc_FS / d_data$FactorScoreValidity["Gc"])
+We can use syntax from the lavaan package to specify the standardized coefficients of our model.
 
-# Calculate d_CM
-d_CM <- CMahalanobis(
-  d = d_case,
-  R = d_data$R_all,
-  Dep = paste0("Gc_", 1:3),
-  Ind = "Gc",
-  UseFactorScores_Ind = T
-)
-d_M <-
-  CMahalanobis(
-    Dep = paste0("Gc_", 1:3),
-    R = d_data$R_all,
-    d = d_case %>% select(-Gc)
-  )
+```{r model}
+# Model of Reading
+m_Reading <- "
+Ga =~ 0.83 * Ga1 + 0.92 * Ga2 + 0.95 * Ga3
+Gc =~ 0.88 * Gc1 + 0.71 * Gc2 + 0.85 * Gc3
+RD =~ 0.93 * RD1 + 0.87 * RD2 + 0.85 * RD3
+RC =~ 0.91 * RC1 + 0.86 * RC2 + 0.90 * RC3
+Ga ~~ 0.68 * Gc
+RD ~  0.47 * Ga + 0.53 * Gc
+RC ~  0.05 * Ga + 0.40 * Gc  + 0.43 * RD
+"
+```
 
-# Make Table 3
-d_case %>%
-  select(-Gc) %>%
-  mutate_all(function(x)
-    x * 15 + 100) %>%
-  mutate(pdM = as.vector(d_M$p),
-         pdCM = as.vector(d_CM$p),
-         Case = 1:2) %>%
-  select(Case, everything()) %>%
-  magrittr::set_colnames(
-    c(
-      "$\\text{Case}$",
-      "$Gc_1$",
-      "$Gc_2$",
-      "$Gc_3$",
-      "$\\hat{G}c$",
-      "$\\text{P}(d_M)$",
-      "$\\text{P}(d_{CM})$"
-    )
-  ) %>%
-  knitr::kable(
-    digits = c(0,0,0,0,1,3,3), 
-    align = "lcccccc", 
-    caption = "Table 1. Comparing the Unusualness of Two Cases")
+We are going to need several bits of information about this model. We will call the `sim_standardized_matrices` function from the simstandard package. In particular, we need the correlation matrix implied by our model.
+
+```{r fit}
+fit_Reading <- simstandard::sim_standardized_matrices(m_Reading)
+R <- fit_Reading$Correlations$R_all
+```
+
+Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to z-scores. Finally, we use the simstandard package's `add_factor_scores` function to add estimated factor scores to the data frame.
+
+```{r scores}
+d_case <- tibble(
+  Ga1 = 71,
+  Ga2 = 65,
+  Ga3 = 74,
+  Gc1 = 108,
+  Gc2 = 123,
+  Gc3 = 99,
+  RD1 = 77,
+  RD2 = 71,
+  RD3 = 80,
+  RC1 = 90,
+  RC2 = 84,
+  RC3 = 107
+) %>% 
+  mutate_all(zscore, mean = 100, sd = 15)
+
+fit_reading <- simstandard::sim_standardized_matrices(m_Reading)
+composite_matrix <- fit_reading$Coefficients$composite_score
+d_composites <- as.matrix(d_case) %*% composite_matrix
+
+d_all <- cbind(d_case, d_composites)
+
+d_all %>% 
+        gather("Ability","z-score") %>% 
+  mutate(SS = as.integer(`z-score` * 15 + 100)) %>%
+  select(Ability,SS, `z-score`) %>% 
+  kable(digits = 2, 
+        caption = "Case Scores") %>%
+  kableExtra::kable_styling(bootstrap_options = "striped")
+```
+
+## Indicator Scores
+
+Suppose that we want to know if the academic performance scores are unusual, given the cognitive predictor scores.
+
+First, let's see if the observed score profile is unusual. We can calculate the (unconditional) Mahalanobis distance by putting all the observed variables as dependent variables:
+
+```{r}
+v_Reading <- c("RD1","RD2","RD3","RC1","RC2","RC3")
+v_Cognitive <- c("Ga1","Ga2","Ga3","Gc1","Gc2","Gc3")
+
+cond_maha(
+  data = d_all, 
+  R = R, 
+  v_dep = c(v_Reading, v_Cognitive))
+```
+
+From the probability (p), we see that the overall observed score profile is quite unusual. 
+
+```{r, echo=FALSE}
+d_case %>% 
+  gather("Variable","Score", factor_key = T) %>% 
+  mutate(Score = Score * 15 + 100,
+         Ability = str_sub(Variable, 1,2),
+         Test = str_sub(Variable,3,3)) %>% 
+  mutate(Ability = str_sub(Variable,1,2) %>% 
+           factor(levels = c("Ga","Gc","RD","RC"), labels = c("Auditory Processing (Ga)","Verbal Knowledge (Gc)","Reading Decoding","Reading Comprehension"))) %>% 
+  ggplot(aes(Test, Score,fill = Ability)) + 
+  geom_normalviolin(aes(mu = 100, sigma = 15), width = 0.8, p_tail = 0.05) +
+  geom_hline(yintercept = 100, color = "gray20") + 
+  geom_line(aes(group = Ability)) +
+  geom_point(size = 8) + 
+  geom_text(aes(label = Score), color = "white", size = 3.25) + 
+  facet_grid(cols = vars(Ability)) +
+  theme_light(base_family = myfont, base_size = 14) +
+  scale_y_continuous(breaks = seq(40,160,15)) +
+  scale_x_discrete() +
+  coord_cartesian(ylim = c(55,145)) +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 10))
+  
+```
+
+
+
+Now, let's see if the academic scores are unusual by themselves:
+
+```{r}
+cond_maha(
+  data = d_case, 
+  R = R, 
+  v_dep = v_Reading)
+```
+
+A little less unusual, but still unusual.
+
+Now let's see if the academic scores are unusual after controlling for the cognitive predictors:
+
+```{r dCM_observed}
+dCM <- cond_maha(
+  data = d_case, 
+  R = R, 
+  v_dep = v_Reading, 
+  v_ind = v_Cognitive) 
+dCM
+
+```
+
+Controlling for the cognitive predictors, did not alter our conclusion that the reading profile is unusual. It appears that the Reading scores are more unusual than about `round(dCM$dCM_p * 100)`% of Reading profiles from people with the same specified cognitive predictor scores.
+
+Although we know that given the cognitive scores the Reading profile is unusual, we do not know which aspect of it is unusual. We can inspect the standardized residuals of the reading profile like so:
+
+```{r resid}
+dCM$d_dep_residuals_z
+```
+
+If we can assume that the residuals are normally distributed, we can view the probability of the standardized residuals:
+
+```{r residp}
+dCM$d_dep_residuals_p
+```
+
+In summary, 
+
+```{r residsummary, echo=FALSE}
+tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "Standardized Residual", "p")) %>% 
+  bind_cols(
+    bind_rows(
+      dCM$d_dep * 15 + 100, 
+      dCM$d_predicted * 15 + 100, 
+      dCM$d_deviations * 15 , 
+      dCM$SEE * 15 ,
+      dCM$d_dep_residuals_z,
+      dCM$d_dep_residuals_p)
+  ) %>% 
+  knitr::kable(digits = 2) %>% 
+  kableExtra::kable_styling(bootstrap_options = "striped")
+
+
+
+```
+
+
+Thus, we can see that all three decoding tests are lower than expectations, particularly `RD2`, the reading comprehension tests are within expectations, though `RC3` is somewhat high.
+
+```{r, echo = FALSE, fig.cap="Conditional Distributions for Reading, Controlling for Cognitive Predictors"}
+  tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "Standardized Residual", "p")) %>% 
+  bind_cols(
+    bind_rows(
+      dCM$d_dep * 15 + 100, 
+      dCM$d_predicted * 15 + 100, 
+      dCM$d_deviations * 15 , 
+      dCM$SEE * 15 ,
+      dCM$d_dep_residuals_z,
+      dCM$d_dep_residuals_p),
+    bind_rows(
+      dCM$d_ind * 15 + 100, 
+      matrix(rep(100,6), nrow = 1, dimnames = list(1, v_Cognitive)) %>% 
+        as_tibble(.name_repair = "unique"),
+      dCM$d_ind * 15 , 
+      matrix(rep(15,6), nrow = 1, dimnames = list(1, v_Cognitive)) %>% 
+        as_tibble(.name_repair = "unique"),
+      dCM$d_ind,
+      mutate_all(dCM$d_ind, pnorm))
+  ) %>% gather(Variable,Value, -Score) %>% 
+  spread(Score,Value) %>% 
+  mutate(Ability = str_sub(Variable,1,2) %>% 
+           factor(levels = c("Ga","Gc","RD","RC"), labels = c("Auditory Processing (Ga)","Verbal Knowledge (Gc)","Reading Decoding","Reading Comprehension")),
+         Test = str_sub(Variable,3,3)) %>% 
+  # mutate(Role = fct_collapse(Ability, Predictor = c("Ga","Gc"), Reading = c("RD", "RC"))) %>% 
+  mutate(Variable = factor(Variable, levels = c(v_Cognitive, v_Reading))) %>%
+  ggplot(aes(Test, Score, fill = Ability)) + 
+  geom_normalviolin(aes(mu = `Predicted score`, sigma = `Std. Error of Est.`), p_tail = 0.05,width = .8) + 
+  geom_segment(aes(x = as.numeric(Test) - 0.4 , 
+                   xend = as.numeric(Test) + 0.4, 
+                   y = `Predicted score`, 
+                   yend = `Predicted score`), 
+               lwd = 0.25, 
+               alpha = 0.5) + 
+  geom_line(aes(group = Ability)) +
+  geom_point(size = 8) + 
+  geom_text(aes(label = Score), color = "white", size = 3.25) + 
+  facet_grid(.~Ability) +
+  scale_y_continuous(breaks = seq(40,160,15)) +
+  scale_x_discrete() +
+  theme_light(base_family = myfont, base_size = 14) + 
+  theme(legend.position = "none", strip.text = element_text(size = 10)) + 
+  coord_cartesian(ylim = c(55,145))
+```
+
+# Composite Score Model
+
+Often, all we need do is calculate the composite scores and see if they are within expectations.
+
+```{r}
+Cognitive_Composite <- paste0(c("Ga", "Gc"),"_Composite")
+Reading_Composite <- paste0(c("RD", "RC"),"_Composite")
+
+# Unconditional Reading Profile
+cond_maha(data = d_all, 
+          R = R, 
+          v_dep = Reading_Composite) 
+# Conditional Reading Profile
+cond_maha(data = d_all, 
+          R = R, 
+          v_dep = Reading_Composite, 
+          v_ind = Cognitive_Composite) 
+
+```
+
+```{r, echo = FALSE}
+dCM_composite <- cond_maha(data = d_all, 
+          R = R, 
+          v_dep = Reading_Composite, 
+          v_ind = Cognitive_Composite) 
+d_all %>% 
+  select(contains("Composite")) %>% 
+  gather("Variable","Score") %>% 
+  mutate(Variable = str_remove(Variable, "_Composite") %>% fct_inorder(),
+         Role = c("Unconditional","Unconditional","Conditional","Conditional") %>% fct_rev,
+         Predicted = c(0,0,dCM_composite$d_predicted %>% as.matrix()) * 15 + 100,
+         SEE = 15 * c(1,1,dCM_composite$SEE),
+         Score = Score * 15 + 100) %>% 
+  ggplot(aes(Variable, Score, fill = Variable)) + 
+  geom_normalviolin(aes(mu = Predicted, sigma = SEE), p_tail = 0.05) + 
+  geom_line(aes(group = Role)) + 
+  geom_point(size = 9) + 
+  geom_text(aes(label = round(Score)), color = "white") + 
+  facet_grid(cols = vars(Role), scales = "free_x") + 
+  theme_light(base_size = 14, myfont) + 
+  theme(legend.position = "none")
+  
 ```
 
 
 
 
-We can use the proposed method to make sense of observed scores. If the observed scores of the three tests measuring Gc are all 130, we can calculate the (unconditional) Mahalanobis distance to show that the profile of the three scores would be more unusual than about 80% of the population (see Table 1). If the observed scores of the three tests measuring Gc are 115, 130 and 145, the profile would be less usual than 99.8% of population. We can see from this case that although they have equal averages, their unusualness is quite different. 
+# Observed Scores, Given Composite Scores
 
-The problem with the traditional Mahalanobis distance is that both profiles are unusual because the scores, on average, are 2 standard deviations above the mean. With the proposed conditional Mahalanobis distance (conditioned on the estimated factor score of 130.9), we would see in Table 3 that Case 2, with a variable profile, is still more unusual than 98.5% of profiles with the same factor score. Case 1---with equal scores conditioned on an equally weighted factor score---is the least unusual profile possible.  Thus, with the conditional Mahalanobis distance, one can distinguish between profiles that are unusual because of elevation and those that are unusual because of variability in their shape.
+Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.
+
+```{r}
+dCM_Gc <- cond_maha(d_all, 
+                    R = R, 
+                    v_dep = c("Gc1", "Gc2", "Gc3"), 
+                    v_ind = "Gc_Composite")
+dCM_Gc
+```
+
+```{r}
+dCM_Gc$d_dep_residuals_z
+dCM_Gc$d_dep_residuals_p
+
+```
+
+Here we see that the Gc profile is somewhat unusual, but not particularly so. Among people with a composite Gc of `r round(d_all$Gc_Composite * 15 + 100)`, this profile is more unusual than `r round(dCM_Gc$dCM_p * 100)`% of profiles. From the plot below, Gc2 is a little high (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc2, 2)`) and Gc3 is a little low (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc3, 2)`).
+
+```{r, echo = FALSE}
+bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
+          dCM_Gc$d_predicted * 15 + 100,
+          dCM_Gc$SEE * 15) %>% 
+  mutate(Type = c("Score","Predicted","SEE")) %>% 
+  gather("Variable","Score", -Type) %>% 
+  spread(Type, Score) %>% 
+  mutate(Role = "Conditional Distributions, Given Gc") %>% 
+  add_row(Variable = "Gc",
+          Predicted = 100, 
+          Score = d_all$Gc_Composite * 15 + 100 ,
+          SEE = 15,
+          Role = "Unconditional") %>% 
+  mutate(Role = fct_rev(Role)) %>% 
+  arrange(Variable) %>% 
+  mutate(Variable = factor(Variable),
+         Score = Score ) %>% 
+  ggplot(aes(Variable, Score)) + 
+  geom_normalviolin(aes(mu = Predicted, sigma = SEE), 
+                    p_tail = 0.05, fill = rgb(.48627451,.68235294,0)) + 
+  geom_line(aes(group = Role)) +
+  geom_point(size = 9) +
+  geom_text(aes(label = round(Score)), color = "white") + 
+  facet_grid(cols = vars(Role), 
+             scales = "free_x", 
+             space = "free_x") +
+  theme_light(base_family = myfont, base_size = 14) +
+  scale_y_continuous(breaks = seq(40,160,15)) +
+  scale_x_discrete() +
+  coord_cartesian(ylim = c(55,145)) +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 12))
+  
+```
+
+
+
+```{r, include = FALSE}
+# unusualness(data = d_all,
+#             m = m_Reading, 
+#             v_dep = Reading_Composite, 
+#             v_ind = Cognitive_Composite) %>% 
+#   kable(digits = 2,
+#         col.names = c(
+#           "Measure",
+#           "*d~CM~*",
+#           "*p*",
+#           "Level",
+#           "*d~M~*",
+#           "*p*",
+#           "Level")) %>% 
+#   kableExtra::add_header_above(
+#     c(" " = 1,
+#       "Conditional Unusualness" = 3,
+#       "Unconditional Unusualness" = 3))
+```
+
 
 # References
 

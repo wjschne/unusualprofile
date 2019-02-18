@@ -9,7 +9,9 @@ Description: The unusualprofile packages calculates how unusual a score profile 
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
+Depends: 
+    R (>= 3.1)
 Imports:
     lavaan, 
     magrittr, 
@@ -21,11 +23,18 @@ Imports:
     stats, 
     rlang, 
     purrr, 
-    matrixcalc
+    simstandard
 Authors@R: c(person("Feng", "Ji", email = "fengji@berkeley.edu", role = c("aut","cre")),
              person("W. Joel", "Schneider", email = "w.joel.schneider@gmail.com", role = "aut"))
 Suggests: testthat,
     knitr,
+    extrafont,
+    kableExtra,
+    gganimate,
+    forcats,
+    stringr,
+    showtext,
     rmarkdown,
-    tidyverse
+    ggplot2,
+    ggnormalviolin
 VignetteBuilder: knitr
