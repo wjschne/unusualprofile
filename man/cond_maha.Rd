@@ -4,7 +4,8 @@
 \alias{cond_maha}
 \title{Calculate the conditional Mahalanobis distance for any variables.}
 \usage{
-cond_maha(data, R, v_dep, v_ind = NULL, label = NA)
+cond_maha(data, R, v_dep, v_ind = NULL, v_ind_composites = NULL,
+  label = NA)
 }
 \arguments{
 \item{data}{Data.frame with the independent and dependent variables.}
@@ -14,6 +15,8 @@ cond_maha(data, R, v_dep, v_ind = NULL, label = NA)
 \item{v_dep}{Vector of names of the dependent variables in your profile.}
 
 \item{v_ind}{Vector of names of independent variables you would like to control for.}
+
+\item{v_ind_composites}{Vector of names of independent variables that are composites of dependent variables}
 
 \item{label}{optional tag for labeling output}
 }

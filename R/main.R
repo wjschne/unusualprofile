@@ -5,6 +5,7 @@
 #' @param R Correlation among all variables.
 #' @param v_dep Vector of names of the dependent variables in your profile.
 #' @param v_ind Vector of names of independent variables you would like to control for.
+#' @param v_ind_composites Vector of names of independent variables that are composites of dependent variables
 #' @param label optional tag for labeling output
 #' @return conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
 #' @examples
@@ -36,6 +37,7 @@ cond_maha <- function(data,
                       R,
                       v_dep,
                       v_ind = NULL,
+                      v_ind_composites = NULL,
                       label = NA) {
   # Convert d to matrix
   if (is.vector(data))
@@ -116,8 +118,11 @@ cond_maha <- function(data,
     dCM_df <- k_dep
 
     # Initialize predictor vectors
-    v_ind_singular <- character(0)
+    if (is.null(v_ind_composites)) v_ind_composites <- character(0)
+    v_ind_singular <- v_ind_composites
     v_ind_nonsingular <- character(0)
+    v_ind_try <- setdiff(v_ind, v_ind_singular)
+    dCM_df <- dCM_df - length(v_ind_singular)
 
     if (is_singular(cov_cond)) {
       # Function to see if adding a predictor makes the
@@ -134,7 +139,7 @@ cond_maha <- function(data,
 
       # Add predictors that do not make conditional
       # covariance singular
-      for (i in v_ind) {
+      for (i in v_ind_try) {
         if (addpredictor(i, v_ind_nonsingular, v_dep, R)) {
           v_ind_nonsingular <- c(v_ind_nonsingular, i)
         } else {
