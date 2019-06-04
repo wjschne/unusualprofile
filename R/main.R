@@ -1,11 +1,13 @@
 #' Calculate the conditional Mahalanobis distance for any variables.
 #'
 #' @export
-#' @param data Data.frame with the independent and dependent variables.
+#' @param data Data.frame with the independent and dependent variables. Unless mu and sigma are specified, data are assumed to be z-scores.
 #' @param R Correlation among all variables.
 #' @param v_dep Vector of names of the dependent variables in your profile.
 #' @param v_ind Vector of names of independent variables you would like to control for.
 #' @param v_ind_composites Vector of names of independent variables that are composites of dependent variables
+#' @param mu A vector of means. A single value means that all variables have the same mean.
+#' @param sigma A vector of standard deviations. A single value means that all variables have the same standard deviation
 #' @param label optional tag for labeling output
 #' @return conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
 #' @examples
@@ -38,18 +40,34 @@ cond_maha <- function(data,
                       v_dep,
                       v_ind = NULL,
                       v_ind_composites = NULL,
+                      mu = NULL,
+                      sigma = NULL,
                       label = NA) {
   # Convert d to matrix
   if (is.vector(data))
     data <- matrix(data, nrow = 1)
   data <- as.matrix(data)
 
-  # Check if v_ind are in colnames d
-  if (!all(v_ind %in% colnames(data))) {
-    v_Ind_not_in_d <-
-      paste(v_ind[!(v_ind %in% colnames(data))], collapse = ", ")
-    stop(paste0("Some variables in v_ind are not in d: ", v_Ind_not_in_d))
+
+  v_ind <- unique(c(v_ind, v_ind_composites))
+
+  # Check if v_ind are in colnames of data
+  if (!is.null(v_ind)) {
+    if (!all(v_ind %in% colnames(data))) {
+      v_ind_not_in_d <-
+        paste(v_ind[!(v_ind %in% colnames(data))], collapse = ", ")
+      stop(paste0("Some variables in v_ind are not in d: ", v_ind_not_in_d))
+    }
+
+    # Check if v_dep and v_ind have overlapping v
+    if (any(v_dep %in% v_ind)) {
+      overlap <- v_dep[v_dep %in% v_ind]
+      stop(paste0("At least one variable is in both v_dep and v_ind: ", paste(overlap, collapse = " ")))
+    }
   }
+
+
+
 
   # Check if v_dep are in colnames d
   if (!all(v_dep %in% colnames(data))) {
@@ -57,6 +75,82 @@ cond_maha <- function(data,
       paste(v_dep[!(v_dep %in% colnames(data))], collapse = ", ")
     stop(paste0("Some variables in v_dep are not in d: ", v_Dep_not_in_d))
   }
+
+  v_all <- c(v_ind, v_dep)
+
+  data_k <- ncol(data)
+
+  # If data have no means specified
+  if (is.null(mu)) {
+    mu <- rep(0, data_k)
+  } else {
+    # Number of values in mu
+    mu_k <- length(mu)
+
+    # If there is only 1 value in mu, make data_k copies
+    if (mu_k == 1)
+      mu <- rep(mu, data_k)
+
+    # If length of mu is unequal to the number of variables in data
+    if (mu_k != data_k & mu_k > 1) {
+      stop(
+        paste0(
+          "There are ",
+          mu_k,
+          " means in mu, but ",
+          data_n,
+          ifelse(data_k == 1, " column ", " columns "),
+          "in the data. Supply 1 mean for each variable."
+        )
+      )
+    }
+  }
+
+
+  # If data have no standard deviations specified
+  if (is.null(sigma)) {
+    sigma <- rep(0, data_k)
+  } else {
+    # Number of values in sigma
+    sigma_k <- length(sigma)
+
+    # If there is only 1 value in sigma, make data_k copies
+    if (sigma_k == 1)
+      sigma <- rep(sigma, data_k)
+
+    # If length of sigma is unequal to the number of variables in data
+    if (sigma_k != data_k & sigma_k > 1) {
+      stop(
+        paste0(
+          "There are ",
+          sigma_k,
+          " means in sigma, but ",
+          data_n,
+          ifelse(data_k == 1, " column ", " columns "),
+          "in the data. Supply 1 mean for each variable."
+        )
+      )
+    }
+  }
+
+  # Check if R is a correlation matrix
+  # Check if R has ones on the diagonal
+  if (!all(diag(R) == 1)) stop("R has values on its diagonal that are not ones.")
+  # Check if R is symmetric
+  if (!isSymmetric(R)) stop("R is not symmetric")
+  # Check if all values in R are between -1 and 1
+  if (!all(R <= 1 & R >= -1)) stop("Some values of R are outside the range of 1 and -1.")
+
+
+  # Make z-scores
+  n <- nrow(data)
+  ones <- matrix(rep(1, n), ncol = 1)
+  colmu <- ones %*% matrix(mu, nrow = 1)
+  colsd <- ones %*% matrix(sigma, nrow = 1)
+  d_z <- (data - colmu) / colsd
+
+  d_z <- d_z[, v_all, drop = FALSE]
+  data <- data[, v_all, drop = FALSE]
 
   # Select covariance among dependent variables
   Ryy <- R[v_dep, v_dep, drop = FALSE]
@@ -74,12 +168,13 @@ cond_maha <- function(data,
 
   # Data for just dependent variables
   d_dep <- data[, v_dep, drop = F]
+  d_dep_z <- d_z[, v_dep, drop = F]
 
   # Number of dependent variables
   k_dep <- length(v_dep)
 
   # (Unconditional) Mahalanobis distance of dependent variables
-  dM_dep <- (((d_dep %*% solve(Ryy)) * d_dep) %*%
+  dM_dep <- (((d_dep_z %*% solve(Ryy)) * d_dep_z) %*%
                matrix(1, nrow = k_dep)) %>%
     sqrt %>%
     as.vector
@@ -265,7 +360,7 @@ format.maha <- function(x, ...) {
 #' @noRd
 #' @keywords internal
 #' @export
-print.maha <- function(x, ...) cat(format(x, ...), "\n")
+print.maha <- function(x, ...) format(x, ...)
 
 
 
@@ -540,3 +635,178 @@ p2label <- function(p) {
 is_singular <- function(x) {
   det(x) < .Machine$double.eps
 }
+
+#' Rounds proportions to significant digits both near 0 and 1
+#'
+#' @param p probabiity
+#' @param digits rounding digits
+#'
+#' @return numeric vector
+#' @export
+#'
+#' @examples
+#' proportion_round(0.01111)
+
+proportion_round <- function(p, digits = 2) {
+  p1 <- round(p, digits)
+  lower_limit <- 0.95 * 10 ^ (-1 * digits)
+  upper_limit <- 1 - lower_limit
+  p1[p > upper_limit & p <= 1] <- 1 - signif(1 - p[p > upper_limit & p <= 1], digits - 1)
+  p1[p < lower_limit & p >= 0] <- signif(p[p < lower_limit & p >= 0], digits - 1)
+  p1
+}
+
+#' Rounds proportions to significant digits both near 0 and 1, then converts to percentiles
+#'
+#' @param p probabiity
+#' @param digits rounding digits
+#'
+#' @return chracter vector
+#' @export
+#'
+#' @examples
+#' prop2percentile(0.01111)
+
+proportion2percentile <- function(p,
+                                  digits = 2,
+                                  remove_leading_zero = TRUE,
+                                  add_percent_character = FALSE) {
+  p1 <- as.character(100 * proportion_round(p, digits = digits))
+  if (remove_leading_zero) {
+    p1 <- gsub(pattern = "^0\\.",
+               replacement = ".",
+               x = p1)
+  }
+
+
+  if (add_percent_character) {
+    p1 <- paste0(p1,"%")
+  }
+
+  p1
+
+}
+
+
+#' Plot the variables from the results of the cond_maha function.
+#'
+#' @export
+#' @param cm The results of the cond_maha function.
+#' @param family Font family.
+plot_cond_maha <- function(cm, family = "serif") {
+  d <- bind_rows(
+    cm$d_ind %>%
+      rowid_to_column("id") %>%
+      gather("Variable", "Score",-id) %>%
+      mutate(
+        Predicted = 0,
+        SD = 1,
+        p = pnorm(Score, 0, 1),
+        Role = "Independent"
+      ),
+    cm$d_dep %>%
+      rowid_to_column("id") %>%
+      gather("Variable", "Score",-id) %>%
+      left_join(
+        cm$d_predicted %>%
+          rowid_to_column("id") %>%
+          gather("Variable", "Predicted",-id),
+        by = c("Variable", "id")
+      ) %>%
+      left_join(tibble(Variable = names(cm$SEE),
+                       SD = cm$SEE),
+                by = "Variable") %>%
+      left_join(
+        cm$d_dep_residuals_p %>%
+          rowid_to_column("id") %>%
+          gather("Variable", "p",-id),
+        by = c("Variable", "id")
+      ) %>%
+      mutate(Role = "Dependent")) %>%
+    mutate(Role = fct_inorder(Role),
+           id = factor(id),
+           p = proportion_round(p))
+
+    ggplot(d, aes(Variable, Score, fill = Role)) +
+        facet_grid(
+          cols = vars(Role),
+          scales = "free",
+          space = "free"
+        ) +
+        ggnormalviolin::geom_normalviolin(
+          aes(
+            mu = Predicted,
+            sigma = SD,
+            face_right = Role == "Dependent",
+            face_left = Role != "Dependent"
+          ),
+          fill = "gray90"
+        ) +
+        ggnormalviolin::geom_normalviolin(aes(
+          mu = 0,
+          sigma = 1,
+          face_right = Role != "Dependent"
+        ),
+        fill = "gray65") +
+        geom_point(mapping = aes(color = id)) +
+    geom_text(
+      mapping = aes(label = formatC(Score, 2, format = "f"),
+                    color = id),
+      vjust = -0.5,
+      family = family
+    ) +
+    geom_text(
+      mapping = aes(
+        color = id,
+        label = if_else(
+          Role == "Independent",
+          "",
+          paste0(
+            "italic(c*p)=='",
+            str_replace_all(
+              p,
+              pattern = "0\\.",
+              replacement = "."
+            ),
+            "'"
+          )
+        )
+      ),
+      vjust = 2.3,
+      size = 3,
+      parse = TRUE,
+      family = family
+    ) +
+    geom_text(
+      mapping = aes(
+        color = id,
+        label = paste0(
+          "italic(p)=='",
+          str_replace_all(
+            proportion_round(pnorm(Score, 0, 1)),
+            "0\\.",
+            "."),
+          "'")
+      ),
+      vjust = 1.3,
+      size = 3,
+      parse = TRUE,
+      family = family
+    ) +
+    scale_y_continuous("z-Scores") +
+    scale_x_discrete(NULL,
+                     expand = expand_scale(add = 1)) +
+    labs(title = bquote(list(
+      Conditional ~ Mahalanobis == .(formatC(cm$dCM, 2, format = "f")),
+      italic(p) == .(proportion_round(cm$dCM_p))
+    )),
+    caption = expression(
+      list(
+        italic(p) == "Population proportion",
+        italic(c * p) == "Conditional proportion"
+      )
+    )) +
+    theme_light(base_family = family) +
+    theme(legend.position = "none")
+}
+

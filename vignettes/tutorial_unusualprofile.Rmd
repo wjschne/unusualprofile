@@ -1,6 +1,6 @@
 ---
 title: "Introduction to the unusualprofile package"
-author: "Feng Ji & W. Joel Schneider"
+author: "W. Joel Schneider & Feng Ji"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: bibliography.bib

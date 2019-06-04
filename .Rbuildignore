@@ -4,3 +4,5 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^cran-comments\.md$
+^README\.Rmd$
+^\.travis\.yml$

@@ -3,8 +3,18 @@ Type: Package
 Title: Calculates Conditional Mahalanobis Distances
 Version: 0.1.0
 Date: 2018-06-24
-Author: Feng Ji & W. Joel Schneider
-Maintainer: Feng Ji <fengji@berkeley.edu>
+Author: W. Joel Schneider & Feng Ji
+Authors@R: c(
+    person(given = "W. Joel",
+           family = "Schneider",
+           role = c("aut", "cre"),
+           email = "w.joel.schneider@gmail.com",
+           comment = c(ORCID = "0000-0002-8393-5316")),
+    person(given = "Feng",
+           family = "Ji",
+           role = "aut",
+           email = "fengji@berkeley.edu"))
+Maintainer: W. Joel Schneider <w.joelschneider@gmail.com>
 Description: The unusualprofile packages calculates how unusual a score profile is after controlling for a set of predictors.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
@@ -24,9 +34,8 @@ Imports:
     rlang, 
     purrr, 
     simstandard
-Authors@R: c(person("Feng", "Ji", email = "fengji@berkeley.edu", role = c("aut","cre")),
-             person("W. Joel", "Schneider", email = "w.joel.schneider@gmail.com", role = "aut"))
-Suggests: testthat,
+Suggests: 
+    testthat (>= 2.1.0),
     knitr,
     extrafont,
     kableExtra,
