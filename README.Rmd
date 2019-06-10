@@ -8,16 +8,17 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev = "svg",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  # fig.path = "man/figures/README-",
+  out.width = "100%",
+  fig.width = 7.2916667,
+  fig.height = 7.2916667,
+  dev = "svg"
 )
 
 library(unusualprofile)
 library(simstandard)
 library(ggnormalviolin)
-library(tidyverse)
-library(extrafont)
+library(dplyr)
 ```
 # unusualprofile
 
@@ -25,6 +26,7 @@ library(extrafont)
 
 [![CRAN status](https://www.r-pkg.org/badges/version/ggnormalviolin)](https://cran.r-project.org/package=unusualprofile) [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build status](https://travis-ci.org/wjschne/unusualprofile.svg?branch=master)](https://travis-ci.org/wjschne/unusualprofile)
+[![Codecov test coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg)](https://codecov.io/gh/wjschne/unusualprofile?branch=master)
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis distances and related statistics. Such statistics can help find cases with unusual profiles of multivariate normal data.
@@ -45,9 +47,8 @@ Using the simstandard package, we generate 1 case from a standardized multivaria
 library(unusualprofile)
 library(simstandard)
 library(ggnormalviolin)
-library(tidyverse)
-library(extrafont)
-set.seed(48)
+library(dplyr)
+set.seed(281)
 
 # lavaan model with three indicators of a latent variable
 model <- "
@@ -67,26 +68,72 @@ d <- sim_standardized(
   rename(X = "X_Composite",
          Y = "Y_Composite")
 
+
+
 # Model-implied correlation matrix
 R <- sim_standardized_matrices(model)$Correlations$R_all
 ```
 
+
+```{r, eval=FALSE, include=FALSE}
+library(tidyverse)
+find_un <- function(seed = 1) {
+  set.seed(seed)
+  d <- sim_standardized(
+  model, 
+  n = 1, 
+  observed = TRUE, 
+  latent = FALSE, 
+  errors = FALSE, 
+  composites = TRUE) %>% 
+  rename(X = "X_Composite",
+         Y = "Y_Composite")
+
+  cm <- cond_maha(data = d, 
+          R = R,
+          v_ind = c("X_1", "X_2", "X_3"),
+          v_dep = c("Y_1", "Y_2", "Y_3"))
+
+tibble(p = cm$dCM_p, ind_mean = mean(d$X_1, d$X_2, d$X_3), id = seed)
+  
+}
+
+map_df(200:1000, find_un) %>% 
+  filter(p > 0.95, ind_mean > 1 | ind_mean < -1)
+```
+
+
 Now we specify the correlations, independent variables, and dependent variables. In this case, the indpendent variables are composite scores summarizing the dependent variables.
 
-```{r}
+```{r example}
 # Conditional Mahalanobis distance
 cm <- cond_maha(data = d, 
           R = R,
-          v_dep = c("X_1", "X_2", "X_3", 
-                    "Y_1", "Y_2", "Y_3"),
-          v_ind_composites = c("X", "Y"))
+          v_ind = c("X_1", "X_2", "X_3"),
+          v_dep = c("Y_1", "Y_2", "Y_3"))
 
 cm
 
 # Plot
 plot_cond_maha(cm)
 
+# Conditional Mahalanobis distance
+cm <- cond_maha(data = d, 
+          R = R,
+          v_ind = c("X", "Y"),
+          v_dep = c("X_1", "X_2", "X_3",
+                    "Y_1", "Y_2", "Y_3"))
 
+cm
+
+# Plot
+plot_cond_maha(cm)
+
+unusualprofile::unusualness(d, model, 
+                            v_dep = c("Y"),
+                            v_ind = c("X")) %>% 
+  mutate(Measure = stringr::str_replace(Measure, "\\$\\\\leftarrow\\$","&larr;")) %>% 
+  knitr::kable(digits = 2) 
 
 
 

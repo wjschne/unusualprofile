@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculates Conditional Mahalanobis Distances • unusualprofile</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Calculates Conditional Mahalanobis Distances">
 <meta property="og:description" content="The unusualprofile packages calculates how unusual a score profile is after controlling for a set of predictors.">
@@ -19,7 +20,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -39,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -59,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/wjschne/unusualprofile">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -69,16 +77,148 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
+    
+
+    
+    
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 <div id="unusualprofile" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#unusualprofile" class="anchor"></a>unusualprofile</h1></div>
-<p>This package provides a new method to interpret individual results of psychological test batteries. The Mahalanobis distance is a commonly-used measure of how unusual an individual’s profile of scores is compared to a population of score profiles. In models in which there is a set of predictors and a set of dependent variables (e.g., cognitive abilities predicting academic abilities), it is useful to distinguish between a profile of dependent scores that is unusual because its profile of predictor scores is unusual and a profile of dependent scores that is unusual even after controlling for the predictors. The conditional Mahalanobis distance measures the unusualness of a profile shape after controlling for a set of predictors. In psychological assessments, one only has access to observed scores, but the goal is to understand a person’s profile of latent construct scores. Factor score estimates are calculated and used to form conditional Mahalanobis distance with predicted unusualness.</p>
+<!-- badges: start -->
+
+<p>The goal of unusualprofile is to calculate conditional Mahalanobis distances and related statistics. Such statistics can help find cases with unusual profiles of multivariate normal data.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/reexports.html">install_github</a></span>(<span class="st">"wjschne/unusualprofile"</span>)</a></code></pre></div>
+</div>
+<div id="example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example" class="anchor"></a>Example</h2>
+<p>Using the simstandard package, we generate 1 case from a standardized multivariate normal data set.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(unusualprofile)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(simstandard)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggnormalviolin)</a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(extrafont)</a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">48</span>)</a>
+<a class="sourceLine" id="cb2-7" title="7"></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co"># lavaan model with three indicators of a latent variable</span></a>
+<a class="sourceLine" id="cb2-9" title="9">model &lt;-<span class="st"> "</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="st">X =~ 0.7 * X_1 + 0.5 * X_2 + 0.8 * X_3</span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="st">Y =~ 0.7 * Y_1 + 0.5 * Y_2 + 0.8 * Y_3</span></a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="st">Y ~ 0.6 * X</span></a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="st">"</span></a>
+<a class="sourceLine" id="cb2-14" title="14"></a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="co"># Randomly generated case</span></a>
+<a class="sourceLine" id="cb2-16" title="16">d &lt;-<span class="st"> </span><span class="kw">sim_standardized</span>(</a>
+<a class="sourceLine" id="cb2-17" title="17">  model, </a>
+<a class="sourceLine" id="cb2-18" title="18">  <span class="dt">n =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb2-19" title="19">  <span class="dt">observed =</span> <span class="ot">TRUE</span>, </a>
+<a class="sourceLine" id="cb2-20" title="20">  <span class="dt">latent =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb2-21" title="21">  <span class="dt">errors =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb2-22" title="22">  <span class="dt">composites =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-23" title="23"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">X =</span> <span class="st">"X_Composite"</span>,</a>
+<a class="sourceLine" id="cb2-24" title="24">         <span class="dt">Y =</span> <span class="st">"Y_Composite"</span>)</a>
+<a class="sourceLine" id="cb2-25" title="25"></a>
+<a class="sourceLine" id="cb2-26" title="26"><span class="co"># Model-implied correlation matrix</span></a>
+<a class="sourceLine" id="cb2-27" title="27">R &lt;-<span class="st"> </span><span class="kw">sim_standardized_matrices</span>(model)<span class="op">$</span>Correlations<span class="op">$</span>R_all</a></code></pre></div>
+<p>Now we specify the correlations, independent variables, and dependent variables. In this case, the indpendent variables are composite scores summarizing the dependent variables.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># Conditional Mahalanobis distance</span></a>
+<a class="sourceLine" id="cb3-2" title="2">cm &lt;-<span class="st"> </span><span class="kw"><a href="reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d, </a>
+<a class="sourceLine" id="cb3-3" title="3">          <span class="dt">R =</span> R,</a>
+<a class="sourceLine" id="cb3-4" title="4">          <span class="dt">v_ind =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>),</a>
+<a class="sourceLine" id="cb3-5" title="5">          <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span>))</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7">cm</a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt; Conditional Mahalanobis Distance = 2.2066, df = 3, p = 0.8184</span></a>
+<a class="sourceLine" id="cb3-9" title="9"></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="kw"><a href="reference/plot_cond_maha.html">plot_cond_maha</a></span>(cm)</a></code></pre></div>
+<p><img src="index_files/figure-html/example-1.svg" width="100%"></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
+<a class="sourceLine" id="cb4-2" title="2">unusualprofile<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/unusualprofile/man/unusualness.html">unusualness</a></span>(d, model, </a>
+<a class="sourceLine" id="cb4-3" title="3">                            <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Y"</span>),</a>
+<a class="sourceLine" id="cb4-4" title="4">                            <span class="dt">v_ind =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Measure =</span> stringr<span class="op">::</span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_replace.html">str_replace</a></span>(Measure, <span class="st">"</span><span class="ch">\\</span><span class="st">$</span><span class="ch">\\\\</span><span class="st">leftarrow</span><span class="ch">\\</span><span class="st">$"</span>,<span class="st">"&amp;larr;"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="dt">digits =</span> <span class="dv">2</span>) </a></code></pre></div>
+<table class="table table">
+<thead><tr class="header">
+<th align="left">Measure</th>
+<th align="right">dCM</th>
+<th align="right">dCM Percentile</th>
+<th align="left">dCM Level</th>
+<th align="right">dM</th>
+<th align="right">dM Percentile</th>
+<th align="left">dM Level</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Latent Dependent ← Latent Independent</td>
+<td align="right">2.35</td>
+<td align="right">0.98</td>
+<td align="left">Very High</td>
+<td align="right">1.86</td>
+<td align="right">0.94</td>
+<td align="left">High</td>
+</tr>
+<tr class="even">
+<td align="left">Observed Dependent ← Observed Independent</td>
+<td align="right">2.21</td>
+<td align="right">0.82</td>
+<td align="left">High Average</td>
+<td align="right">2.23</td>
+<td align="right">0.83</td>
+<td align="left">High Average</td>
+</tr>
+<tr class="odd">
+<td align="left">Observed Dependent ← Latent Dependent</td>
+<td align="right">1.42</td>
+<td align="right">0.43</td>
+<td align="left">Average</td>
+<td align="right">2.23</td>
+<td align="right">0.83</td>
+<td align="left">High Average</td>
+</tr>
+<tr class="even">
+<td align="left">Observed Independent ← Latent Independent</td>
+<td align="right">2.74</td>
+<td align="right">0.94</td>
+<td align="left">High</td>
+<td align="right">2.59</td>
+<td align="right">0.92</td>
+<td align="left">High</td>
+</tr>
+<tr class="odd">
+<td align="left">All Observed ← All Latent</td>
+<td align="right">3.08</td>
+<td align="right">0.85</td>
+<td align="left">High Average</td>
+<td align="right">3.40</td>
+<td align="right">0.93</td>
+<td align="left">High</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/wjschne/unusualprofile">https://​github.com/​wjschne/​unusualprofile</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/wjschne/unusualprofile/issues">https://​github.com/​wjschne/​unusualprofile/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li>
@@ -89,20 +229,31 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Feng Ji <br><small class="roles"> Author, maintainer </small>  </li>
-<li>W. Joel Schneider <br><small class="roles"> Author </small>  </li>
+<li>W. Joel Schneider <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8393-5316" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Feng Ji <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  </div>
+      <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=unusualprofile"><img src="https://www.r-pkg.org/badges/version/ggnormalviolin" alt="CRAN status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://travis-ci.org/wjschne/unusualprofile"><img src="https://travis-ci.org/wjschne/unusualprofile.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://codecov.io/gh/wjschne/unusualprofile?branch=master"><img src="https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+</ul>
+</div>
 </div>
 
+</div>
+
+
       <footer><div class="copyright">
-  <p>Developed by Feng Ji, W. Joel Schneider.</p>
+  <p>Developed by W. Joel Schneider, Feng Ji.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
       </footer>
 </div>

@@ -10,6 +10,8 @@ status](https://www.r-pkg.org/badges/version/ggnormalviolin)](https://cran.r-pro
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build
 status](https://travis-ci.org/wjschne/unusualprofile.svg?branch=master)](https://travis-ci.org/wjschne/unusualprofile)
+[![Codecov test
+coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg)](https://codecov.io/gh/wjschne/unusualprofile?branch=master)
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
@@ -35,9 +37,8 @@ multivariate normal data set.
 library(unusualprofile)
 library(simstandard)
 library(ggnormalviolin)
-library(tidyverse)
-library(extrafont)
-set.seed(48)
+library(dplyr)
+set.seed(281)
 
 # lavaan model with three indicators of a latent variable
 model <- "
@@ -57,6 +58,8 @@ d <- sim_standardized(
   rename(X = "X_Composite",
          Y = "Y_Composite")
 
+
+
 # Model-implied correlation matrix
 R <- sim_standardized_matrices(model)$Correlations$R_all
 ```
@@ -69,15 +72,49 @@ summarizing the dependent variables.
 # Conditional Mahalanobis distance
 cm <- cond_maha(data = d, 
           R = R,
-          v_dep = c("X_1", "X_2", "X_3", 
-                    "Y_1", "Y_2", "Y_3"),
-          v_ind_composites = c("X", "Y"))
+          v_ind = c("X_1", "X_2", "X_3"),
+          v_dep = c("Y_1", "Y_2", "Y_3"))
 
 cm
-#> Conditional Mahalanobis Distance = 3.0834, df = 4, p = 0.9504
+#> Conditional Mahalanobis Distance = 2.9295, df = 3, p = 0.9646
 
 # Plot
 plot_cond_maha(cm)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.svg" width="100%" />
+<img src="README_files/figure-gfm/example-1.svg" width="100%" />
+
+``` r
+
+# Conditional Mahalanobis distance
+cm <- cond_maha(data = d, 
+          R = R,
+          v_ind = c("X", "Y"),
+          v_dep = c("X_1", "X_2", "X_3",
+                    "Y_1", "Y_2", "Y_3"))
+
+cm
+#> Conditional Mahalanobis Distance = 3.5010, df = 6, p = 0.9435
+
+# Plot
+plot_cond_maha(cm)
+```
+
+<img src="README_files/figure-gfm/example-2.svg" width="100%" />
+
+``` r
+
+unusualprofile::unusualness(d, model, 
+                            v_dep = c("Y"),
+                            v_ind = c("X")) %>% 
+  mutate(Measure = stringr::str_replace(Measure, "\\$\\\\leftarrow\\$","&larr;")) %>% 
+  knitr::kable(digits = 2) 
+```
+
+| Measure                                   |  dCM | dCM Percentile | dCM Level   |   dM | dM Percentile | dM Level  |
+| :---------------------------------------- | ---: | -------------: | :---------- | ---: | ------------: | :-------- |
+| Latent Dependent ← Latent Independent     | 0.78 |           0.57 | Average     | 0.93 |          0.65 | Average   |
+| Observed Dependent ← Observed Independent | 2.93 |           0.96 | High        | 3.32 |          0.99 | Very High |
+| Observed Dependent ← Latent Dependent     | 3.33 |           0.99 | Very High   | 3.32 |          0.99 | Very High |
+| Observed Independent ← Latent Independent | 1.09 |           0.24 | Low Average | 2.78 |          0.95 | High      |
+| All Observed ← All Latent                 | 3.50 |           0.94 | High        | 4.04 |          0.99 | Very High |

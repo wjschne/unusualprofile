@@ -16,7 +16,9 @@ dcm_cor(model, v_dep, v_ind, n = 10000)
 \item{n}{Sample size of simulated data}
 }
 \value{
-Correlation between the conditional Mahalanobis distance calculated by using the true scores and the conditional Mahalanobis calculated by using estimated factor scores
+Correlation between the conditional Mahalanobis distance
+calculated by using the true scores and the conditional Mahalanobis
+calculated by using estimated factor scores
 }
 \description{
 Function to evaluate the accuracy of dCM with estimated factor scores

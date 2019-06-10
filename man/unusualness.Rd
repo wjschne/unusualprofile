@@ -2,7 +2,9 @@
 % Please edit documentation in R/main.R
 \name{unusualness}
 \alias{unusualness}
-\title{Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data}
+\title{Wrapper for finding out Mahalanobis distance between variables:
+this one gives everything for practitioners to use when they only have
+population relations and their clients' data}
 \usage{
 unusualness(data, model, v_dep, v_ind)
 }
@@ -16,10 +18,14 @@ unusualness(data, model, v_dep, v_ind)
 \item{v_ind}{The names of variables of your interest.}
 }
 \value{
-conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
+conditional Mahalanobis distance, percentiles for each case
+based on the Chi-square distribution formed by conditional Mahalanobis
+distance and predicted Deps based on Inds.
 }
 \description{
-Wrapper for finding out Mahalanobis distance between variables: this one gives everything for practitioners to use when they only have population relations and their clients' data
+Wrapper for finding out Mahalanobis distance between variables:
+this one gives everything for practitioners to use when they only have
+population relations and their clients' data
 }
 \examples{
 # Standardized structural model in lavaan syntax

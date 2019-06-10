@@ -10,7 +10,11 @@ proportion2percentile(p, digits = 2, remove_leading_zero = TRUE,
 \arguments{
 \item{p}{probabiity}
 
-\item{digits}{rounding digits}
+\item{digits}{rounding digits. Defaults to 2}
+
+\item{remove_leading_zero}{Remove leading zero for small percentiles, Defaults to TRUE}
+
+\item{add_percent_character}{Append percent character. Defaults to FALSE}
 }
 \value{
 chracter vector
@@ -19,5 +23,5 @@ chracter vector
 Rounds proportions to significant digits both near 0 and 1, then converts to percentiles
 }
 \examples{
-prop2percentile(0.01111)
+proportion2percentile(0.01111)
 }

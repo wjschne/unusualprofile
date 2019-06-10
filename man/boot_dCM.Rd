@@ -4,15 +4,17 @@
 \alias{boot_dcm}
 \title{Confidence interval of the reliability (accuracy index)}
 \usage{
-boot_dcm(model, v_dep, v_ind = NULL, sample_size = 1000,
-  replications = 1000)
+boot_dcm(model, v_dep, v_ind = NULL, v_ind_composites = NULL,
+  sample_size = 1000, replications = 1000)
 }
 \arguments{
 \item{model}{Population relations among variables represented by Lavaan Syntax}
 
-\item{v_dep}{The names of variables you would like to condition on}
+\item{v_dep}{Vector of names of the dependent variables in your profile.}
 
-\item{v_ind}{The names of variables of your interest}
+\item{v_ind}{Vector of names of independent variables you would like to control for.}
+
+\item{v_ind_composites}{Vector of names of independent variables that are composites of dependent variables}
 
 \item{sample_size}{The number of cases}
 

@@ -13,20 +13,29 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{css, echo = FALSE}
+
+@import url('http://fonts.googleapis.com/css?family=Titillium+Web');
+body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px}
+
+```
+
 ```{r setup, include = FALSE}
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   dev = "svg",
   out.height = "100%",
   out.width = "100%",
-  fig.width = 7,
-  fig.height = 7, 
+  fig.width = 7.2916667,
+  fig.height = 7.2916667,
   message = FALSE,
   warning = FALSE,
   cache = F
 )
-
+library(extrafont)
+loadfonts(device = "win")
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -38,9 +47,13 @@ library(simstandard)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
-library(extrafont)
+
+library(showtext)
+library(purrr)
 
 myfont <- "Titillium Web"
+
+# font_add_google("Titillium Web", "Titillium Web")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))
@@ -75,13 +88,9 @@ PropRound <- function(p, maxDigits = 10) {
 numText <- function(x, digits = 2) {
   str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
 }
-```
-
-```{css, echo = FALSE}
-@import url('http://fonts.googleapis.com/css?family=Titillium+Web');
-body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px}
 
 ```
+
 
 
 The unusualprofile package automates the process of making sense of psychoeducational test batteries results for practitioners/school psychologists, using latent-variable-based methods [@ji2018].
@@ -90,7 +99,7 @@ The unusualprofile package automates the process of making sense of psychoeducat
 
 A univariate outlier is unusually far from most of the other scores in a distribution. You can easily find spot a large outlier in a histogram:
 
-```{r, echo= FALSE}
+```{r univariate, echo= FALSE}
 
 set.seed(1)
 data.frame(x = c(rnorm(100), 10)) %>% 
@@ -109,7 +118,8 @@ data.frame(x = c(rnorm(100), 10)) %>%
            label = "Outlier", 
            vjust = -0.5, 
            label.size = 0, 
-           label.padding = unit(0,"mm")) 
+           label.padding = unit(0,"mm"), 
+           family = myfont) 
 
 ```
 
@@ -118,14 +128,14 @@ data.frame(x = c(rnorm(100), 10)) %>%
 
 A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the plot below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
 
-```{r, echo= FALSE, warning=FALSE}
+```{r multivariate, echo=FALSE, warning=FALSE}
 set.seed(5)
-d_mo <- mvtnorm::rmvnorm(n = 10000, sigma = matrix(c(1,0.95,0.95,1),2))
+d_mo <- mvtnorm::rmvnorm(n = 1000, sigma = matrix(c(1,0.95,0.95,1),2))
 d_mo[100,] <- c(-1,1)
 d_mo <- data.frame(d_mo)
 colnames(d_mo) <- c("x","y")
 ggplot(d_mo, aes(x, y)) + 
-  geom_point(alpha = 0.1, size = 0.75) + 
+  geom_point(alpha = 0.2, size = 1, pch = 16) + 
   geom_point(data = d_mo[100,],color = "firebrick") + 
   coord_equal(xlim = c(-4,4), ylim = c(-4,4)) + 
   theme(axis.title.y = element_text(angle = 0, vjust = .5, face = "italic"),
@@ -134,7 +144,7 @@ ggplot(d_mo, aes(x, y)) +
 
 Unfortunately, we cannot create scatterplots with more than three variables. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
 
-```{r, echo= FALSE}
+```{r profiles, echo= FALSE}
 head(d_mo, 200) %>% 
   rowid_to_column("id") %>%
   as_tibble(.name_repair = "unique") %>% 
@@ -231,14 +241,12 @@ With positively correlated variables, the profile's elevation is so important th
 Imagine that four standardized variables correlate at 0.75, and we select a subset of cases in which the profiles have an elevation of 1. In the plot below, two score profiles with an elevation of 1 are shown. The red profile has an unremarkable flat shape, whereas the blue profile has more unusual shape.
 
 ```{r, echo = FALSE}
-library(gganimate)
 library(ggnormalviolin)
 set.seed(1000)
 elevation <- 1
 lambda <- c(0.95, 0.90, 0.85, 0.60)
 Ryy <- lambda %*% t(lambda)
 diag(Ryy) <- 1
-round(rho,2) %>% as.character %>% writeClipboard()
 w <- cbind(diag(4), rep(1,4))
 rho <- cov2cor(t(w) %*% Ryy %*% w)
 Rxx <- matrix(1)
@@ -572,7 +580,7 @@ dCM$d_dep_residuals_z
 If we can assume that the residuals are normally distributed, we can view the probability of the standardized residuals:
 
 ```{r residp}
-dCM$d_dep_residuals_p
+dCM$d_dep_cp
 ```
 
 In summary, 
@@ -586,7 +594,7 @@ tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "S
       dCM$d_deviations * 15 , 
       dCM$SEE * 15 ,
       dCM$d_dep_residuals_z,
-      dCM$d_dep_residuals_p)
+      dCM$d_dep_cp)
   ) %>% 
   knitr::kable(digits = 2) %>% 
   kableExtra::kable_styling(bootstrap_options = "striped")
@@ -607,7 +615,7 @@ Thus, we can see that all three decoding tests are lower than expectations, part
       dCM$d_deviations * 15 , 
       dCM$SEE * 15 ,
       dCM$d_dep_residuals_z,
-      dCM$d_dep_residuals_p),
+      dCM$d_dep_cp),
     bind_rows(
       dCM$d_ind * 15 + 100, 
       matrix(rep(100,6), nrow = 1, dimnames = list(1, v_Cognitive)) %>% 
@@ -704,7 +712,7 @@ dCM_Gc
 
 ```{r}
 dCM_Gc$d_dep_residuals_z
-dCM_Gc$d_dep_residuals_p
+dCM_Gc$d_dep_cp
 
 ```
 
@@ -755,17 +763,7 @@ bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
 #   kable(digits = 2,
 #         col.names = c(
 #           "Measure",
-#           "*d~CM~*",
-#           "*p*",
-#           "Level",
-#           "*d~M~*",
-#           "*p*",
-#           "Level")) %>% 
-#   kableExtra::add_header_above(
-#     c(" " = 1,
-#       "Conditional Unusualness" = 3,
-#       "Unconditional Unusualness" = 3))
-```
+ 
 
 
 # References

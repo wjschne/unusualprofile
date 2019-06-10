@@ -6,3 +6,5 @@
 ^cran-comments\.md$
 ^README\.Rmd$
 ^\.travis\.yml$
+^codecov\.yml$
+^README_files$

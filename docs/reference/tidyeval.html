@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function to evaluate the accuracy of dCM with estimated factor scores — dcm_cor • unusualprofile</title>
+<title>Tidy eval helpers — tidyeval • unusualprofile</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -34,9 +34,29 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Function to evaluate the accuracy of dCM with estimated factor scores — dcm_cor" />
+<meta property="og:title" content="Tidy eval helpers — tidyeval" />
 
-<meta property="og:description" content="Function to evaluate the accuracy of dCM with estimated factor scores" />
+<meta property="og:description" content="
+sym() creates a symbol from a string and
+syms() creates a list of symbols from a
+character vector.
+expr() and quo() quote
+one expression. quo() wraps the quoted expression in a quosure.
+The plural variants rlang::exprs() and
+quos() return a list of quoted expressions or
+quosures.
+enexpr() and enquo()
+capture the expression supplied as argument by the user of the
+current function (enquo() wraps this expression in a quosure).
+enexprs() and enquos()
+capture multiple expressions supplied as arguments, including
+....
+" />
+
+<meta property="og:description" content="exprs() is not exported to avoid conflicts with Biobase::exprs(),
+therefore one should always use rlang::exprs().
+To learn more about tidy eval and how to use these tools, visit
+http://rlang.r-lib.org and the Metaprogramming section of Advanced R." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,68 +135,44 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function to evaluate the accuracy of dCM with estimated factor scores</h1>
-    <small class="dont-index">Source: <a href='https://github.com/wjschne/unusualprofile/blob/master/R/main.R'><code>R/main.R</code></a></small>
-    <div class="hidden name"><code>dcm_cor.Rd</code></div>
+    <h1>Tidy eval helpers</h1>
+    <small class="dont-index">Source: <a href='https://github.com/wjschne/unusualprofile/blob/master/R/utils-tidy-eval.R'><code>R/utils-tidy-eval.R</code></a></small>
+    <div class="hidden name"><code>tidyeval.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Function to evaluate the accuracy of dCM with estimated factor scores</p>
+    <ul>
+<li><p><code><a href='https://rlang.r-lib.org/reference/sym.html'>sym</a>()</code> creates a symbol from a string and
+<code><a href='https://rlang.r-lib.org/reference/sym.html'>syms</a>()</code> creates a list of symbols from a
+character vector.</p></li>
+<li><p><code><a href='https://rlang.r-lib.org/reference/quotation.html'>expr</a>()</code> and <code><a href='https://rlang.r-lib.org/reference/quotation.html'>quo</a>()</code> quote
+one expression. <code>quo()</code> wraps the quoted expression in a quosure.</p>
+<p>The plural variants <code><a href='https://rlang.r-lib.org/reference/quotation.html'>rlang::exprs()</a></code> and
+<code><a href='https://rlang.r-lib.org/reference/quotation.html'>quos</a>()</code> return a list of quoted expressions or
+quosures.</p></li>
+<li><p><code><a href='https://rlang.r-lib.org/reference/quotation.html'>enexpr</a>()</code> and <code><a href='https://rlang.r-lib.org/reference/quotation.html'>enquo</a>()</code>
+capture the expression supplied as argument by the user of the
+current function (<code>enquo()</code> wraps this expression in a quosure).</p>
+<p><code><a href='https://rlang.r-lib.org/reference/quotation.html'>enexprs</a>()</code> and <code><a href='https://rlang.r-lib.org/reference/quotation.html'>enquos</a>()</code>
+capture multiple expressions supplied as arguments, including
+<code>...</code>.</p></li>
+</ul>
+
+    <p><code>exprs()</code> is not exported to avoid conflicts with <code><a href='https://rdrr.io/pkg/Biobase/man/exprs.html'>Biobase::exprs()</a></code>,
+therefore one should always use <code><a href='https://rlang.r-lib.org/reference/quotation.html'>rlang::exprs()</a></code>.</p>
+<p>To learn more about tidy eval and how to use these tools, visit
+<a href='http://rlang.r-lib.org'>http://rlang.r-lib.org</a> and the <a href='https://adv-r.hadley.nz/introduction-16.html'>Metaprogramming section</a> of <a href='https://adv-r.hadley.nz'>Advanced R</a>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>dcm_cor</span>(<span class='no'>model</span>, <span class='no'>v_dep</span>, <span class='no'>v_ind</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10000</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>model</th>
-      <td><p>Lavaan Syntax Object</p></td>
-    </tr>
-    <tr>
-      <th>v_dep</th>
-      <td><p>The names of variables you would like to condition on.</p></td>
-    </tr>
-    <tr>
-      <th>v_ind</th>
-      <td><p>The names of variables of your interest.</p></td>
-    </tr>
-    <tr>
-      <th>n</th>
-      <td><p>Sample size of simulated data</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+        
 
-    <p>Correlation between the conditional Mahalanobis distance calculated by using the true scores and the conditional Mahalanobis calculated by using estimated factor scores</p>
-    
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='st'>"
-Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
-Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
-Gs =~ 0.70 * Gs_1 + 0.80 * Gs_2 + 0.80 * Gs_3
-Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
-Math =~ 0.40 * Math_1 + 0.90 * Math_2 + 0.70 * Math_3
-Gc ~ 0.60 * Gf + 0.10 * Gs
-Gf ~ 0.50 * Gs
-Read ~ 0.40 * Gc + 0.10 * Gf
-Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
-"</span>
-<span class='fu'>dcm_cor</span>(<span class='no'>m</span>, <span class='kw'>v_dep</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>), <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>, <span class='st'>"Gs"</span>), <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; [1] 0.6912473</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+                </ul>
 
   </div>
 </div>

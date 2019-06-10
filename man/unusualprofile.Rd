@@ -6,11 +6,11 @@
 \alias{unusualprofile-package}
 \title{unusualprofile: Calculates Conditional Mahalanobis Distances}
 \description{
-The unusualprofile package calculates the unusualness of score profiles conditioned on
-a set of predictor variables
+The unusualprofile package calculates the unusualness of score profiles
+conditioned on a set of predictor variables
 }
 \author{
-Feng Ji
-
 W. Joel Schneider
+
+Feng Ji
 }

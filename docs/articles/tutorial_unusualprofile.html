@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to the unusualprofile package • unusualprofile</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Introduction to the unusualprofile package">
 <meta property="og:description" content="">
@@ -39,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -59,7 +60,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/wjschne/unusualprofile">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -72,11 +80,11 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to the unusualprofile package</h1>
-                        <h4 class="author">Feng Ji &amp; W. Joel Schneider</h4>
+                        <h4 class="author">W. Joel Schneider &amp; Feng Ji</h4>
             
-            <h4 class="date">2019-02-18</h4>
+            <h4 class="date">2019-06-04</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/master/vignettes/tutorial_unusualprofile.Rmd"><code>vignettes/tutorial_unusualprofile.Rmd</code></a></small>
       <div class="hidden name"><code>tutorial_unusualprofile.Rmd</code></div>
 
     </div>
@@ -177,13 +185,13 @@ General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predic
 </p>
 </div>
 <p>Here we load packages we will need and create a function for converting raw scores with a specific population mean and standard deviation to z-scores:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tibble)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(purrr)</a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(knitr)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(kableExtra)</a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(unusualprofile)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tibble)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(purrr)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(knitr)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(kableExtra)</a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(unusualprofile)</a>
 <a class="sourceLine" id="cb1-8" title="8"></a>
 <a class="sourceLine" id="cb1-9" title="9"><span class="co"># Function to create z-scores</span></a>
 <a class="sourceLine" id="cb1-10" title="10">zscore &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>) (x <span class="op">-</span><span class="st"> </span>mean) <span class="op">/</span><span class="st"> </span>sd</a></code></pre></div>
@@ -199,7 +207,7 @@ General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predic
 <a class="sourceLine" id="cb2-9" title="9"><span class="st">RC ~  0.05 * Ga + 0.40 * Gc  + 0.43 * RD</span></a>
 <a class="sourceLine" id="cb2-10" title="10"><span class="st">"</span></a></code></pre></div>
 <p>We are going to need several bits of information about this model. We will call the <code>sim_standardized_matrices</code> function from the simstandard package. In particular, we need the correlation matrix implied by our model.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">fit_Reading &lt;-<span class="st"> </span>simstandard<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/simstandard/topics/sim_standardized_matrices">sim_standardized_matrices</a></span>(m_Reading)</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">fit_Reading &lt;-<span class="st"> </span>simstandard<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized_matrices.html">sim_standardized_matrices</a></span>(m_Reading)</a>
 <a class="sourceLine" id="cb3-2" title="2">R &lt;-<span class="st"> </span>fit_Reading<span class="op">$</span>Correlations<span class="op">$</span>R_all</a></code></pre></div>
 <p>Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to z-scores. Finally, we use the simstandard package’s <code>add_factor_scores</code> function to add estimated factor scores to the data frame.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">d_case &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
@@ -218,19 +226,19 @@ General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predic
 <a class="sourceLine" id="cb4-14" title="14">) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-15" title="15"><span class="st">  </span><span class="kw">mutate_all</span>(zscore, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>)</a>
 <a class="sourceLine" id="cb4-16" title="16"></a>
-<a class="sourceLine" id="cb4-17" title="17">fit_reading &lt;-<span class="st"> </span>simstandard<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/simstandard/topics/sim_standardized_matrices">sim_standardized_matrices</a></span>(m_Reading)</a>
+<a class="sourceLine" id="cb4-17" title="17">fit_reading &lt;-<span class="st"> </span>simstandard<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized_matrices.html">sim_standardized_matrices</a></span>(m_Reading)</a>
 <a class="sourceLine" id="cb4-18" title="18">composite_matrix &lt;-<span class="st"> </span>fit_reading<span class="op">$</span>Coefficients<span class="op">$</span>composite_score</a>
-<a class="sourceLine" id="cb4-19" title="19">d_composites &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(d_case) <span class="op">%*%</span><span class="st"> </span>composite_matrix</a>
+<a class="sourceLine" id="cb4-19" title="19">d_composites &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(d_case) <span class="op">%*%</span><span class="st"> </span>composite_matrix</a>
 <a class="sourceLine" id="cb4-20" title="20"></a>
-<a class="sourceLine" id="cb4-21" title="21">d_all &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a></span>(d_case, d_composites)</a>
+<a class="sourceLine" id="cb4-21" title="21">d_all &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(d_case, d_composites)</a>
 <a class="sourceLine" id="cb4-22" title="22"></a>
 <a class="sourceLine" id="cb4-23" title="23">d_all <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-24" title="24"><span class="st">        </span><span class="kw">gather</span>(<span class="st">"Ability"</span>,<span class="st">"z-score"</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-25" title="25"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SS =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/integer">as.integer</a></span>(<span class="st">`</span><span class="dt">z-score</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-25" title="25"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">SS =</span> <span class="kw"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span>(<span class="st">`</span><span class="dt">z-score</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">15</span> <span class="op">+</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-26" title="26"><span class="st">  </span><span class="kw">select</span>(Ability,SS, <span class="st">`</span><span class="dt">z-score</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-27" title="27"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">digits =</span> <span class="dv">2</span>, </a>
 <a class="sourceLine" id="cb4-28" title="28">        <span class="dt">caption =</span> <span class="st">"Case Scores"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-29" title="29"><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/kableExtra/topics/kable_styling">kable_styling</a></span>(<span class="dt">bootstrap_options =</span> <span class="st">"striped"</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb4-29" title="29"><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html">kable_styling</a></span>(<span class="dt">bootstrap_options =</span> <span class="st">"striped"</span>)</a></code></pre></div>
 <table class="table table table-striped">
 <caption>
 Case Scores
@@ -430,13 +438,13 @@ RC_Composite
 <a href="#indicator-scores" class="anchor"></a>Indicator Scores</h2>
 <p>Suppose that we want to know if the academic performance scores are unusual, given the cognitive predictor scores.</p>
 <p>First, let’s see if the observed score profile is unusual. We can calculate the (unconditional) Mahalanobis distance by putting all the observed variables as dependent variables:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">v_Reading &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"RD1"</span>,<span class="st">"RD2"</span>,<span class="st">"RD3"</span>,<span class="st">"RC1"</span>,<span class="st">"RC2"</span>,<span class="st">"RC3"</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2">v_Cognitive &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Ga1"</span>,<span class="st">"Ga2"</span>,<span class="st">"Ga3"</span>,<span class="st">"Gc1"</span>,<span class="st">"Gc2"</span>,<span class="st">"Gc3"</span>)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">v_Reading &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"RD1"</span>,<span class="st">"RD2"</span>,<span class="st">"RD3"</span>,<span class="st">"RC1"</span>,<span class="st">"RC2"</span>,<span class="st">"RC3"</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2">v_Cognitive &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Ga1"</span>,<span class="st">"Ga2"</span>,<span class="st">"Ga3"</span>,<span class="st">"Gc1"</span>,<span class="st">"Gc2"</span>,<span class="st">"Gc3"</span>)</a>
 <a class="sourceLine" id="cb5-3" title="3"></a>
 <a class="sourceLine" id="cb5-4" title="4"><span class="kw"><a href="../reference/cond_maha.html">cond_maha</a></span>(</a>
 <a class="sourceLine" id="cb5-5" title="5">  <span class="dt">data =</span> d_all, </a>
 <a class="sourceLine" id="cb5-6" title="6">  <span class="dt">R =</span> R, </a>
-<a class="sourceLine" id="cb5-7" title="7">  <span class="dt">v_dep =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(v_Reading, v_Cognitive))</a>
+<a class="sourceLine" id="cb5-7" title="7">  <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(v_Reading, v_Cognitive))</a>
 <a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; Mahalanobis Distance = 5.0727, df = 12, p = 0.9883</span></a></code></pre></div>
 <p>From the probability (p), we see that the overall observed score profile is quite unusual.</p>
 <p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-10-1.svg" width="100%" height="100%"></p>
@@ -455,7 +463,7 @@ RC_Composite
 <a class="sourceLine" id="cb7-5" title="5">  <span class="dt">v_ind =</span> v_Cognitive) </a>
 <a class="sourceLine" id="cb7-6" title="6">dCM</a>
 <a class="sourceLine" id="cb7-7" title="7"><span class="co">#&gt; Conditional Mahalanobis Distance = 3.2589, df = 6, p = 0.8992</span></a></code></pre></div>
-<p>Controlling for the cognitive predictors, did not alter our conclusion that the reading profile is unusual. It appears that the Reading scores are more unusual than about <code><a href="https://www.rdocumentation.org/packages/base/topics/Round">round(dCM$dCM_p * 100)</a></code>% of Reading profiles from people with the same specified cognitive predictor scores.</p>
+<p>Controlling for the cognitive predictors, did not alter our conclusion that the reading profile is unusual. It appears that the Reading scores are more unusual than about <code><a href="https://rdrr.io/r/base/Round.html">round(dCM$dCM_p * 100)</a></code>% of Reading profiles from people with the same specified cognitive predictor scores.</p>
 <p>Although we know that given the cognitive scores the Reading profile is unusual, we do not know which aspect of it is unusual. We can inspect the standardized residuals of the reading profile like so:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">dCM<span class="op">$</span>d_dep_residuals_z</a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt; # A tibble: 1 x 6</span></a>
@@ -646,8 +654,8 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
 <h1 class="hasAnchor">
 <a href="#composite-score-model" class="anchor"></a>Composite Score Model</h1>
 <p>Often, all we need do is calculate the composite scores and see if they are within expectations.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">Cognitive_Composite &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Ga"</span>, <span class="st">"Gc"</span>),<span class="st">"_Composite"</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2">Reading_Composite &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"RD"</span>, <span class="st">"RC"</span>),<span class="st">"_Composite"</span>)</a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">Cognitive_Composite &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Ga"</span>, <span class="st">"Gc"</span>),<span class="st">"_Composite"</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2">Reading_Composite &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"RD"</span>, <span class="st">"RC"</span>),<span class="st">"_Composite"</span>)</a>
 <a class="sourceLine" id="cb10-3" title="3"></a>
 <a class="sourceLine" id="cb10-4" title="4"><span class="co"># Unconditional Reading Profile</span></a>
 <a class="sourceLine" id="cb10-5" title="5"><span class="kw"><a href="../reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d_all, </a>
@@ -668,7 +676,7 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
 <p>Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">dCM_Gc &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cond_maha.html">cond_maha</a></span>(d_all, </a>
 <a class="sourceLine" id="cb11-2" title="2">                    <span class="dt">R =</span> R, </a>
-<a class="sourceLine" id="cb11-3" title="3">                    <span class="dt">v_dep =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Gc1"</span>, <span class="st">"Gc2"</span>, <span class="st">"Gc3"</span>), </a>
+<a class="sourceLine" id="cb11-3" title="3">                    <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Gc1"</span>, <span class="st">"Gc2"</span>, <span class="st">"Gc3"</span>), </a>
 <a class="sourceLine" id="cb11-4" title="4">                    <span class="dt">v_ind =</span> <span class="st">"Gc_Composite"</span>)</a>
 <a class="sourceLine" id="cb11-5" title="5">dCM_Gc</a>
 <a class="sourceLine" id="cb11-6" title="6"><span class="co">#&gt; Conditional Mahalanobis Distance = 1.8396, df = 2, p = 0.8159</span></a></code></pre></div>
@@ -739,11 +747,11 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
 
 
       <footer><div class="copyright">
-  <p>Developed by Feng Ji, W. Joel Schneider.</p>
+  <p>Developed by W. Joel Schneider, Feng Ji.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
 </div>
       </footer>
 </div>

@@ -2,7 +2,7 @@ Package: unusualprofile
 Type: Package
 Title: Calculates Conditional Mahalanobis Distances
 Version: 0.1.0
-Date: 2018-06-24
+Date: 2019-06-24
 Author: W. Joel Schneider & Feng Ji
 Authors@R: c(
     person(given = "W. Joel",
@@ -23,29 +23,30 @@ RoxygenNote: 6.1.1
 Depends: 
     R (>= 3.1)
 Imports:
-    lavaan, 
-    magrittr, 
-    glue, 
-    mvtnorm, 
-    dplyr, 
-    tidyr, 
-    tibble, 
-    stats, 
-    rlang, 
-    purrr, 
-    simstandard
+    lavaan,
+    magrittr,
+    glue,
+    mvtnorm,
+    dplyr,
+    tidyr,
+    tibble,
+    stats,
+    purrr,
+    simstandard,
+    ggplot2,
+    ggnormalviolin,
+    rlang (>= 0.1.2)
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
     extrafont,
     kableExtra,
-    gganimate,
     forcats,
     stringr,
     showtext,
     rmarkdown,
-    ggplot2,
-    ggnormalviolin
+    covr,
+    roxygen2
 VignetteBuilder: knitr
 URL: https://github.com/wjschne/unusualprofile
 BugReports: https://github.com/wjschne/unusualprofile/issues
