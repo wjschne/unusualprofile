@@ -35,7 +35,7 @@ knitr::opts_chunk$set(
   cache = F
 )
 library(extrafont)
-loadfonts(device = "win")
+
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -53,7 +53,7 @@ library(purrr)
 
 myfont <- "Titillium Web"
 
-# font_add_google("Titillium Web", "Titillium Web")
+font_add_google("Titillium Web", "Titillium Web")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))

@@ -909,13 +909,15 @@ plot_cond_maha <- function(cm, family = "serif") {
         sigma = .data$SD,
         face_right = .data$Role == "Conditional",
         face_left = .data$Role != "Conditional"),
-      fill = "gray90") +
+      fill = "gray90",
+      width = 0.85) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$mu,
         sigma = .data$sigma,
         face_right = .data$Role != "Conditional"),
-      fill = "gray65") +
+      fill = "gray65",
+      width = 0.85) +
     ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(

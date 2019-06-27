@@ -16,15 +16,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -75,7 +73,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -99,7 +97,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/wjschne/unusualprofile">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -126,8 +124,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>boot_dcm</span>(<span class='no'>model</span>, <span class='no'>v_dep</span>, <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>replications</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+    <pre class="usage"><span class='fu'>boot_dcm</span>(<span class='no'>model</span>, <span class='no'>v_dep</span>, <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>v_ind_composites</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>replications</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -138,11 +136,15 @@
     </tr>
     <tr>
       <th>v_dep</th>
-      <td><p>The names of variables you would like to condition on</p></td>
+      <td><p>Vector of names of the dependent variables in your profile.</p></td>
     </tr>
     <tr>
       <th>v_ind</th>
-      <td><p>The names of variables of your interest</p></td>
+      <td><p>Vector of names of independent variables you would like to control for.</p></td>
+    </tr>
+    <tr>
+      <th>v_ind_composites</th>
+      <td><p>Vector of names of independent variables that are composites of dependent variables</p></td>
     </tr>
     <tr>
       <th>sample_size</th>
@@ -172,8 +174,8 @@ Read ~ 0.40 * Gc + 0.10 * Gf
 Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
 "</span>
 <span class='fu'>boot_dcm</span>(<span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>m</span>,
-         <span class='kw'>v_dep</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>),
-         <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>, <span class='st'>"Gs"</span>),
+         <span class='kw'>v_dep</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>),
+         <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>, <span class='st'>"Gs"</span>),
          <span class='kw'>sample_size</span> <span class='kw'>=</span> <span class='fl'>100</span>,
          <span class='kw'>replications</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt;      2.5%       50%     97.5% 
 #&gt; 0.6999410 0.7911769 0.8509437 </div></pre>
@@ -197,7 +199,7 @@ Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9100.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
    </div>
