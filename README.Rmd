@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   fig.height = 7.2916667,
   dev = "svg"
 )
-
+options(digits = 2)
 library(unusualprofile)
 library(simstandard)
 library(ggnormalviolin)
@@ -43,9 +43,7 @@ devtools::install_github("wjschne/unusualprofile")
 
 To use the unusualprofile package, all that is needed is to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables. 
 
-## Preliminary work: Generate a model and case data
-
-This section has nothing to with the unusualprofile package per se. For now, we need to create some data to work with. Suppose we have set of variables that have the following relationships:
+Suppose we have set of variables that have the following relationships:
 
 ![Multivariate normal model](man/figures/rm_model.svg)
 
@@ -53,65 +51,22 @@ First, we load the packages that we will use later:
 
 ```{r}
 library(unusualprofile)
-library(simstandard)
 library(ggnormalviolin)
 library(dplyr)
 ```
 
 
-Using the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html), we generate 1 case from a standardized multivariate normal data set. 
-We use [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html) to match the structure in the figure:
-
-```{r}
-# lavaan model with three indicators of a latent variable
-model <- "
-X =~ 0.7 * X_1 + 0.5 * X_2 + 0.8 * X_3
-Y =~ 0.8 * Y_1 + 0.7 * Y_2 + 0.9 * Y_3
-Y ~ 0.6 * X
-"
-```
-
-Now we generate a case from this multivariate distribution:
-
-```{r data}
-# Ensure that random data will be the same as in the example.
-set.seed(281)
-
-# Randomly generated case
-d <- sim_standardized(
-  model, 
-  n = 1, 
-  observed = TRUE, 
-  latent = FALSE, 
-  errors = FALSE, 
-  composites = TRUE) 
-```
-
-The case in the `d` variable looks like this:
+The case in the `d_example` data set was generated from the model depicted above:
 
 ```{r, echo=FALSE}
-knitr::kable(d, digits = 2) 
+d_example
 ```
-
-
 
 The model-implied correlation matrix:
 
 ```{r}
-
-# Model-implied correlation matrix
-R <- sim_standardized_matrices(model)$Correlations$R_all
-
+R_example
 ```
-
-```{r, echo = FALSE}
-
-v_all <- c("X_1", "X_2", "X_3", 
-           "Y_1", "Y_2", "Y_3", 
-           "X_Composite", "Y_Composite")
-knitr::kable(R[v_all,v_all], digits = 2)
-```
-
 
 ## Using the `cond_maha` function
 
@@ -119,8 +74,8 @@ Now we specify the correlations (`R`), means (`mu`), standard deviations (`sigma
 
 ```{r example}
 # Conditional Mahalanobis distance
-cm <- cond_maha(data = d, 
-          R = R,
+cm <- cond_maha(data = d_example, 
+          R = R_example,
           mu = 0,
           sigma = 1,
           v_ind_composites = c("X_Composite", "Y_Composite"),

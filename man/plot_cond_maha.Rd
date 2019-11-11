@@ -4,12 +4,14 @@
 \alias{plot_cond_maha}
 \title{Plot the variables from the results of the cond_maha function.}
 \usage{
-plot_cond_maha(cm, family = "serif")
+plot_cond_maha(cm, family = "serif", score_digits = 2)
 }
 \arguments{
 \item{cm}{The results of the cond_maha function.}
 
 \item{family}{Font family.}
+
+\item{score_digits}{Number of digits to round scores.}
 }
 \description{
 Plot the variables from the results of the cond_maha function.

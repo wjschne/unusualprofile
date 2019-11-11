@@ -32,10 +32,10 @@ knitr::opts_chunk$set(
   fig.height = 7.2916667,
   message = FALSE,
   warning = FALSE,
-  cache = F
+  cache = TRUE
 )
-library(extrafont)
 
+library(extrafont)
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -89,15 +89,19 @@ numText <- function(x, digits = 2) {
   str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
 }
 
+bmatrix <- function(x) {
+  paste0("\\begin{bmatrix}\n", paste0(apply(x,1,paste0, collapse = " & "), collapse = "\\\\\n"), "\n\\end{bmatrix}")
+}
+
 ```
 
 
 
-The unusualprofile package automates the process of making sense of psychoeducational test batteries results for practitioners/school psychologists, using latent-variable-based methods [@ji2018].
+The unusualprofile package automates the process of making sense of psychoeducational test batteries results using latent-variable-based methods [@ji2018].
 
 # Univariate Outliers
 
-A univariate outlier is unusually far from most of the other scores in a distribution. You can easily find spot a large outlier in a histogram:
+A univariate outlier is far from most of the other scores in a distribution. You can easily find spot a large outlier in a histogram:
 
 ```{r univariate, echo= FALSE}
 
@@ -123,8 +127,11 @@ data.frame(x = c(rnorm(100), 10)) %>%
 
 ```
 
+If we want to quantify the degree of unusualness of the univariate outlier, we could convert the outlier to a z-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
 
 # Multivariate Outliers
+
+A univariate outlier refers to a single case on a single variable. A multivariate outlier refers to a single row of data on 2 or more variables. 
 
 A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the plot below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
 
@@ -135,14 +142,14 @@ d_mo[100,] <- c(-1,1)
 d_mo <- data.frame(d_mo)
 colnames(d_mo) <- c("x","y")
 ggplot(d_mo, aes(x, y)) + 
-  geom_point(alpha = 0.2, size = 1, pch = 16) + 
-  geom_point(data = d_mo[100,],color = "firebrick") + 
+  geom_point(alpha = 0.2, size = 2, pch = 16) + 
+  geom_point(data = d_mo[100,],color = "firebrick", size = 3) + 
   coord_equal(xlim = c(-4,4), ylim = c(-4,4)) + 
   theme(axis.title.y = element_text(angle = 0, vjust = .5, face = "italic"),
         axis.title.x = element_text(face = "italic"))
 ```
 
-Unfortunately, we cannot create scatterplots with more than three variables. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
+Scatterplots are great for inspecting multivariate outliers with a small number of variables. Unfortunately, scatterplots can only display 2 or three variables at a time. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
 
 ```{r profiles, echo= FALSE}
 head(d_mo, 200) %>% 
@@ -203,15 +210,23 @@ d_4 %>%
   scale_y_continuous(NULL)
 ```
 
+In the plot above, we can see plainly that the red profile is unusual. However, we cannot yet tell exactly how unusual it is. We would like a measure of its unusualness.
+
 # Quantifying Unusualness
 
-The *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. It is a multidimensional extension of the Pythagorean Theorem. The reference point of interest is usually the vector means from each variable (i.e., the centroid). The Euclidean distance of point *p*~1~ = (1,1,-1,1) to the vector of *z*-score means *p*~2~ = (0,0,0,0) is
+## The Euclidean Distance
+
+The simplest (but ultimately unsatisfying) way to measure unusuallness is with the Euclidean distance. A multidimensiontal extension of the Pythagorean Theorem, the *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. The reference point of interest is usually the vector of means from each variable---the *centroid*. The Euclidean distance of point *p*~1~ = (1,1,&minus;1,1) to the centroid *p*~2~ = (0,0,0,0)  is
 
 $$\sqrt{(p_1-p_2)'(p_1-p_2)}=\sqrt{(1-0)^2+(1-0)^2+(-1-0)^2+(1-0)^2}=2$$
 
 The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the two variables are highly correlated, point (1,1,&minus;1,1) is much more unusual than point (1,1,1,1). Though fairly simple to calculate, the Euclidean distance is insensitive to the relationships among the variables, making it a poor choice for quantifying the unusualness of profiles of correlated variables.
 
-In 1936, P. R. Mahalanobis introduced a multidimensional distance related to the Euclidean distance, but one that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Computationally, the principal components need not be calculated explicitly. We simply need to invert the covariance matrix of the profile variables:
+## The Mahalanobis Distance
+
+In 1936, P. R. Mahalanobis introduced a variant of the Euclidean distance that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Because principal components are always uncorrelated, distances in principal component space always have the same meaning no matter what the relationships are in the original variables. 
+
+Computationally, the principal components need not be calculated explicitly. We simply need to invert the covariance matrix of the profile variables:
 
 $$d_{M}=\sqrt{(X-\mu_X)'\Sigma_X^{-1}(X-\mu_X)}$$
 
@@ -221,24 +236,82 @@ $X$ is a vector of variable scores
 $\mu_X$ is the vector of variable means of $X$ (i.e., the centroid of $X$)  
 $\Sigma_X$ is the covariance matrix of the variables in vector $X$
 
-If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each one, and then adding them together. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
+If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each score, and then adding row of scores. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
 
-Thus, if there are *k* normally distributed variables in vector *X*,
+Thus, if there are *k* normally distributed variables in vector *X*, the Mahalanobis distance squared for vector *X* has a &chi;^2^ distriution with *k* degrees of freedom. In mathematical notation:
 
 $$d_M ^ 2 \sim \chi^2(k)$$
 
 Thus, if we can assume the profile variables are multivariate normal, we can use the cumulative distribution function of the &chi;^2^ distribution to quantify how unusual a particular profile compares to the general population of profiles.
 
+Suppose that a Mahalanobis distance for a row of data from 5  standard normal variates is 15.5. The cumulative distribution function for the &chi;^2^ distribution with 5 degrees of freedom is `r round(pchisq(15.5,5), 3)`. Thus, the row of data is a multivariate outlier.
 
 # Conditional Mahalanobis Distances
 
-One the disadvantages of the Mahalanobis Distance is that it treats all the dimensions equivalently. For example, if four standardized variables are highly correlated, point (4,4,4,4) is unusual in that each point is 4 standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually high, but has the modal profile shape.^[A perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean of a normally distributed variable is *extremely average*.]
+One the disadvantages of the Mahalanobis Distance is that it treats all the dimensions equivalently. For highly correlated variables, the first principal component (or general factor) is of particular importance. We might want to distinguish between cases that are unusual on the first principal component and scores that are unusual on the remaining principal components. 
+
+For example, in a distribution of 4 highly correlated standardized variables, the point (4,4,4,4) is unusual because each point is unusual---four standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually elevated, but has the modal profile shape.^[A perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean of a normally distributed variable is *extremely average*.]
+
+In contrast, the point (&minus;4, 4, &minus;4, 4) is perfectly average in its elevation---the scores average to 0. It has, however, an unusually uneven shape.
 
 ## Distinguishing Profile Shape from Profile Elevation
 
-With positively correlated variables, the profile's elevation is so important that we might want to distinguish it from the profile shape when we quantify how unusual a profile is. Suppose that we compare all profiles that have the same elevation but have different profile shapes. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
+With positively correlated variables, the profile's elevation is so important that we might want to distinguish it from the profile shape when we quantify how unusual a profile is. Suppose that we compare all profiles that have the same elevation but have different profile shapes. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are define to have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
 
-Imagine that four standardized variables correlate at 0.75, and we select a subset of cases in which the profiles have an elevation of 1. In the plot below, two score profiles with an elevation of 1 are shown. The red profile has an unremarkable flat shape, whereas the blue profile has more unusual shape.
+Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1). 
+
+
+```{tikz, echo = F, out.width=500, fig.align = "center"}
+\usetikzlibrary{positioning, fit, intersections}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{arrows,shapes,backgrounds, shadows,fadings,trees}
+\usetikzlibrary{calc}
+
+\tikzset{latent/.style={circle, minimum size=20mm,inner sep=0mm,font=\huge, text = black, fill = gray},
+	error/.style={circle, fill = gray, inner sep=0mm, minimum size=9mm,font=\footnotesize},
+	ob/.style={rectangle,thick,inner sep=0mm, outer sep = 0mm, minimum size=13 mm, align=center, font=\Large, text = black, fill = gray},
+	single/.style={->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\small, gray},
+	cov/.style={<->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\Large, bend left=50, gray},
+	variance/.style={<->, draw, >=latex',bend left=245, looseness=6,shorten >=2pt,shorten <=2pt, font=\small, gray},
+	upvariance/.style={<->,  >=latex', thick, shorten >=2pt,shorten <=2pt, font=\Large,bend left = 115,looseness=4},
+	loading/.style={fill=white,circle,inner sep = 0mm, font = \small, text = gray}
+}
+
+\begin{tikzpicture}[scale=1,  decoration = {brace, amplitude = 1.5}]
+	
+	\coordinate (nodeZero) at (0,0);
+\node[ob, right = 1.5mm of nodeZero] (x1) {$x_{1}$};
+\node[ob, right = 1.5mm of x1] (x2) {$x_{2}$};
+\node[ob, right = 1.5mm of x2] (x3) {$x_{3}$};
+\node[ob, right = 1.5mm of x3] (x4) {$x_{4}$};
+\node[latent, above = 25mm of $(x1)!0.5!(x4)$] (g) {$g$};
+\coordinate (firstg1) at ($(x1.north |- g.south)!0.47!(x1.north) + (-1,0)$);
+\coordinate (lastg1) at ($(x4.north |- g.south)!0.47!(x4.north)+ (1,0)$);
+\path[single] (g) to (x1);
+\path[single] (g) to (x2);
+\path[single] (g) to (x3);
+\path[single] (g) to (x4);
+\node[loading] at (intersection of g--x1 and firstg1--lastg1) {.95};
+\node[loading] at (intersection of g--x2 and firstg1--lastg1) {.90};
+\node[loading] at (intersection of g--x3 and firstg1--lastg1) {.85};
+\node[loading] at (intersection of g--x4 and firstg1--lastg1) {.60};
+\node[error, below = 10 mm of x1] (ex1) {};
+\node[error, below = 10 mm of x2] (ex2) {};
+\node[error, below = 10 mm of x3] (ex3) {};
+\node[error, below = 10 mm of x4] (ex4) {};
+\path[single] (ex1) to node[loading, pos = .47]{.31} (x1);
+\path[single] (ex2) to node[loading, pos = .47]{.44} (x2);
+\path[single] (ex3) to node[loading, pos = .47]{.53} (x3);
+\path[single] (ex4) to node[loading, pos = .47]{.80} (x4);
+
+
+
+\end{tikzpicture}
+
+```
+
+In the plot below, two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven.
 
 ```{r, echo = FALSE}
 library(ggnormalviolin)
@@ -249,6 +322,8 @@ Ryy <- lambda %*% t(lambda)
 diag(Ryy) <- 1
 w <- cbind(diag(4), rep(1,4))
 rho <- cov2cor(t(w) %*% Ryy %*% w)
+drho <- round(rho, 2)
+diag(drho) <- 1
 Rxx <- matrix(1)
 Ryx <- rho[1:4, 5, drop = F]
 cov_cond <- Ryy - Ryx %*% solve(Rxx) %*% t(Ryx)
@@ -370,16 +445,17 @@ d %>%
            vjust = -0.1,
            size = 5) +
   coord_cartesian(ylim = c(-3, 3))
+
+
 ```
 
 
 How can we calculate the Mahalanobis distance for profiles that all have the same elevation? First we need to calculate the composite score's correlation with each score.
 
-$$R_X = \begin{bmatrix}1 & 0.75 & 0.75 & 0.75\\
-0.75 & 1 & 0.75 & 0.75\\
-0.75 & 0.75 & 1 & 0.75\\
-0.75 & 0.75 & 0.75 & 1\\
-\end{bmatrix}$$
+```{r, results='asis', echo = FALSE}
+cat(paste0("$$R_{X}=",bmatrix(drho[1:4,1:4]),"$$"))
+```
+
 
 $$w = \begin{bmatrix}1 & 0 & 0 & 0 & 1\\
 0 & 1 & 0 & 0 & 1\\
@@ -391,6 +467,12 @@ $$\Sigma = w'Rw$$
 $$D = \text{diag}(\Sigma)$$
 
 $$R_{All} = D^{-0.5}\Sigma D^{-0.5}$$
+
+```{r, results='asis', echo = FALSE}
+
+cat(paste0("$$R_{All}=",bmatrix(drho),"$$"))
+```
+
 
 # Estimating factor scores
 

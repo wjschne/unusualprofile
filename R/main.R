@@ -890,12 +890,13 @@ proportion2percentile <- function(p,
 #' @export
 #' @param cm The results of the cond_maha function.
 #' @param family Font family.
+#' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
 #'
-plot_cond_maha <- function(cm, family = "serif") {
+plot_cond_maha <- function(cm, family = "serif", score_digits = 2) {
 
   cm$d_score %>%
-    dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE),
+    dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE * .data$sigma),
            yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
            id = factor(.data$id),
            Role = factor(.data$Role, levels = c("Unconditional", "Conditional"))) %>%
@@ -921,7 +922,7 @@ plot_cond_maha <- function(cm, family = "serif") {
     ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
-        label = formatC(.data$Score, 2, format = "f"),
+        label = formatC(.data$Score, score_digits, format = "f"),
         color = .data$id
       ),
       vjust = -0.5,
