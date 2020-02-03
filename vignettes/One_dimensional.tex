@@ -1,0 +1,69 @@
+\documentclass[tikz]{standalone}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning, fit, intersections}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{arrows,shapes,backgrounds, shadows,fadings,trees}
+\usetikzlibrary{calc}
+
+\usepackage{color}
+\definecolor{ColorA}{HTML}{376fcc}
+\definecolor{ColorB}{HTML}{bc4949}
+\definecolor{ColorC}{rgb}{.4,.165,.6}
+\definecolor{A}{HTML}{F9F8EB}
+\definecolor{B}{HTML}{FFE1B6}
+\definecolor{C}{HTML}{7A9EB1}
+
+\usepackage[nomessages]{fp}% 
+
+\def\Primary{{I,V,S,N,P,F,M}}
+
+\usepackage{fontspec}
+\usepackage{anyfontsize}
+\setmainfont{Titillium Web}
+
+\begin{document}
+
+		%\pagecolor{A}
+\tikzset{latent/.style={circle, minimum size=35mm,inner sep=0mm,font=\fontsize{50}{55}\selectfont, text = black, fill = gray!50},
+	error/.style={circle, fill = gray!50, inner sep=0mm, minimum size=16mm,font=\footnotesize},
+	ob/.style={rectangle,thick,inner sep=0mm, outer sep = 0mm, minimum size=20 mm, align=center, font=\fontsize{30}{35}\selectfont, text = black, fill = gray!50, rounded corners = 2mm},
+	single/.style={->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\small, gray!50, ultra thick},
+	cov/.style={<->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\Large, bend left=50, gray},
+	variance/.style={<->, draw, >=latex',bend left=245, looseness=6,shorten >=2pt,shorten <=2pt, font=\small, gray},
+	upvariance/.style={<->,  >=latex', thick, shorten >=2pt,shorten <=2pt, font=\Large,bend left = 115,looseness=4},
+	loading/.style={fill=white,circle,inner sep = 0mm, font = \Large, text = gray}
+}
+
+
+\begin{tikzpicture}[scale=1,  decoration = {brace, amplitude = 1.5}]
+
+\coordinate (nodeZero) at (0,0);
+\node[ob, right = 4mm of nodeZero] (x1) {\emph{x}$_{\text{1}}$};
+\node[ob, right = 4mm of x1] (x2) {\emph{x}$_{\text{2}}$};
+\node[ob, right = 4mm of x2] (x3) {\emph{x}$_{\text{3}}$};
+\node[ob, right = 4mm of x3] (x4) {\emph{x}$_{\text{4}}$};
+\node[latent, above = 40mm of $(x1)!0.5!(x4)$] (g) {\emph{g}};
+\coordinate (firstg1) at ($(x1.north |- g.south)!0.47!(x1.north) + (-1,0)$);
+\coordinate (lastg1) at ($(x4.north |- g.south)!0.47!(x4.north)+ (1,0)$);
+\path[single] (g) to (x1);
+\path[single] (g) to (x2);
+\path[single] (g) to (x3);
+\path[single] (g) to (x4);
+\node[loading] at (intersection of g--x1 and firstg1--lastg1) {.95};
+\node[loading] at (intersection of g--x2 and firstg1--lastg1) {.90};
+\node[loading] at (intersection of g--x3 and firstg1--lastg1) {.85};
+\node[loading] at (intersection of g--x4 and firstg1--lastg1) {.60};
+\node[error, below = 18 mm of x1] (ex1) {};
+\node[error, below = 18 mm of x2] (ex2) {};
+\node[error, below = 18 mm of x3] (ex3) {};
+\node[error, below = 18 mm of x4] (ex4) {};
+\path[single] (ex1) to node[loading, pos = .47]{.31} (x1);
+\path[single] (ex2) to node[loading, pos = .47]{.44} (x2);
+\path[single] (ex3) to node[loading, pos = .47]{.53} (x3);
+\path[single] (ex4) to node[loading, pos = .47]{.80} (x4);
+	\end{tikzpicture}
+\end{document}

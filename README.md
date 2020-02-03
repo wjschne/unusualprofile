@@ -24,8 +24,8 @@ You can install the development version from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("wjschne/unusualprofile")
+# install.packages("remotes")
+remotes::install_github("wjschne/unusualprofile")
 ```
 
 # Example

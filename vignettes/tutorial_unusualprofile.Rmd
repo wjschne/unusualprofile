@@ -16,7 +16,7 @@ vignette: >
 ```{css, echo = FALSE}
 
 @import url('http://fonts.googleapis.com/css?family=Titillium+Web');
-body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px}
+body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px; line-height:1.25;}
 
 ```
 
@@ -34,6 +34,8 @@ knitr::opts_chunk$set(
   warning = FALSE,
   cache = TRUE
 )
+
+options(digits = 2)
 
 library(extrafont)
 library(dplyr)
@@ -89,8 +91,18 @@ numText <- function(x, digits = 2) {
   str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
 }
 
-bmatrix <- function(x) {
-  paste0("\\begin{bmatrix}\n", paste0(apply(x,1,paste0, collapse = " & "), collapse = "\\\\\n"), "\n\\end{bmatrix}")
+bmatrix <- function(x, digits = 2) {
+  x_formatted <- apply(x, 1, formatC, digits = digits, format = "f")
+  x_formatted <- apply(x_formatted, 1, str_remove, pattern = "^0")
+  x_formatted[x == 0] <- "0"
+  x_formatted[x == 1] <- "1"
+  paste0("\\begin{bmatrix}\n", 
+         paste0(apply(x_formatted,
+                      MARGIN = 1,
+                      FUN = paste0, 
+                      collapse = " & "), 
+                collapse = "\\\\\n"), 
+         "\n\\end{bmatrix}")
 }
 
 ```
@@ -101,7 +113,7 @@ The unusualprofile package automates the process of making sense of psychoeducat
 
 # Univariate Outliers
 
-A univariate outlier is far from most of the other scores in a distribution. You can easily find spot a large outlier in a histogram:
+A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in a histogram:
 
 ```{r univariate, echo= FALSE}
 
@@ -114,6 +126,7 @@ data.frame(x = c(rnorm(100), 10)) %>%
   ggplot(aes(x = x, fill = Outlier)) + 
   geom_histogram(binwidth = 0.5) + 
   scale_fill_manual(NULL, values = c("firebrick", "gray40")) +
+  scale_x_continuous(NULL, breaks = seq(-4,10,2)) +
   theme(legend.position = "none") +
   xlab(NULL) + 
   ylab(NULL) +
@@ -127,7 +140,7 @@ data.frame(x = c(rnorm(100), 10)) %>%
 
 ```
 
-If we want to quantify the degree of unusualness of the univariate outlier, we could convert the outlier to a z-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
+If we want to quantify the degree of unusualness of the univariate outlier, we could convert the outlier to a *z*-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
 
 # Multivariate Outliers
 
@@ -149,18 +162,31 @@ ggplot(d_mo, aes(x, y)) +
         axis.title.x = element_text(face = "italic"))
 ```
 
-Scatterplots are great for inspecting multivariate outliers with a small number of variables. Unfortunately, scatterplots can only display 2 or three variables at a time. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
+Scatterplots are great for inspecting multivariate outliers with a small number of variables. Unfortunately, scatterplots can only display 2 or 3 variables at a time. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
 
 ```{r profiles, echo= FALSE}
-head(d_mo, 200) %>% 
+k <- 400
+head(d_mo, k) %>% 
   rowid_to_column("id") %>%
   as_tibble(.name_repair = "unique") %>% 
   gather(key, value, -id) %>% 
-  mutate(Outlier = id == 100) %>%
+  mutate(Outlier = id == 100,
+         key = factor(key),
+           x = as.numeric(key) + 0.2 * runif(k,min = -1,1) * dnorm(value)) %>%
   arrange(-Outlier) %>% 
   ggplot(aes(key, value, group = id)) + 
-  geom_line(alpha = 0.25, size = 0.25) +
-  geom_point(alpha = 0.25, size = 0.75) +
+  ggnormalviolin::geom_normalviolin(
+    data = tibble(
+      mu = c(0,0), 
+      sigma = c(1,1), 
+      x = c("x","y")), 
+    aes(
+      x = x, 
+      mu = mu, 
+      sigma = sigma), width = 0.2,
+    inherit.aes = F) + 
+  geom_line(alpha = 0.25, size = 0.25, aes(x = x, group = id)) +
+  geom_point(alpha = 0.25, size = 0.75, aes(x = x)) +
   scale_size_manual(values = c(0.5,2)) + 
   annotate(x = "x",  
            y = -1, 
@@ -174,13 +200,13 @@ head(d_mo, 200) %>%
            color = "firebrick", 
            geom = "point", 
            size = 2) +
-  scale_x_discrete(NULL, expand = c(0.03,0)) + 
+  scale_x_discrete(NULL, expand = expand_scale(0,.25)) + 
   scale_y_continuous(NULL) +
   theme(axis.text.x = element_text(face = "italic"))
 
 ```
 
-Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, one of the profiles is much less flat, making it unusual in this context. 
+Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,&minus;1,1} is much less flat, making it unusual in this context. 
 
 ```{r, echo=FALSE}
 vnames <- paste0("x_",1:4)
@@ -197,15 +223,28 @@ d_4[1,] <- c(1, 1, -1, 1)
 d_4 %>% 
   mutate(id = 1:n) %>% 
   gather(key, value, -id) %>% 
+  mutate(key = factor(key),
+           x = as.numeric(key) + 0.25 * runif(n,min = -1,1) * dnorm(value)) %>% 
   ggplot(aes(key, value, group = id)) + 
-  geom_line(alpha = 0.2, size = 0.25) + 
-  geom_point(alpha = 0.3, size = 0.75) + 
+  ggnormalviolin::geom_normalviolin(
+    data = tibble(
+      mu = 0, 
+      sigma = 1, 
+      x = paste0("x_", 1:4)),
+    aes(
+      x = x, 
+      mu = mu, 
+      sigma = sigma), 
+    width = 0.25,
+    inherit.aes = F) + 
+  geom_line(alpha = 0.2, size = 0.25, aes(group = id, x = x)) + 
+  geom_point(alpha = 0.3, size = 0.75, aes(x = x)) + 
   geom_line(data = . %>% filter(id == 1),
             color = "firebrick", size = 0.5) +
   geom_point(data = . %>% filter(id == 1),
              size = 1.25, color = "firebrick") + 
   scale_x_discrete(NULL, 
-                   expand = c(0.03,0), 
+                   expand = c(0.06,0), 
                    labels = parse(text = paste0("italic(x)[",1:4,"]"))) + 
   scale_y_continuous(NULL)
 ```
@@ -216,7 +255,7 @@ In the plot above, we can see plainly that the red profile is unusual. However, 
 
 ## The Euclidean Distance
 
-The simplest (but ultimately unsatisfying) way to measure unusuallness is with the Euclidean distance. A multidimensiontal extension of the Pythagorean Theorem, the *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. The reference point of interest is usually the vector of means from each variable---the *centroid*. The Euclidean distance of point *p*~1~ = (1,1,&minus;1,1) to the centroid *p*~2~ = (0,0,0,0)  is
+The simplest (but ultimately unsatisfying) way to measure a profile's unusualness is with the Euclidean distance. A multidimensional extension of the Pythagorean Theorem, the *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. The reference point of interest is usually the vector of means from each variable---the *centroid*. The Euclidean distance of point *p*~1~ = (1,1,&minus;1,1) to the centroid *p*~2~ = (0,0,0,0)  is
 
 $$\sqrt{(p_1-p_2)'(p_1-p_2)}=\sqrt{(1-0)^2+(1-0)^2+(-1-0)^2+(1-0)^2}=2$$
 
@@ -224,21 +263,22 @@ The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the 
 
 ## The Mahalanobis Distance
 
-In 1936, P. R. Mahalanobis introduced a variant of the Euclidean distance that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Because principal components are always uncorrelated, distances in principal component space always have the same meaning no matter what the relationships are in the original variables. 
+In 1936, P. R. Mahalanobis introduced a variant of the Euclidean distance that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Because principal components are always uncorrelated, distances in principal component space always have the same meaning regardless of the relationsips of the original variables.
 
 Computationally, the principal components need not be calculated explicitly. We simply need to invert the covariance matrix of the profile variables:
 
 $$d_{M}=\sqrt{(X-\mu_X)'\Sigma_X^{-1}(X-\mu_X)}$$
 
->Where  
-$d_M$ is the Mahalanobis distance  
+Where
+
+>$d_M$ is the Mahalanobis distance  
 $X$ is a vector of variable scores  
 $\mu_X$ is the vector of variable means of $X$ (i.e., the centroid of $X$)  
 $\Sigma_X$ is the covariance matrix of the variables in vector $X$
 
-If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each score, and then adding row of scores. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
+If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each score, and then summing each row of scores. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
 
-Thus, if there are *k* normally distributed variables in vector *X*, the Mahalanobis distance squared for vector *X* has a &chi;^2^ distriution with *k* degrees of freedom. In mathematical notation:
+Thus, if there are *k* normally distributed variables in vector *X*, the Mahalanobis distance squared for vector *X* has a &chi;^2^ distribution with *k* degrees of freedom. In mathematical notation:
 
 $$d_M ^ 2 \sim \chi^2(k)$$
 
@@ -248,67 +288,20 @@ Suppose that a Mahalanobis distance for a row of data from 5  standard normal va
 
 # Conditional Mahalanobis Distances
 
-One the disadvantages of the Mahalanobis Distance is that it treats all the dimensions equivalently. For highly correlated variables, the first principal component (or general factor) is of particular importance. We might want to distinguish between cases that are unusual on the first principal component and scores that are unusual on the remaining principal components. 
+One the disadvantages of the Mahalanobis Distance is that it treats all the principal component dimensions equivalently. For highly correlated variables, the first principal component (or general factor) is of particular importance. We might want to distinguish between cases that are unusual on the first principal component and scores that are unusual on the remaining principal components.
 
-For example, in a distribution of 4 highly correlated standardized variables, the point (4,4,4,4) is unusual because each point is unusual---four standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually elevated, but has the modal profile shape.^[A perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean of a normally distributed variable is *extremely average*.]
+For example, in a distribution of 4 highly correlated standardized variables, the point (4,4,4,4) is unusual because each point is unusual---four standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually elevated, but has the modal profile shape. Of course, a perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean is *extremely average*.
 
 In contrast, the point (&minus;4, 4, &minus;4, 4) is perfectly average in its elevation---the scores average to 0. It has, however, an unusually uneven shape.
 
 ## Distinguishing Profile Shape from Profile Elevation
 
-With positively correlated variables, the profile's elevation is so important that we might want to distinguish it from the profile shape when we quantify how unusual a profile is. Suppose that we compare all profiles that have the same elevation but have different profile shapes. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are define to have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
+With positively correlated variables, the profile's elevation typically matters much more than the profile shape. Thus, when considerating how unusual a set of scores is, we might want to distinguish overall elevation from relative profile shape when we quantify how unusual a profile is. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are define to have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
 
-Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1). 
+Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
 
-
-```{tikz, echo = F, out.width=500, fig.align = "center"}
-\usetikzlibrary{positioning, fit, intersections}
-\usetikzlibrary{decorations.pathreplacing}
-\usetikzlibrary{decorations.text}
-\usetikzlibrary{arrows,shapes,backgrounds, shadows,fadings,trees}
-\usetikzlibrary{calc}
-
-\tikzset{latent/.style={circle, minimum size=20mm,inner sep=0mm,font=\huge, text = black, fill = gray},
-	error/.style={circle, fill = gray, inner sep=0mm, minimum size=9mm,font=\footnotesize},
-	ob/.style={rectangle,thick,inner sep=0mm, outer sep = 0mm, minimum size=13 mm, align=center, font=\Large, text = black, fill = gray},
-	single/.style={->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\small, gray},
-	cov/.style={<->,draw,shorten >=2pt,shorten <=2pt,>=latex', font=\Large, bend left=50, gray},
-	variance/.style={<->, draw, >=latex',bend left=245, looseness=6,shorten >=2pt,shorten <=2pt, font=\small, gray},
-	upvariance/.style={<->,  >=latex', thick, shorten >=2pt,shorten <=2pt, font=\Large,bend left = 115,looseness=4},
-	loading/.style={fill=white,circle,inner sep = 0mm, font = \small, text = gray}
-}
-
-\begin{tikzpicture}[scale=1,  decoration = {brace, amplitude = 1.5}]
-	
-	\coordinate (nodeZero) at (0,0);
-\node[ob, right = 1.5mm of nodeZero] (x1) {$x_{1}$};
-\node[ob, right = 1.5mm of x1] (x2) {$x_{2}$};
-\node[ob, right = 1.5mm of x2] (x3) {$x_{3}$};
-\node[ob, right = 1.5mm of x3] (x4) {$x_{4}$};
-\node[latent, above = 25mm of $(x1)!0.5!(x4)$] (g) {$g$};
-\coordinate (firstg1) at ($(x1.north |- g.south)!0.47!(x1.north) + (-1,0)$);
-\coordinate (lastg1) at ($(x4.north |- g.south)!0.47!(x4.north)+ (1,0)$);
-\path[single] (g) to (x1);
-\path[single] (g) to (x2);
-\path[single] (g) to (x3);
-\path[single] (g) to (x4);
-\node[loading] at (intersection of g--x1 and firstg1--lastg1) {.95};
-\node[loading] at (intersection of g--x2 and firstg1--lastg1) {.90};
-\node[loading] at (intersection of g--x3 and firstg1--lastg1) {.85};
-\node[loading] at (intersection of g--x4 and firstg1--lastg1) {.60};
-\node[error, below = 10 mm of x1] (ex1) {};
-\node[error, below = 10 mm of x2] (ex2) {};
-\node[error, below = 10 mm of x3] (ex3) {};
-\node[error, below = 10 mm of x4] (ex4) {};
-\path[single] (ex1) to node[loading, pos = .47]{.31} (x1);
-\path[single] (ex2) to node[loading, pos = .47]{.44} (x2);
-\path[single] (ex3) to node[loading, pos = .47]{.53} (x3);
-\path[single] (ex4) to node[loading, pos = .47]{.80} (x4);
-
-
-
-\end{tikzpicture}
-
+```{r, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
+knitr::include_graphics("One_dimensional.svg")
 ```
 
 In the plot below, two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven.
@@ -339,7 +332,6 @@ CM <- cond_maha(d %>% as_tibble(.name_repair = "unique") %>% mutate(Composite = 
           R = rho, 
           v_dep = colnames(d)[-5], 
           v_ind = "Composite")
-
 
 d %>% 
   as_tibble(.name_repair = "unique") %>% 
@@ -375,7 +367,9 @@ d %>%
   #           hjust = 1.15, 
   #           size = 5) +
   scale_y_continuous(NULL, breaks = -3:3) +
-  scale_x_discrete(NULL, label = parse(text = paste0("italic(x)[",1:4,"]"))) +
+  scale_x_discrete(
+    NULL, 
+    label = parse(text = paste0("italic(x)[",1:4,"]"))) +
   scale_color_manual(values = c("steelblue","firebrick")) + 
   annotate("text", 
            x = 4.15, 
@@ -384,15 +378,50 @@ d %>%
            parse = TRUE, 
            vjust = -0.1,
            size = 5) + 
-  annotate("label", x = 1.5, y = 2.75, label = paste0("More unusual than ", round(CM$dCM_p[1] * 100), "% of\nprofiles with the same elevation"), color = "steelblue", label.padding = unit(0, "lines"), label.size = 0, size = 6, lineheight = 0.85) +
-  annotate("label", x = 1.5, y = -0.75, label = paste0("More unusual than ", round(CM$dCM_p[2] * 100), "% of\nprofiles with the same elevation"), color = "firebrick", label.padding = unit(0, "lines"), label.size = 0, size = 6, lineheight = 0.85) +
-  annotate("segment", x = 1.5, y = -0.4, xend = 1.55, yend = 0.7, 
-           size = 1, color = "firebrick", 
-           arrow = arrow(length = unit(0.35,"cm"), 
-                         angle = 17, type = "closed")) +
-  annotate("segment", x = 1.5, y = 2.4, xend = 1.56, yend = 1.75, 
-           size = 1, color = "steelblue", 
-           arrow = arrow(length = unit(0.35,"cm"), 
+  annotate(
+    "label", 
+    x = 1.5, 
+    y = 2.75, 
+    label = paste0(
+      "More unusual than ", 
+      round(CM$dCM_p[1] * 100), 
+      "% of\nprofiles with the same elevation"), 
+    color = "steelblue", 
+    label.padding = unit(0, "lines"), 
+    label.size = 0, 
+    size = 6, 
+    lineheight = 0.85) +
+  annotate(
+    "label", 
+    x = 1.5, 
+    y = -0.75, 
+    label = paste0(
+      "More unusual than ", 
+      round(CM$dCM_p[2] * 100), 
+      "% of\nprofiles with the same elevation"), 
+    color = "firebrick", 
+    label.padding = unit(0, "lines"), 
+    label.size = 0, 
+    size = 6, 
+    lineheight = 0.85) +
+  annotate(
+    "segment", 
+    x = 1.5, 
+    y = -0.4, 
+    xend = 1.55, 
+    yend = 0.7,
+    size = 1, 
+    color = "firebrick", 
+    arrow = arrow(length = unit(0.35,"cm"), 
+                  angle = 17, type = "closed")) +
+  annotate(
+    "segment", 
+    x = 1.5, 
+    y = 2.4, 
+    xend = 1.56, 
+    yend = 1.75, 
+    size = 1, color = "steelblue", 
+    arrow = arrow(length = unit(0.35,"cm"), 
                          angle = 17, type = "closed")) + 
   ggtitle("Two profiles with the same elevation but different shapes") + 
   theme(legend.position = "none") +
@@ -400,77 +429,170 @@ d %>%
 
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-d %>% 
-  as_tibble(.name_repair = "unique") %>% 
-  rowid_to_column(var = "id") %>% 
-  mutate(id = factor(id),
-         pdM = PropRound(CM$dCM_p)) %>% 
-  gather("Variable","X",-id, -pdM) %>% 
-  ggplot(aes(Variable, X)) + 
-  geom_normalviolin(
-    aes(
-      x = id,
-      mu = mu, sigma = sigma), 
-    data = tibble(id = factor(c("x1","x2","x3","x4")),
-                  mu = rho[5,1:4],
-                  sigma = sqrt(diag(cov_cond))), 
-    inherit.aes = F,
-    alpha = 0.5, 
-    upper_limit = 3) +
-  geom_line(aes(x = id, 
-                group = 1,
-      y = mu), color = "gray30",
-      data = tibble(id = factor(c("x1","x2","x3","x4")),
-                  mu = rho[5,1:4])) + 
-  geom_point(aes(x = id,
-      y = mu), size = 3, color = "gray30", pch = 16,
-      data = tibble(id = factor(c("x1","x2","x3","x4")),
-                  mu = rho[5,1:4])) + 
-  geom_text(aes(x = id,
-      y = mu, label = formatC(mu,2, format = "f")), size = 5, vjust = 1.5,
-      data = tibble(id = factor(c("x1","x2","x3","x4")),
-                  mu = rho[5,1:4])) + 
-  geom_hline(yintercept = 1) +
-  scale_y_continuous(NULL, breaks = -3:3) +
-  scale_x_discrete(NULL, label = parse(text = paste0("italic(x)[",1:4,"]"))) +
-  scale_color_manual(values = c("steelblue","firebrick")) + 
-  ggtitle("Conditional Distributions When Composite = 1") + 
-  theme(legend.position = "none") +
-  annotate("text", 
-           x = 4.15, 
-           y = 1, 
-           label = "Composite == 1", 
-           parse = TRUE, 
-           vjust = -0.1,
-           size = 5) +
-  coord_cartesian(ylim = c(-3, 3))
-
-
-```
-
+## Calculate correlation matrix
 
 How can we calculate the Mahalanobis distance for profiles that all have the same elevation? First we need to calculate the composite score's correlation with each score.
 
-```{r, results='asis', echo = FALSE}
-cat(paste0("$$R_{X}=",bmatrix(drho[1:4,1:4]),"$$"))
+First we need to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
+
+```{r}
+model <- "g =~ 0.95 * x_1 + 0.90 * x_2 + 0.85 * x_3 + 0.60 * x_4"
 ```
 
+Using the simstandard package, we can find the model-implied correlation matrix.
 
-$$w = \begin{bmatrix}1 & 0 & 0 & 0 & 1\\
+```{r}
+library(simstandard)
+
+# Fit object
+fit <- sim_standardized_matrices(model)
+
+# Observed Variable Names
+v_observed <- fit$v_names$v_observed
+
+# Model-implied correlations of observed variables
+R_x <- fit$Correlations$R_all[v_observed,v_observed]
+R_x
+```
+
+Thus,
+
+```{r, results='asis', echo = FALSE}
+cat(paste0("$$R_{X} \\approx ",bmatrix(R_x[v_observed,v_observed]),"$$"))
+```
+
+We need to use this matrix to create a new 5 &times; 5 correlation matrix that includes the correlations among the four variables and also each variable's correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps. 
+
+We will need a "weight" matrix that will select each variable individually and also the sum of the four variables. 
+
+$$w=\begin{bmatrix}
+1 & 0 & 0 & 0 & 1\\
 0 & 1 & 0 & 0 & 1\\
 0 & 0 & 1 & 0 & 1\\
-0 & 0 & 0 & 1 & 1\\
+0 & 0 & 0 & 1 & 1
 \end{bmatrix}$$
 
-$$\Sigma = w'Rw$$
+
+Notice that the first column of this matrix has a 1 in first position and zeroes elsewhere. It selects the first variable, *X*~1~. The second column selects *X*~2~, and so on to the fourth column. The last column is all ones, which will select all four variables and add them up.
+
+We can construct this matrix with the `diag` function, which creates an identity matrix. This matrix is appended to a column of ones:
+
+```{r}
+w <-  cbind(diag(4),
+            rep(1,4))
+w
+```
+
+Now we can use the weight matrix *w* to calculate the covariance matrix:
+
+$$\Sigma = w'R_{X}w$$
+
+```{r}
+Sigma <- t(w) %*% R_x %*% w
+Sigma
+```
+
+```{r, results='asis', echo = FALSE}
+cat(paste0("$$\\Sigma \\approx ",bmatrix(Sigma),"$$"))
+```
+
+Now we need to convert the covariance matrix to a correlation matrix. With matrix equations, we would need to create a matrix of with a vector of variances on the diagonal:
+
 $$D = \text{diag}(\Sigma)$$
+Then we would take the square root, invert this matrix, and then pre-multiply it and post-multiply it by the covariance matrix.
 
 $$R_{All} = D^{-0.5}\Sigma D^{-0.5}$$
 
 ```{r, results='asis', echo = FALSE}
+cat(paste0("$$R_{All} \\approx ",bmatrix(drho),"$$"))
+```
 
-cat(paste0("$$R_{All}=",bmatrix(drho),"$$"))
+Fortunately, all this complication of converting covariances to correlations can be sidestepped by using the `cov2cor` function:
+
+```{r}
+R_all <- cov2cor(Sigma)
+R_all
+```
+
+Calculating the necessary correlations from start to finish:
+
+```{r}
+library(simstandard)
+
+# Standardized model
+model <- "g =~ 0.95 * x_1 + 0.90 * x_2 + 0.85 * x_3 + 0.60 * x_4"
+
+# Standardized model fit object
+fit <- sim_standardized_matrices(model)
+
+# Observed Variable Names
+v_observed <- fit$v_names$v_observed
+
+# Model-implied correlations of observed variables
+R_x <- fit$Correlations$R_all[v_observed,v_observed]
+
+# Weight matrix
+w <-  cbind(diag(4),rep(1,4))
+
+# Covariance matrix with composite score
+Sigma <- t(w) %*% R_x %*% w
+
+# Correlation matrix with composite score
+R_all <- cov2cor(Sigma)
+```
+
+## Calculate composite scores
+
+To calculate the standardized composite score $z_C$, add each variable's deviation from its own mean and divid by the square root of the sum of the observed score covariance matrix.
+
+$$z_C=\frac{1'(x-\mu_X)}{\sqrt{1'\Sigma_X1}}$$
+
+Where
+
+ >$z_C$ is the vector of standardized composite scores.  
+ $x$ is the vector of observed scores  
+ $\mu_X$ is the vector of means for the $X$ variables  
+ $\Sigma_X$ is the covariance matrix of the $X$ variables
+ $1$ is a vector of ones compatible with $\Sigma_X$
+
+## Estimate expected test scores conditioned on a composite score
+
+Given a particular composite score, we need to calculate a predicted score. That is, if the composite score is 1.5 standard deviations above the mean, what are the expected subtest scores?
+
+To make the calculations simple, assume that all scores---including the composite score---have been standardized to have a mean of 0 and a standard deviation of 1.
+
+$$\hat{x}=\sigma_Xz_Cr_{XX_C}+\mu_X$$
+
+Where
+
+>$\hat{X}$ is the vector of expected subtest scores  
+$C$ is the composite score  
+$r_{XX_C}$ is a vector of correlations of each variable in $X$ with the composite score $X_C$
+
+## Calculating the Conditional Mahalanobis Distance
+
+$$d_{M_C}=\sqrt{\left(X-\hat{X}\right)'\Sigma_{X}^{-1}\left(X-\hat{X}\right)}$$
+
+Where
+
+>$d_{M_C}$ is the Conditional Mahalanobis Distance  
+$X$ is a vector of subtest scores  
+$\hat{X}$ is the vector of expected subtest scores  
+$\Sigma_{X}$ is the covariance matrix of the subtest scores
+
+
+Suppose there are *k* outcome scores, and *j* composite scores used to calculate the expected scores $\hat{X}$. If multivariate normality of the subtest scores can by assumed, then the Conditional Mahalanobis Distance squared has a *&chi;*^2^ distribution with *k* &minus; *j* degrees of freedom.
+
+$$d_{M_C}^{2} \sim\chi^{2}(k-j)$$
+
+# Computational Example
+
+Suppose that
+
+$$x=\{x_1,  x_2, x_3, x_4\} = \{1, 1, -1, -1\}. $$
+
+```{r}
+
 ```
 
 
@@ -503,7 +625,7 @@ where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$.
 
 If multivariate normality can be assumed and there are *k* outcome scores,
 
-$$d_{CM}^{2} \sim\chi^{2}(k)$$  
+$$d_{M_C}^{2} \sim\chi^{2}(k)$$  
 
 # A Worked Example
 
@@ -513,7 +635,7 @@ Suppose we have two cognitive predictors of reading, General Comprehension/Knowl
 knitr::include_graphics("Reading.svg")
 ```
 
-Here we load packages we will need and create a function for converting raw scores with a specific population mean and standard deviation to z-scores:
+Here we load packages we will need and create a function for converting raw scores with a specific population mean and standard deviation to *z*-scores:
 
 ```{r load}
 library(tibble)
@@ -524,7 +646,7 @@ library(knitr)
 library(kableExtra)
 library(unusualprofile)
 
-# Function to create z-scores
+# Function to create *z*-scores
 zscore <- function(x, mean = 100, sd = 15) (x - mean) / sd
 ```
 
@@ -550,7 +672,7 @@ fit_Reading <- simstandard::sim_standardized_matrices(m_Reading)
 R <- fit_Reading$Correlations$R_all
 ```
 
-Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to z-scores. Finally, we use the simstandard package's `add_factor_scores` function to add estimated factor scores to the data frame.
+Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to *z*-scores. Finally, we use the simstandard package's `add_factor_scores` function to add estimated factor scores to the data frame.
 
 ```{r scores}
 d_case <- tibble(
@@ -581,7 +703,7 @@ d_all %>%
   select(Ability,SS, `z-score`) %>% 
   kable(digits = 2, 
         caption = "Case Scores") %>%
-  kableExtra::kable_styling(bootstrap_options = "striped")
+  kableExtra::kable_styling(., bootstrap_options = "striped")
 ```
 
 ## Indicator Scores
@@ -679,7 +801,7 @@ tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "S
       dCM$d_dep_cp)
   ) %>% 
   knitr::kable(digits = 2) %>% 
-  kableExtra::kable_styling(bootstrap_options = "striped")
+  kableExtra::kable_styling(., bootstrap_options = "striped")
 
 
 
