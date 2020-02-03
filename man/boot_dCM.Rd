@@ -4,8 +4,14 @@
 \alias{boot_dcm}
 \title{Confidence interval of the reliability (accuracy index)}
 \usage{
-boot_dcm(model, v_dep, v_ind = NULL, v_ind_composites = NULL,
-  sample_size = 1000, replications = 1000)
+boot_dcm(
+  model,
+  v_dep,
+  v_ind = NULL,
+  v_ind_composites = NULL,
+  sample_size = 1000,
+  replications = 1000
+)
 }
 \arguments{
 \item{model}{Population relations among variables represented by Lavaan Syntax}

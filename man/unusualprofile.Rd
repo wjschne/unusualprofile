@@ -3,7 +3,6 @@
 \docType{package}
 \name{unusualprofile}
 \alias{unusualprofile}
-\alias{unusualprofile-package}
 \title{unusualprofile: Calculates Conditional Mahalanobis Distances}
 \description{
 The unusualprofile package calculates the unusualness of score profiles

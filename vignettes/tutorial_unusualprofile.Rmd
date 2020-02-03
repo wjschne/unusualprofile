@@ -296,7 +296,7 @@ In contrast, the point (&minus;4, 4, &minus;4, 4) is perfectly average in its el
 
 ## Distinguishing Profile Shape from Profile Elevation
 
-With positively correlated variables, the profile's elevation typically matters much more than the profile shape. Thus, when considerating how unusual a set of scores is, we might want to distinguish overall elevation from relative profile shape when we quantify how unusual a profile is. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are define to have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
+One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are defined to have the same profile elevation. For ease of computation, the profile variables and the composite score can be re-scaled to have the same metric---preferably the *z*-score metric.
 
 Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
 

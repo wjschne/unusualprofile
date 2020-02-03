@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculates Conditional Mahalanobis Distances • unusualprofile</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Calculates Conditional Mahalanobis Distances">
 <meta property="og:description" content="The unusualprofile packages calculates how unusual a score profile is after controlling for a set of predictors.">
@@ -19,7 +20,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -39,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -62,7 +63,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/wjschne/unusualprofile">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -75,13 +76,10 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    
 
-    
-    
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+      </header><div class="row">
+  <div class="contents col-md-9">
+
 <div id="unusualprofile" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#unusualprofile" class="anchor"></a>unusualprofile</h1></div>
@@ -93,199 +91,60 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"wjschne/unusualprofile"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("remotes")</span></a>
+<a class="sourceLine" id="cb1-2" title="2">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"wjschne/unusualprofile"</span>)</a></code></pre></div>
 </div>
 <div id="example" class="section level1">
 <h1 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h1>
 <p>To use the unusualprofile package, all that is needed is to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables.</p>
-<div id="preliminary-work-generate-a-model-and-case-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#preliminary-work-generate-a-model-and-case-data" class="anchor"></a>Preliminary work: Generate a model and case data</h2>
-<p>This section has nothing to with the unusualprofile package per se. For now, we need to create some data to work with. Suppose we have set of variables that have the following relationships:</p>
-<div class="figure">
-<img src="reference/figures/rm_model.svg" alt="Multivariate normal model"><p class="caption">Multivariate normal model</p>
-</div>
+<p>Suppose we have set of variables that have the following relationships:</p>
+<p><img src="reference/figures/rm_model.svg" alt="Multivariate normal model"></p>
 <p>First, we load the packages that we will use later:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(unusualprofile)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simstandard)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggnormalviolin)</a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a></code></pre></div>
-<p>Using the <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package</a>, we generate 1 case from a standardized multivariate normal data set. We use <a href="http://lavaan.ugent.be/tutorial/syntax1.html">lavaan syntax</a> to match the structure in the figure:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># lavaan model with three indicators of a latent variable</span></a>
-<a class="sourceLine" id="cb3-2" title="2">model &lt;-<span class="st"> "</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="st">X =~ 0.7 * X_1 + 0.5 * X_2 + 0.8 * X_3</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="st">Y =~ 0.8 * Y_1 + 0.7 * Y_2 + 0.9 * Y_3</span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="st">Y ~ 0.6 * X</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="st">"</span></a></code></pre></div>
-<p>Now we generate a case from this multivariate distribution:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># Ensure that random data will be the same as in the example.</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">281</span>)</a>
-<a class="sourceLine" id="cb4-3" title="3"></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co"># Randomly generated case</span></a>
-<a class="sourceLine" id="cb4-5" title="5">d &lt;-<span class="st"> </span><span class="kw">sim_standardized</span>(</a>
-<a class="sourceLine" id="cb4-6" title="6">  model, </a>
-<a class="sourceLine" id="cb4-7" title="7">  <span class="dt">n =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb4-8" title="8">  <span class="dt">observed =</span> <span class="ot">TRUE</span>, </a>
-<a class="sourceLine" id="cb4-9" title="9">  <span class="dt">latent =</span> <span class="ot">FALSE</span>, </a>
-<a class="sourceLine" id="cb4-10" title="10">  <span class="dt">errors =</span> <span class="ot">FALSE</span>, </a>
-<a class="sourceLine" id="cb4-11" title="11">  <span class="dt">composites =</span> <span class="ot">TRUE</span>) </a></code></pre></div>
-<p>The case in the <code>d</code> variable looks like this:</p>
-<table class="table table">
-<thead><tr class="header">
-<th align="right">X_1</th>
-<th align="right">X_2</th>
-<th align="right">X_3</th>
-<th align="right">Y_1</th>
-<th align="right">Y_2</th>
-<th align="right">Y_3</th>
-<th align="right">X_Composite</th>
-<th align="right">Y_Composite</th>
-</tr></thead>
-<tbody><tr class="odd">
-<td align="right">2</td>
-<td align="right">1.45</td>
-<td align="right">2.7</td>
-<td align="right">1.66</td>
-<td align="right">-0.84</td>
-<td align="right">1.81</td>
-<td align="right">2.59</td>
-<td align="right">1.01</td>
-</tr></tbody>
-</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(unusualprofile)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggnormalviolin)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a></code></pre></div>
+<p>The case in the <code>d_example</code> data set was generated from the model depicted above:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">#&gt; # A tibble: 1 x 8</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt;     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt; 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01</span></a></code></pre></div>
 <p>The model-implied correlation matrix:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="co"># Model-implied correlation matrix</span></a>
-<a class="sourceLine" id="cb5-3" title="3">R &lt;-<span class="st"> </span><span class="kw">sim_standardized_matrices</span>(model)<span class="op">$</span>Correlations<span class="op">$</span>R_all</a></code></pre></div>
-<table class="table table">
-<thead><tr class="header">
-<th></th>
-<th align="right">X_1</th>
-<th align="right">X_2</th>
-<th align="right">X_3</th>
-<th align="right">Y_1</th>
-<th align="right">Y_2</th>
-<th align="right">Y_3</th>
-<th align="right">X_Composite</th>
-<th align="right">Y_Composite</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>X_1</td>
-<td align="right">1.00</td>
-<td align="right">0.35</td>
-<td align="right">0.56</td>
-<td align="right">0.34</td>
-<td align="right">0.29</td>
-<td align="right">0.38</td>
-<td align="right">0.81</td>
-<td align="right">0.39</td>
-</tr>
-<tr class="even">
-<td>X_2</td>
-<td align="right">0.35</td>
-<td align="right">1.00</td>
-<td align="right">0.40</td>
-<td align="right">0.24</td>
-<td align="right">0.21</td>
-<td align="right">0.27</td>
-<td align="right">0.74</td>
-<td align="right">0.28</td>
-</tr>
-<tr class="odd">
-<td>X_3</td>
-<td align="right">0.56</td>
-<td align="right">0.40</td>
-<td align="right">1.00</td>
-<td align="right">0.38</td>
-<td align="right">0.34</td>
-<td align="right">0.43</td>
-<td align="right">0.83</td>
-<td align="right">0.44</td>
-</tr>
-<tr class="even">
-<td>Y_1</td>
-<td align="right">0.34</td>
-<td align="right">0.24</td>
-<td align="right">0.38</td>
-<td align="right">1.00</td>
-<td align="right">0.56</td>
-<td align="right">0.72</td>
-<td align="right">0.40</td>
-<td align="right">0.87</td>
-</tr>
-<tr class="odd">
-<td>Y_2</td>
-<td align="right">0.29</td>
-<td align="right">0.21</td>
-<td align="right">0.34</td>
-<td align="right">0.56</td>
-<td align="right">1.00</td>
-<td align="right">0.63</td>
-<td align="right">0.35</td>
-<td align="right">0.84</td>
-</tr>
-<tr class="even">
-<td>Y_3</td>
-<td align="right">0.38</td>
-<td align="right">0.27</td>
-<td align="right">0.43</td>
-<td align="right">0.72</td>
-<td align="right">0.63</td>
-<td align="right">1.00</td>
-<td align="right">0.46</td>
-<td align="right">0.90</td>
-</tr>
-<tr class="odd">
-<td>X_Composite</td>
-<td align="right">0.81</td>
-<td align="right">0.74</td>
-<td align="right">0.83</td>
-<td align="right">0.40</td>
-<td align="right">0.35</td>
-<td align="right">0.46</td>
-<td align="right">1.00</td>
-<td align="right">0.47</td>
-</tr>
-<tr class="even">
-<td>Y_Composite</td>
-<td align="right">0.39</td>
-<td align="right">0.28</td>
-<td align="right">0.44</td>
-<td align="right">0.87</td>
-<td align="right">0.84</td>
-<td align="right">0.90</td>
-<td align="right">0.47</td>
-<td align="right">1.00</td>
-</tr>
-</tbody>
-</table>
-</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">R_example</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt;              X_1  X_2  X_3  Y_1  Y_2  Y_3 X_Composite Y_Composite</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt; X_1         1.00 0.35 0.56 0.34 0.29 0.38        0.81        0.39</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; X_2         0.35 1.00 0.40 0.24 0.21 0.27        0.74        0.28</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; X_3         0.56 0.40 1.00 0.38 0.34 0.43        0.83        0.44</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; Y_1         0.34 0.24 0.38 1.00 0.56 0.72        0.40        0.87</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; Y_2         0.29 0.21 0.34 0.56 1.00 0.63        0.35        0.84</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; Y_3         0.38 0.27 0.43 0.72 0.63 1.00        0.46        0.90</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; X_Composite 0.81 0.74 0.83 0.40 0.35 0.46        1.00        0.47</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00</span></a></code></pre></div>
 <div id="using-the-cond_maha-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-the-cond_maha-function" class="anchor"></a>Using the <code>cond_maha</code> function</h2>
 <p>Now we specify the correlations (<code>R</code>), means (<code>mu</code>), standard deviations (<code>sigma</code>). independent variables (<code>v_ind</code>), and dependent variables (<code>v_dep</code>). In this case, the indpendent variables are composite scores summarizing the dependent variables.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Conditional Mahalanobis distance</span></a>
-<a class="sourceLine" id="cb6-2" title="2">cm &lt;-<span class="st"> </span><span class="kw"><a href="reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d, </a>
-<a class="sourceLine" id="cb6-3" title="3">          <span class="dt">R =</span> R,</a>
-<a class="sourceLine" id="cb6-4" title="4">          <span class="dt">mu =</span> <span class="dv">0</span>,</a>
-<a class="sourceLine" id="cb6-5" title="5">          <span class="dt">sigma =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb6-6" title="6">          <span class="dt">v_ind_composites =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"X_Composite"</span>, <span class="st">"Y_Composite"</span>),</a>
-<a class="sourceLine" id="cb6-7" title="7">          <span class="dt">v_dep =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,</a>
-<a class="sourceLine" id="cb6-8" title="8">                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span>))</a>
-<a class="sourceLine" id="cb6-9" title="9"></a>
-<a class="sourceLine" id="cb6-10" title="10">cm</a>
-<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539</span></a>
-<a class="sourceLine" id="cb6-12" title="12"></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb6-14" title="14"><span class="kw"><a href="reference/plot_cond_maha.html">plot_cond_maha</a></span>(cm)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># Conditional Mahalanobis distance</span></a>
+<a class="sourceLine" id="cb5-2" title="2">cm &lt;-<span class="st"> </span><span class="kw"><a href="reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d_example, </a>
+<a class="sourceLine" id="cb5-3" title="3">          <span class="dt">R =</span> R_example,</a>
+<a class="sourceLine" id="cb5-4" title="4">          <span class="dt">mu =</span> <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb5-5" title="5">          <span class="dt">sigma =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb5-6" title="6">          <span class="dt">v_ind_composites =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_Composite"</span>, <span class="st">"Y_Composite"</span>),</a>
+<a class="sourceLine" id="cb5-7" title="7">          <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,</a>
+<a class="sourceLine" id="cb5-8" title="8">                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span>))</a>
+<a class="sourceLine" id="cb5-9" title="9"></a>
+<a class="sourceLine" id="cb5-10" title="10">cm</a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539</span></a>
+<a class="sourceLine" id="cb5-12" title="12"></a>
+<a class="sourceLine" id="cb5-13" title="13"><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb5-14" title="14"><span class="kw"><a href="reference/plot_cond_maha.html">plot_cond_maha</a></span>(cm)</a></code></pre></div>
 <p><img src="reference/figures/README-example-1.svg" width="100%"></p>
 </div>
 </div>
+
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
@@ -306,22 +165,12 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>W. Joel Schneider <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8393-5316" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>W. Joel Schneider <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8393-5316" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Feng Ji <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-      <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=unusualprofile"><img src="https://www.r-pkg.org/badges/version/ggnormalviolin" alt="CRAN status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
-<li><a href="https://travis-ci.org/wjschne/unusualprofile"><img src="https://travis-ci.org/wjschne/unusualprofile.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://codecov.io/gh/wjschne/unusualprofile?branch=master"><img src="https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
-</ul>
-</div>
-</div>
-
+  </div>
 </div>
 
 
@@ -330,12 +179,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

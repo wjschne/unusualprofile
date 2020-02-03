@@ -4,8 +4,17 @@
 \alias{cond_maha}
 \title{Calculate the conditional Mahalanobis distance for any variables.}
 \usage{
-cond_maha(data, R, v_dep, v_ind = NULL, v_ind_composites = NULL,
-  mu = 0, sigma = 1, use_sample_stats = FALSE, label = NA)
+cond_maha(
+  data,
+  R,
+  v_dep,
+  v_ind = NULL,
+  v_ind_composites = NULL,
+  mu = 0,
+  sigma = 1,
+  use_sample_stats = FALSE,
+  label = NA
+)
 }
 \arguments{
 \item{data}{Data.frame with the independent and dependent variables. Unless mu and sigma are specified, data are assumed to be z-scores.}
