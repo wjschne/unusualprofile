@@ -91,8 +91,8 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("remotes")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"wjschne/unusualprofile"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("remotes")</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"wjschne/unusualprofile"</span>)</span></code></pre></div>
 </div>
 <div id="example" class="section level1">
 <h1 class="hasAnchor">
@@ -101,43 +101,43 @@
 <p>Suppose we have set of variables that have the following relationships:</p>
 <p><img src="reference/figures/rm_model.svg" alt="Multivariate normal model"></p>
 <p>First, we load the packages that we will use later:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(unusualprofile)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggnormalviolin)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(unusualprofile)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggnormalviolin)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</span></code></pre></div>
 <p>The case in the <code>d_example</code> data set was generated from the model depicted above:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">#&gt; # A tibble: 1 x 8</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt;     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt; 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#&gt; # A tibble: 1 x 8</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01</span></span></code></pre></div>
 <p>The model-implied correlation matrix:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">R_example</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt;              X_1  X_2  X_3  Y_1  Y_2  Y_3 X_Composite Y_Composite</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt; X_1         1.00 0.35 0.56 0.34 0.29 0.38        0.81        0.39</span></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; X_2         0.35 1.00 0.40 0.24 0.21 0.27        0.74        0.28</span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; X_3         0.56 0.40 1.00 0.38 0.34 0.43        0.83        0.44</span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; Y_1         0.34 0.24 0.38 1.00 0.56 0.72        0.40        0.87</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; Y_2         0.29 0.21 0.34 0.56 1.00 0.63        0.35        0.84</span></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; Y_3         0.38 0.27 0.43 0.72 0.63 1.00        0.46        0.90</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; X_Composite 0.81 0.74 0.83 0.40 0.35 0.46        1.00        0.47</span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>R_example</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt;              X_1  X_2  X_3  Y_1  Y_2  Y_3 X_Composite Y_Composite</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; X_1         1.00 0.35 0.56 0.34 0.29 0.38        0.81        0.39</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; X_2         0.35 1.00 0.40 0.24 0.21 0.27        0.74        0.28</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; X_3         0.56 0.40 1.00 0.38 0.34 0.43        0.83        0.44</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; Y_1         0.34 0.24 0.38 1.00 0.56 0.72        0.40        0.87</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; Y_2         0.29 0.21 0.34 0.56 1.00 0.63        0.35        0.84</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; Y_3         0.38 0.27 0.43 0.72 0.63 1.00        0.46        0.90</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; X_Composite 0.81 0.74 0.83 0.40 0.35 0.46        1.00        0.47</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00</span></span></code></pre></div>
 <div id="using-the-cond_maha-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-the-cond_maha-function" class="anchor"></a>Using the <code>cond_maha</code> function</h2>
 <p>Now we specify the correlations (<code>R</code>), means (<code>mu</code>), standard deviations (<code>sigma</code>). independent variables (<code>v_ind</code>), and dependent variables (<code>v_dep</code>). In this case, the indpendent variables are composite scores summarizing the dependent variables.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># Conditional Mahalanobis distance</span></a>
-<a class="sourceLine" id="cb5-2" title="2">cm &lt;-<span class="st"> </span><span class="kw"><a href="reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d_example, </a>
-<a class="sourceLine" id="cb5-3" title="3">          <span class="dt">R =</span> R_example,</a>
-<a class="sourceLine" id="cb5-4" title="4">          <span class="dt">mu =</span> <span class="dv">0</span>,</a>
-<a class="sourceLine" id="cb5-5" title="5">          <span class="dt">sigma =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb5-6" title="6">          <span class="dt">v_ind_composites =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_Composite"</span>, <span class="st">"Y_Composite"</span>),</a>
-<a class="sourceLine" id="cb5-7" title="7">          <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,</a>
-<a class="sourceLine" id="cb5-8" title="8">                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span>))</a>
-<a class="sourceLine" id="cb5-9" title="9"></a>
-<a class="sourceLine" id="cb5-10" title="10">cm</a>
-<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539</span></a>
-<a class="sourceLine" id="cb5-12" title="12"></a>
-<a class="sourceLine" id="cb5-13" title="13"><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb5-14" title="14"><span class="kw"><a href="reference/plot_cond_maha.html">plot_cond_maha</a></span>(cm)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Conditional Mahalanobis distance</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>cm &lt;-<span class="st"> </span><span class="kw"><a href="reference/cond_maha.html">cond_maha</a></span>(<span class="dt">data =</span> d_example, </span>
+<span id="cb5-3"><a href="#cb5-3"></a>          <span class="dt">R =</span> R_example,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>          <span class="dt">mu =</span> <span class="dv">0</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>          <span class="dt">sigma =</span> <span class="dv">1</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>          <span class="dt">v_ind_composites =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_Composite"</span>, <span class="st">"Y_Composite"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7"></a>          <span class="dt">v_dep =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span>))</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a>cm</span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co"># Plot</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="kw"><a href="reference/plot_cond_maha.html">plot_cond_maha</a></span>(cm)</span></code></pre></div>
 <p><img src="reference/figures/README-example-1.svg" width="100%"></p>
 </div>
 </div>
