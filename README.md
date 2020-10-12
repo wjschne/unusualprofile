@@ -12,6 +12,7 @@ status](https://www.r-pkg.org/badges/version/ggnormalviolin)](https://cran.r-pro
 status](https://travis-ci.org/wjschne/unusualprofile.svg?branch=master)](https://travis-ci.org/wjschne/unusualprofile)
 [![Codecov test
 coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg)](https://codecov.io/gh/wjschne/unusualprofile?branch=master)
+
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
@@ -46,15 +47,16 @@ library(ggnormalviolin)
 library(dplyr)
 ```
 
-The case in the `d_example` data set was generated from the model
-depicted above:
+Included with the unusualprofile package, the `d_example` data set has a
+single row of data generated from the path diagram depicted above.
 
     #> # A tibble: 1 x 8
     #>     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite
     #>   <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl>       <dbl>       <dbl>
     #> 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01
 
-The model-implied correlation matrix:
+Also included with the unusualprofile package is the path diagram’s
+model-implied correlation matrix:
 
 ``` r
 R_example
@@ -71,9 +73,9 @@ R_example
 
 ## Using the `cond_maha` function
 
-Now we specify the correlations (`R`), means (`mu`), standard deviations
+We can specify the correlations (`R`), means (`mu`), standard deviations
 (`sigma`). independent variables (`v_ind`), and dependent variables
-(`v_dep`). In this case, the indpendent variables are composite scores
+(`v_dep`). In this case, the independent variables are composite scores
 summarizing the dependent variables.
 
 ``` r

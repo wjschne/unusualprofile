@@ -20,13 +20,13 @@ library(simstandard)
 library(ggnormalviolin)
 library(dplyr)
 ```
+
 # unusualprofile
 
 <!-- badges: start -->
 
-[![CRAN status](https://www.r-pkg.org/badges/version/ggnormalviolin)](https://cran.r-project.org/package=unusualprofile) [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build status](https://travis-ci.org/wjschne/unusualprofile.svg?branch=master)](https://travis-ci.org/wjschne/unusualprofile)
-[![Codecov test coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg)](https://codecov.io/gh/wjschne/unusualprofile?branch=master)
+[![CRAN status](https://www.r-pkg.org/badges/version/ggnormalviolin)](https://cran.r-project.org/package=unusualprofile) [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) [![Travis build status](https://travis-ci.org/wjschne/unusualprofile.svg?branch=master)](https://travis-ci.org/wjschne/unusualprofile) [![Codecov test coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/master/graph/badge.svg)](https://codecov.io/gh/wjschne/unusualprofile?branch=master)
+
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis distances and related statistics. Such statistics can help find cases with unusual profiles of multivariate normal data.
@@ -39,9 +39,10 @@ You can install the development version from [GitHub](https://github.com/) with:
 # install.packages("remotes")
 remotes::install_github("wjschne/unusualprofile")
 ```
+
 # Example
 
-To use the unusualprofile package, all that is needed is to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables. 
+To use the unusualprofile package, all that is needed is to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables.
 
 Suppose we have set of variables that have the following relationships:
 
@@ -55,14 +56,13 @@ library(ggnormalviolin)
 library(dplyr)
 ```
 
-
-The case in the `d_example` data set was generated from the model depicted above:
+Included with the unusualprofile package, the `d_example` data set has a single row of data generated from the path diagram depicted above.
 
 ```{r, echo=FALSE}
 d_example
 ```
 
-The model-implied correlation matrix:
+Also included with the unusualprofile package is the path diagram's model-implied correlation matrix:
 
 ```{r}
 R_example
@@ -70,7 +70,7 @@ R_example
 
 ## Using the `cond_maha` function
 
-Now we specify the correlations (`R`), means (`mu`), standard deviations (`sigma`). independent variables (`v_ind`), and dependent variables (`v_dep`). In this case, the indpendent variables are composite scores summarizing the dependent variables.
+We can specify the correlations (`R`), means (`mu`), standard deviations (`sigma`). independent variables (`v_ind`), and dependent variables (`v_dep`). In this case, the independent variables are composite scores summarizing the dependent variables.
 
 ```{r example}
 # Conditional Mahalanobis distance
@@ -87,4 +87,3 @@ cm
 # Plot
 plot_cond_maha(cm)
 ```
-

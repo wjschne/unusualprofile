@@ -107,7 +107,9 @@ bmatrix <- function(x, digits = 2) {
 
 ```
 
-The unusualprofile package automates the process of making sense of multidimensional test battery results using latent-variable-based methods [@ji2018].
+
+
+The unusualprofile package automates the process of making sense of psychoeducational test batteries results using latent-variable-based methods [@ji2018].
 
 # Univariate Outliers
 
@@ -138,11 +140,11 @@ data.frame(x = c(rnorm(100), 10)) %>%
 
 ```
 
-If we want to quantify the rarity of the univariate outlier, we could convert the outlier to a *z*-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
+If we want to quantify the degree of unusualness of the univariate outlier, we could convert the outlier to a *z*-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
 
 # Multivariate Outliers
 
-A univariate outlier refers to a single case on a single variable. A multivariate outlier refers to a single row of data on 2 or more variables.
+A univariate outlier refers to a single case on a single variable. A multivariate outlier refers to a single row of data on 2 or more variables. 
 
 A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the plot below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
 
@@ -198,13 +200,13 @@ head(d_mo, k) %>%
            color = "firebrick", 
            geom = "point", 
            size = 2) +
-  scale_x_discrete(NULL, expand = expansion(0,.25)) + 
+  scale_x_discrete(NULL, expand = expand_scale(0,.25)) + 
   scale_y_continuous(NULL) +
   theme(axis.text.x = element_text(face = "italic"))
 
 ```
 
-Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,−1,1} is much less flat, making it unusual in this context.
+Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,&minus;1,1} is much less flat, making it unusual in this context. 
 
 ```{r, echo=FALSE}
 vnames <- paste0("x_",1:4)
@@ -216,7 +218,7 @@ d_4 <- mvtnorm::rmvnorm(sigma = rho, n = n) %>%
   as_tibble(.name_repair = "unique") %>% 
   set_colnames(vnames)
 
-d_4[1,] <- list(1, 1, -1, 1)
+d_4[1,] <- c(1, 1, -1, 1)
 
 d_4 %>% 
   mutate(id = 1:n) %>% 
@@ -247,17 +249,17 @@ d_4 %>%
   scale_y_continuous(NULL)
 ```
 
-In the plot above, we can see plainly that the red profile is unusual. However, we cannot yet tell exactly how unusual it is. We would like a measure of its rarity.
+In the plot above, we can see plainly that the red profile is unusual. However, we cannot yet tell exactly how unusual it is. We would like a measure of its unusualness.
 
-# Quantifying Rarity
+# Quantifying Unusualness
 
 ## The Euclidean Distance
 
-The simplest (but ultimately unsatisfying) way to measure a profile's rarity is with the Euclidean distance. A multidimensional extension of the Pythagorean Theorem, the *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. The reference point of interest is usually the vector of means from each variable---the *centroid*. The Euclidean distance of point *p*~1~ = (1,1,−1,1) to the centroid *p*~2~ = (0,0,0,0) is
+The simplest (but ultimately unsatisfying) way to measure unusualness is with the Euclidean distance. A multidimensional extension of the Pythagorean Theorem, the *Euclidean distance* is the square root of the sum of the squared differences on each dimension from some reference point. The reference point of interest is usually the vector of means from each variable---the *centroid*. The Euclidean distance of point *p*~1~ = (1,1,&minus;1,1) to the centroid *p*~2~ = (0,0,0,0)  is
 
 $$\sqrt{(p_1-p_2)'(p_1-p_2)}=\sqrt{(1-0)^2+(1-0)^2+(-1-0)^2+(1-0)^2}=2$$
 
-The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the two variables are highly correlated, point (1,1,−1,1) is much more unusual than point (1,1,1,1). Though fairly simple to calculate, the Euclidean distance is insensitive to the relationships among the variables, making it a poor choice for quantifying the rarity of profiles of correlated variables.
+The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the two variables are highly correlated, point (1,1,&minus;1,1) is much more unusual than point (1,1,1,1). Though fairly simple to calculate, the Euclidean distance is insensitive to the relationships among the variables, making it a poor choice for quantifying the unusualness of profiles of correlated variables.
 
 ## The Mahalanobis Distance
 
@@ -269,20 +271,20 @@ $$d_{M}=\sqrt{(X-\mu_X)'\Sigma_X^{-1}(X-\mu_X)}$$
 
 Where
 
-> $d_M$ is the Mahalanobis distance\
-> $X$ is a vector of variable scores\
-> $\mu_X$ is the vector of variable means of $X$ (i.e., the centroid of $X$)\
-> $\Sigma_X$ is the covariance matrix of the variables in vector $X$
+>$d_M$ is the Mahalanobis distance  
+$X$ is a vector of variable scores  
+$\mu_X$ is the vector of variable means of $X$ (i.e., the centroid of $X$)  
+$\Sigma_X$ is the covariance matrix of the variables in vector $X$
 
-If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each score, and then summing each row of scores. Adding squared uncorrelated standard normal variates just so happens to be how the χ^2^ distribution is made. The degrees of freedom in the χ^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
+If the variables in *X* are normally distributed, essentially the Mahalanobis distance is creating principal component scores that are uncorrelated standard normal variates, squaring each score, and then summing each row of scores. Adding squared uncorrelated standard normal variates just so happens to be how the &chi;^2^ distribution is made. The degrees of freedom in the &chi;^2^ distribution corresponds to the number of standard normal variates that are squared and summed.
 
-Thus, if there are *k* normally distributed variables in vector *X*, the Mahalanobis distance squared for vector *X* has a χ^2^ distribution with *k* degrees of freedom. In mathematical notation:
+Thus, if there are *k* normally distributed variables in vector *X*, the Mahalanobis distance squared for vector *X* has a &chi;^2^ distribution with *k* degrees of freedom. In mathematical notation:
 
 $$d_M ^ 2 \sim \chi^2(k)$$
 
-Thus, if we can assume the profile variables are multivariate normal, we can use the cumulative distribution function of the χ^2^ distribution to quantify how unusual a particular profile compares to the general population of profiles.
+Thus, if we can assume the profile variables are multivariate normal, we can use the cumulative distribution function of the &chi;^2^ distribution to quantify how unusual a particular profile compares to the general population of profiles.
 
-Suppose that a Mahalanobis distance for a row of data from 5 standard normal variates is 15.5. The cumulative distribution function for the χ^2^ distribution with 5 degrees of freedom is `r round(pchisq(15.5,5), 3)`. Thus, the row of data is a multivariate outlier.
+Suppose that a Mahalanobis distance for a row of data from 5  standard normal variates is 15.5. The cumulative distribution function for the &chi;^2^ distribution with 5 degrees of freedom is `r round(pchisq(15.5,5), 3)`. Thus, the row of data is a multivariate outlier.
 
 # Conditional Mahalanobis Distances
 
@@ -290,11 +292,11 @@ One the disadvantages of the Mahalanobis Distance is that it treats all the prin
 
 For example, in a distribution of 4 highly correlated standardized variables, the point (4,4,4,4) is unusual because each point is unusual---four standard deviations above the mean. However, after accounting for its extreme elevation, the profile is perfectly flat. That is, the profile is unusually elevated, but has the modal profile shape. Of course, a perfectly flat profile is unusual in a different sense. It is *extremely flat* in the same sense that a score equal to the mean is *extremely average*.
 
-In contrast, the point (−4, 4, −4, 4) is perfectly average in its elevation---the scores average to 0. It has, however, an unusually uneven shape.
+In contrast, the point (&minus;4, 4, &minus;4, 4) is perfectly average in its elevation---the scores average to 0. It has, however, an unusually uneven shape.
 
 ## Distinguishing Profile Shape from Profile Elevation
 
-One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are defined to have the same profile elevation. For ease of computation, the profile variables and the composite score can be re-scaled to have the same metric---preferably the *z*-score metric.
+With positively correlated variables, the profile's elevation typically matters much more than the profile shape. Thus, when considerating how unusual a set of scores is, we might want to distinguish overall elevation from relative profile shape when we quantify how unusual a profile is. One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are define to have the same profile elevation. Ideally, the profile variables and the composite score are re-scaled to have the same metric---preferably the *z*-score metric.
 
 Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
 
@@ -459,9 +461,9 @@ Thus,
 cat(paste0("$$R_{X} \\approx ",bmatrix(R_x[v_observed,v_observed]),"$$"))
 ```
 
-We need to use this matrix to create a new 5 × 5 correlation matrix that includes the correlations among the four variables and also each variable's correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps.
+We need to use this matrix to create a new 5 &times; 5 correlation matrix that includes the correlations among the four variables and also each variable's correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps. 
 
-We will need a "weight" matrix that will select each variable individually and also the sum of the four variables.
+We will need a "weight" matrix that will select each variable individually and also the sum of the four variables. 
 
 $$w=\begin{bmatrix}
 1 & 0 & 0 & 0 & 1\\
@@ -469,6 +471,7 @@ $$w=\begin{bmatrix}
 0 & 0 & 1 & 0 & 1\\
 0 & 0 & 0 & 1 & 1
 \end{bmatrix}$$
+
 
 Notice that the first column of this matrix has a 1 in first position and zeroes elsewhere. It selects the first variable, *X*~1~. The second column selects *X*~2~, and so on to the fourth column. The last column is all ones, which will select all four variables and add them up.
 
@@ -495,7 +498,8 @@ cat(paste0("$$\\Sigma \\approx ",bmatrix(Sigma),"$$"))
 
 Now we need to convert the covariance matrix to a correlation matrix. With matrix equations, we would need to create a matrix of with a vector of variances on the diagonal:
 
-$$D = \text{diag}(\Sigma)$$ Then we would take the square root, invert this matrix, and then pre-multiply it and post-multiply it by the covariance matrix.
+$$D = \text{diag}(\Sigma)$$
+Then we would take the square root, invert this matrix, and then pre-multiply it and post-multiply it by the covariance matrix.
 
 $$R_{All} = D^{-0.5}\Sigma D^{-0.5}$$
 
@@ -545,10 +549,11 @@ $$z_C=\frac{1'(x-\mu_X)}{\sqrt{1'\Sigma_X1}}$$
 
 Where
 
-> $z_C$ is the vector of standardized composite scores.\
-> $x$ is the vector of observed scores\
-> $\mu_X$ is the vector of means for the $X$ variables\
-> $\Sigma_X$ is the covariance matrix of the $X$ variables $1$ is a vector of ones compatible with $\Sigma_X$
+ >$z_C$ is the vector of standardized composite scores.  
+ $x$ is the vector of observed scores  
+ $\mu_X$ is the vector of means for the $X$ variables  
+ $\Sigma_X$ is the covariance matrix of the $X$ variables
+ $1$ is a vector of ones compatible with $\Sigma_X$
 
 ## Estimate expected test scores conditioned on a composite score
 
@@ -560,9 +565,9 @@ $$\hat{x}=\sigma_Xz_Cr_{XX_C}+\mu_X$$
 
 Where
 
-> $\hat{X}$ is the vector of expected subtest scores\
-> $C$ is the composite score\
-> $r_{XX_C}$ is a vector of correlations of each variable in $X$ with the composite score $X_C$
+>$\hat{X}$ is the vector of expected subtest scores  
+$C$ is the composite score  
+$r_{XX_C}$ is a vector of correlations of each variable in $X$ with the composite score $X_C$
 
 ## Calculating the Conditional Mahalanobis Distance
 
@@ -570,12 +575,13 @@ $$d_{M_C}=\sqrt{\left(X-\hat{X}\right)'\Sigma_{X}^{-1}\left(X-\hat{X}\right)}$$
 
 Where
 
-> $d_{M_C}$ is the Conditional Mahalanobis Distance\
-> $X$ is a vector of subtest scores\
-> $\hat{X}$ is the vector of expected subtest scores\
-> $\Sigma_{X}$ is the covariance matrix of the subtest scores
+>$d_{M_C}$ is the Conditional Mahalanobis Distance  
+$X$ is a vector of subtest scores  
+$\hat{X}$ is the vector of expected subtest scores  
+$\Sigma_{X}$ is the covariance matrix of the subtest scores
 
-Suppose there are *k* outcome scores, and *j* composite scores used to calculate the expected scores $\hat{X}$. If multivariate normality of the subtest scores can by assumed, then the Conditional Mahalanobis Distance squared has a *χ*^2^ distribution with *k* − *j* degrees of freedom.
+
+Suppose there are *k* outcome scores, and *j* composite scores used to calculate the expected scores $\hat{X}$. If multivariate normality of the subtest scores can by assumed, then the Conditional Mahalanobis Distance squared has a *&chi;*^2^ distribution with *k* &minus; *j* degrees of freedom.
 
 $$d_{M_C}^{2} \sim\chi^{2}(k-j)$$
 
@@ -589,6 +595,7 @@ $$x=\{x_1,  x_2, x_3, x_4\} = \{1, 1, -1, -1\}. $$
 
 ```
 
+
 # Estimating factor scores
 
 Factor scores are calculated using Thurstone's method [@thurstone1935vectors; @schneider2013if]:
@@ -597,26 +604,28 @@ $$\hat{a}= R_{XX}\Lambda R_{YY}^{-1}y=R_{XY}R_{YY}^{-1}y$$
 
 Where
 
-> $\hat{a}$ is a random vector of a person's estimated factor scores.\
-> $R_{XX}$ is the correlation matrix among the latent factors.\
-> $\Lambda$ is the factor-pattern matrix.\
-> $R_{XY}$ is a correlation matrix between the common factors and the observed variables.\
-> $R_{YY}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
-> $y$ is a random vector of a person's standardized scores on the observed variables.
+> $\hat{a}$ is a random vector of a person's estimated factor scores.  
+$R_{XX}$ is the correlation matrix among the latent factors.  
+$\Lambda$ is the factor-pattern matrix.  
+$R_{XY}$ is a correlation matrix between the common factors and the observed	variables.  
+$R_{YY}^{-1}$ is the inverse of the correlation matrix among the observed variables.  
+$y$ is a random vector of a person's standardized scores on the observed variables.
 
-# Predicting a profile's rarity in a population
+# Predicting individual's unusualness in population 
 
 $$d_{C M}=\sqrt{(y-\hat{y})'R^{-1}(y-\hat{y})}$$
 
 Where
 
-> $\hat{y}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the factor scores of cognitive abilities).\
-> $y$ is the vector of outcome scores (i.e., the factor scores of academic abilities estimated from our SEM).\
-> $R$ is the matrix of conditional variance among the factor scores (the composite correlation between factor scores calculated using population correlation among observed scores, that is, $\beta'\Sigma_{xx}\beta$, where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$.
+> $\hat{y}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the factor scores of cognitive abilities).  
+$y$ is the vector of outcome scores (i.e., the factor scores of academic abilities estimated from our SEM).  
+$R$ is the matrix of conditional variance among the factor scores (the composite correlation between factor scores calculated using population correlation among observed scores, that is, $\beta'\Sigma_{xx}\beta$,
+where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$. 
+
 
 If multivariate normality can be assumed and there are *k* outcome scores,
 
-$$d_{M_C}^{2} \sim\chi^{2}(k)$$
+$$d_{M_C}^{2} \sim\chi^{2}(k)$$  
 
 # A Worked Example
 
@@ -713,7 +722,7 @@ cond_maha(
   v_dep = c(v_Reading, v_Cognitive))
 ```
 
-From the probability (p), we see that the overall observed score profile is quite unusual.
+From the probability (p), we see that the overall observed score profile is quite unusual. 
 
 ```{r, echo=FALSE}
 d_case %>% 
@@ -738,6 +747,8 @@ d_case %>%
         strip.text = element_text(size = 10))
   
 ```
+
+
 
 Now, let's see if the academic scores are unusual by themselves:
 
@@ -776,7 +787,7 @@ If we can assume that the residuals are normally distributed, we can view the pr
 dCM$d_dep_cp
 ```
 
-In summary,
+In summary, 
 
 ```{r residsummary, echo=FALSE}
 tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "Standardized Residual", "p")) %>% 
@@ -795,6 +806,7 @@ tibble(Score = c("Score","Predicted score", "Deviation","Std. Error of Est.", "S
 
 
 ```
+
 
 Thus, we can see that all three decoding tests are lower than expectations, particularly `RD2`, the reading comprehension tests are within expectations, though `RC3` is somewhat high.
 
@@ -887,6 +899,9 @@ d_all %>%
   
 ```
 
+
+
+
 # Observed Scores, Given Composite Scores
 
 Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.
@@ -944,4 +959,16 @@ bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
 
 
 
+```{r, include = FALSE}
+# unusualness(data = d_all,
+#             m = m_Reading, 
+#             v_dep = Reading_Composite, 
+#             v_ind = Cognitive_Composite) %>% 
+#   kable(digits = 2,
+#         col.names = c(
+#           "Measure",
+ 
+
+
 # References
+

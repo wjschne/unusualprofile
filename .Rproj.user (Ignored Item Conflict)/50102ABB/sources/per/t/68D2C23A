@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1578409729433.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "410081084",
+    "id" : "68D2C23A",
+    "lastKnownWriteTime" : 1578452973,
+    "last_content_update" : 1578452973780,
+    "path" : "C:/Users/renee/Dropbox/packages/unusualprofile/vignettes/tutorial_unusualprofile.Rmd",
+    "project_path" : "vignettes/tutorial_unusualprofile.Rmd",
+    "properties" : {
+        "cursorPosition" : "247,41",
+        "scrollLine" : "233"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

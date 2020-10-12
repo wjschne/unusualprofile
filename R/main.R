@@ -957,7 +957,7 @@ plot_cond_maha <- function(cm, family = "serif", score_digits = 2) {
       family = family) +
     ggplot2::scale_y_continuous("Scores") +
     ggplot2::scale_x_discrete(NULL,
-                     expand = ggplot2::expand_scale(add = 1)) +
+                     expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
       Conditional ~ Mahalanobis == .(formatC(cm$dCM, 2, format = "f")),
       italic(p) == .(proportion_round(cm$dCM_p))
