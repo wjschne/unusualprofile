@@ -942,6 +942,4 @@ bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
   
 ```
 
-
-
 # References
