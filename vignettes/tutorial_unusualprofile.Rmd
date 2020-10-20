@@ -16,8 +16,11 @@ vignette: >
 ```{css, echo = FALSE}
 
 @import url('http://fonts.googleapis.com/css?family=Titillium+Web');
-body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; font-size:18px; line-height:1.25;}
+body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; 
+      font-size:18px; 
+      line-height:1.25;}
 
+.caption {text-align:right; font-size:0.9rem}
 ```
 
 ```{r setup, include = FALSE}
@@ -32,7 +35,7 @@ knitr::opts_chunk$set(
   fig.height = 7.2916667,
   message = FALSE,
   warning = FALSE,
-  cache = TRUE
+  cache = FALSE
 )
 
 options(digits = 2)
@@ -49,7 +52,7 @@ library(simstandard)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
-
+library(glue)
 library(showtext)
 library(purrr)
 
@@ -105,15 +108,19 @@ bmatrix <- function(x, digits = 2) {
          "\n\\end{bmatrix}")
 }
 
+cnt_fig <- 0
+
+fig <- function() cnt_fig <<- cnt_fig + 1
+
 ```
 
-The unusualprofile package automates the process of making sense of multidimensional test battery results using latent-variable-based methods [@ji2018].
+The unusualprofile package can identify multivariate outliers conditional on predictors [@ji2018].
 
 # Univariate Outliers
 
-A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in a histogram:
+A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in this histogram:
 
-```{r univariate, echo= FALSE}
+```{r univariate, echo= FALSE, fig.cap=glue("<em>Figure {fig()}</em>. A histogram with a univariate outlier.")}
 
 set.seed(1)
 data.frame(x = c(rnorm(100), 10)) %>% 
@@ -138,15 +145,15 @@ data.frame(x = c(rnorm(100), 10)) %>%
 
 ```
 
-If we want to quantify the rarity of the univariate outlier, we could convert the outlier to a *z*-score, which would indicate the distance in standard deviation units of the outlier from the mean of the distribution. In this case, the outlier is 10 standard deviation units from the mean of the other scores.
+If we want to quantify the rarity of the univariate outlier, we could convert the outlier to a *z*-score, which indicates the outlier's distance from the population mean in standard deviation units. In this case, the outlier is 10 standard deviations from the mean of the other scores.
 
 # Multivariate Outliers
 
-A univariate outlier refers to a single case on a single variable. A multivariate outlier refers to a single row of data on 2 or more variables.
+A univariate outlier refers to a single case from a single variable. A multivariate outlier refers to a single row of data consisting of 2 or more variables.
 
 A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the plot below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
 
-```{r multivariate, echo=FALSE, warning=FALSE}
+```{r multivariate, echo=FALSE, warning=FALSE, fig.cap=glue("<em>Figure {fig()}</em>. A scatterplot with a multivariate outlier.")}
 set.seed(5)
 d_mo <- mvtnorm::rmvnorm(n = 1000, sigma = matrix(c(1,0.95,0.95,1),2))
 d_mo[100,] <- c(-1,1)
@@ -162,7 +169,7 @@ ggplot(d_mo, aes(x, y)) +
 
 Scatterplots are great for inspecting multivariate outliers with a small number of variables. Unfortunately, scatterplots can only display 2 or 3 variables at a time. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat---highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.
 
-```{r profiles, echo= FALSE}
+```{r multivariate_outlier_2, echo= FALSE, fig.cap=glue("<em>Figure {fig()}</em>. A two-variable violin plot with a multivariate outlier.")}
 k <- 400
 head(d_mo, k) %>% 
   rowid_to_column("id") %>%
@@ -206,7 +213,7 @@ head(d_mo, k) %>%
 
 Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,−1,1} is much less flat, making it unusual in this context.
 
-```{r, echo=FALSE}
+```{r multivariate_outlier_4, echo=FALSE, fig.cap=glue("<em>Figure {fig()}</em>. A four-variable violin plot with a multivariate outlier.")}
 vnames <- paste0("x_",1:4)
 n <- 300
 rho <- matrix(0.99, nrow = 4, ncol = 4, dimnames = list(vnames, vnames))
@@ -261,7 +268,7 @@ The Euclidean distance of point (1,1,1,1) to the centroid is also 2, yet if the 
 
 ## The Mahalanobis Distance
 
-In 1936, P. R. Mahalanobis introduced a variant of the Euclidean distance that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Because principal components are always uncorrelated, distances in principal component space always have the same meaning regardless of the relationsips of the original variables.
+In 1936, P. R. Mahalanobis introduced a variant of the Euclidean distance that accounts for the covariance of the variables. Conceptually, the *Mahalanobis distance* is a Euclidean distance of profile scores if the variables are rotated and rescaled to fit on their principal component axes. Because principal components are always uncorrelated, distances in principal component space always have the same meaning regardless of the relationships of the original variables.
 
 Computationally, the principal components need not be calculated explicitly. We simply need to invert the covariance matrix of the profile variables:
 
@@ -298,13 +305,13 @@ One way to define the profile elevation is to create a composite score from the 
 
 Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model below, and we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
 
-```{r, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
+```{r one_dimensional, echo = FALSE, fig.align='center', fig.cap=glue("<em>Figure {fig()}</em>. A simple model with standardized loadings"), out.width=300}
 knitr::include_graphics("One_dimensional.svg")
 ```
 
 In the plot below, two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven.
 
-```{r, echo = FALSE}
+```{r conditional_dist, echo = FALSE, fig.cap=glue("<em>Figure {fig()}</em>. Conditional distributions for people with a composite score of 1.")}
 library(ggnormalviolin)
 set.seed(1000)
 elevation <- 1
@@ -427,36 +434,96 @@ d %>%
 
 ```
 
-## Calculate correlation matrix
+# A Worked Example
 
-How can we calculate the Mahalanobis distance for profiles that all have the same elevation? First we need to calculate the composite score's correlation with each score.
+Suppose that
 
-First we need to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
+$$X=\{X_1,  X_2, X_3, X_4\} = \{0, 2, -1, -1\}. $$
 
-```{r}
-model <- "g =~ 0.95 * x_1 + 0.90 * x_2 + 0.85 * x_3 + 0.60 * x_4"
+```{r standardized_scores}
+# Standardized observed scores
+X <- c(X_1 = 0, 
+       X_2 = 1, 
+       X_3 = -1,
+       X_4 = -1)
 ```
 
-Using the simstandard package, we can find the model-implied correlation matrix.
+How can we calculate the Mahalanobis distance for profiles that all have the same elevation? We will show how to do so in two ways. The easier of the two methods will be to use the simstandard package to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we will also see how to do everything "by hand" using matrix algebra.
+
+### Calculations using the simstandard and unusualprofile packages
+
+The simstandard package can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
 
 ```{r}
-library(simstandard)
+model <- "X =~ 0.95 * X_1 + 0.90 * X_2 + 0.85 * X_3 + 0.60 * X_4"
+```
 
+Using the simstandard package, we can find the model-implied correlation matrix. The `sim_standardized_matrices` function outputs a large list which includes the model-implied correlation matrix and the names of observed variables and composite scores.
+
+```{r simstandard}
 # Fit object
-fit <- sim_standardized_matrices(model)
+fit <- simstandard::sim_standardized_matrices(model)
 
 # Observed Variable Names
 v_observed <- fit$v_names$v_observed
 
+# Composite Variable Names
+v_composite <- fit$v_names$v_composite_score
+
+# Variable names
+v_names <- c(v_observed, v_composite)
+
+# Model-implied correlations of all variables
+R_all <- fit$Correlations$R_all[v_names, v_names]
+R_all
+
 # Model-implied correlations of observed variables
-R_x <- fit$Correlations$R_all[v_observed,v_observed]
-R_x
+R_X <- R_all[v_observed,v_observed]
+R_X
 ```
 
-Thus,
+Now we use the `cond_maha` function from the unusualprofile package to calculate the conditional Mahalanobis distance.
+
+```{r}
+# Convert X to row matrix, and add the composite score
+d <- t(X) %>% 
+  simstandard::add_composite_scores(m = model)
+d
+
+# Calculate the conditional Mahalanobis distance
+cond_maha(data = d,
+          R = R_all,
+          v_dep = v_observed,
+          v_ind_composites = v_composite)
+```
+
+### Calculations with Matrix Algebra
+
+As an instructive exercise, we will do the calculations "by hand" as well. We need to specify a matrix of loadings:
+
+```{r matrix_loadings}
+# Factor loadings
+lambda <- matrix(c(0.95, 0.90, 0.85, 0.60), 
+                 dimnames = list(paste0("X_", 1:4),
+                                 "X"))
+
+lambda
+```
+
+Now we calculate the model-implied correlations among the observed variables:
+
+```{r R_X}
+# Observed Correlations
+R_X <- lambda %*% t(lambda)
+# Replace diagonal with ones
+diag(R_X) <- 1
+R_X
+```
+
+Presented formally, the model-implied correlations are:
 
 ```{r, results='asis', echo = FALSE}
-cat(paste0("$$R_{X} \\approx ",bmatrix(R_x[v_observed,v_observed]),"$$"))
+cat(paste0("$$R_{X} \\approx ",bmatrix(R_X),"$$"))
 ```
 
 We need to use this matrix to create a new 5 × 5 correlation matrix that includes the correlations among the four variables and also each variable's correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps.
@@ -474,7 +541,7 @@ Notice that the first column of this matrix has a 1 in first position and zeroes
 
 We can construct this matrix with the `diag` function, which creates an identity matrix. This matrix is appended to a column of ones:
 
-```{r}
+```{r weight_matrix}
 w <-  cbind(diag(4),
             rep(1,4))
 w
@@ -485,7 +552,7 @@ Now we can use the weight matrix *w* to calculate the covariance matrix:
 $$\Sigma = w'R_{X}w$$
 
 ```{r}
-Sigma <- t(w) %*% R_x %*% w
+Sigma <- t(w) %*% R_X %*% w
 Sigma
 ```
 
@@ -507,62 +574,61 @@ Fortunately, all this complication of converting covariances to correlations can
 
 ```{r}
 R_all <- cov2cor(Sigma)
+# Assign variable names
+dimnames(R_all) <- list(v_names, v_names)
 R_all
-```
-
-Calculating the necessary correlations from start to finish:
-
-```{r}
-library(simstandard)
-
-# Standardized model
-model <- "g =~ 0.95 * x_1 + 0.90 * x_2 + 0.85 * x_3 + 0.60 * x_4"
-
-# Standardized model fit object
-fit <- sim_standardized_matrices(model)
-
-# Observed Variable Names
-v_observed <- fit$v_names$v_observed
-
-# Model-implied correlations of observed variables
-R_x <- fit$Correlations$R_all[v_observed,v_observed]
-
-# Weight matrix
-w <-  cbind(diag(4),rep(1,4))
-
-# Covariance matrix with composite score
-Sigma <- t(w) %*% R_x %*% w
-
-# Correlation matrix with composite score
-R_all <- cov2cor(Sigma)
 ```
 
 ## Calculate composite scores
 
-To calculate the standardized composite score $z_C$, add each variable's deviation from its own mean and divid by the square root of the sum of the observed score covariance matrix.
+To calculate the standardized composite score $z_C$, add each variable's deviation from its own mean and divide by the square root of the sum of the observed score covariance matrix.
 
-$$z_C=\frac{1'(x-\mu_X)}{\sqrt{1'\Sigma_X1}}$$
+$$z_C=\frac{1'(X-\mu_X)}{\sqrt{1'\Sigma_X1}}$$
 
 Where
 
-> $z_C$ is the vector of standardized composite scores.\
-> $x$ is the vector of observed scores\
-> $\mu_X$ is the vector of means for the $X$ variables\
-> $\Sigma_X$ is the covariance matrix of the $X$ variables $1$ is a vector of ones compatible with $\Sigma_X$
+> $z_C$ is a standardized composite score.\
+> $X$ is a vector of observed scores.\
+> $\mu_X$ is the vector of means for the $X$ variables.\
+> $\Sigma_X$ is the covariance matrix of the $X$ variables.\
+> $1$ is a vector of ones compatible with $\Sigma_X$.
+
+The composite score is:
+
+```{r}
+# Population means of observed variables
+mu_X <- rep_along(X, 0)
+
+# Population standard deviations of observed variables
+sd_X <- rep_along(X, 1)
+
+# Covariance Matrix
+Sigma_X <- diag(sd_X) %*% R_X %*% diag(sd_X)
+
+# Standardized composite score
+z_C <- sum(X - mu_X) / sqrt(sum(Sigma_X))
+```
 
 ## Estimate expected test scores conditioned on a composite score
 
 Given a particular composite score, we need to calculate a predicted score. That is, if the composite score is 1.5 standard deviations above the mean, what are the expected subtest scores?
 
-To make the calculations simple, assume that all scores---including the composite score---have been standardized to have a mean of 0 and a standard deviation of 1.
-
-$$\hat{x}=\sigma_Xz_Cr_{XX_C}+\mu_X$$
+$$\hat{X}=\sigma_Xz_Cr_{XX_C}+\mu_X$$
 
 Where
 
 > $\hat{X}$ is the vector of expected subtest scores\
-> $C$ is the composite score\
-> $r_{XX_C}$ is a vector of correlations of each variable in $X$ with the composite score $X_C$
+> $\sigma_X$ is the vector of standard deviations for $X$\
+> $z_C$ is the composite score\
+> $r_{XX_C}$ is a vector of correlations of each variable in $X$ with the composite score $z_C$\
+> $\mu_X$ is the vector of means for $X$\
+
+Thus,
+
+```{r expected_X}
+# Predicted value of X, given composite score
+X_hat <- sd_X * z_C * R_all[v_observed, v_composite] + mu_X
+```
 
 ## Calculating the Conditional Mahalanobis Distance
 
@@ -575,42 +641,59 @@ Where
 > $\hat{X}$ is the vector of expected subtest scores\
 > $\Sigma_{X}$ is the covariance matrix of the subtest scores
 
-Suppose there are *k* outcome scores, and *j* composite scores used to calculate the expected scores $\hat{X}$. If multivariate normality of the subtest scores can by assumed, then the Conditional Mahalanobis Distance squared has a *χ*^2^ distribution with *k* − *j* degrees of freedom.
+```{r}
+d_mc <- sqrt(t(X - X_hat) %*% solve(R_X) %*% (X - X_hat))[1,1]
+d_mc
+```
+
+Suppose there are *k* outcome scores, and *j* composite scores used to calculate the expected scores $\hat{X}$. If multivariate normality of the subtest scores can be assumed, then the Conditional Mahalanobis Distance squared has a *χ*^2^ distribution with *k* − *j* degrees of freedom.
 
 $$d_{M_C}^{2} \sim\chi^{2}(k-j)$$
 
-# Computational Example
-
-Suppose that
-
-$$x=\{x_1,  x_2, x_3, x_4\} = \{1, 1, -1, -1\}. $$
-
 ```{r}
+# Number of observed variables
+k <- length(v_observed)
 
+# Number of composite variables
+j <- length(v_composite)
+
+# Cumulative distribution function
+p <- pchisq(d_mc ^ 2, df = k - j)
+p
 ```
 
-# Estimating factor scores
+If we can assume that the observed variables in *X* are multivariate normal, a profile of *X* = {`r paste(X, collapse = ",")`} is more unusual than `r round(p * 100)`% of profiles that also have a composite score of *z~C~* = `r round(z_C, 2)`.
 
-Factor scores are calculated using Thurstone's method [@thurstone1935vectors; @schneider2013if]:
+# Models with factor scores
 
-$$\hat{a}= R_{XX}\Lambda R_{YY}^{-1}y=R_{XY}R_{YY}^{-1}y$$
+Suppose we have two cognitive predictors of reading, General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Each cognitive and academic ability is measured with three tests each. The theoretical model of how each variable relates to every other variable is shown below.
+
+```{r, echo = FALSE, fig.align='center', fig.cap="General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension"}
+knitr::include_graphics("Reading.svg")
+```
+
+We want to know if a person's pattern of reading scores are unusual, given the cognitive scores.
+
+Factor scores are calculated using Thurstone's method [@thurstone1935vectors]:
+
+$$\hat{F}= R_{FF}\Lambda_{FX} R_{XX}^{-1}X=R_{FX}R_{XX}^{-1}X$$
 
 Where
 
-> $\hat{a}$ is a random vector of a person's estimated factor scores.\
-> $R_{XX}$ is the correlation matrix among the latent factors.\
-> $\Lambda$ is the factor-pattern matrix.\
-> $R_{XY}$ is a correlation matrix between the common factors and the observed variables.\
-> $R_{YY}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
-> $y$ is a random vector of a person's standardized scores on the observed variables.
+> $\hat{F}$ is a vector of a person's estimated factor scores.\
+> $R_{FF}$ is the correlation matrix among the latent factors.\
+> $\Lambda_{FX}$ is the matrix of loadings from factors to observed scores.\
+> $R_{FX}$ is a correlation matrix between the common factors and the observed variables.\
+> $R_{XX}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
+> $X$ is a vector of a person's standardized scores on the observed variables.
 
 # Predicting a profile's rarity in a population
 
-$$d_{C M}=\sqrt{(y-\hat{y})'R^{-1}(y-\hat{y})}$$
+$$d_{C M}=\sqrt{(X-\hat{X})'R_{XX}^{-1}(X-\hat{X})}$$
 
 Where
 
-> $\hat{y}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the factor scores of cognitive abilities).\
+> $\hat{X}$ is the vector of predicted outcome scores (i.e., the predicted academic abilities predicted by the factor scores of cognitive abilities).\
 > $y$ is the vector of outcome scores (i.e., the factor scores of academic abilities estimated from our SEM).\
 > $R$ is the matrix of conditional variance among the factor scores (the composite correlation between factor scores calculated using population correlation among observed scores, that is, $\beta'\Sigma_{xx}\beta$, where $\beta=\Sigma_{yx}\Sigma_{xx}^{-1}$.
 
@@ -620,12 +703,6 @@ $$d_{M_C}^{2} \sim\chi^{2}(k)$$
 
 # A Worked Example
 
-Suppose we have two cognitive predictors of reading, General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Each cognitive and academic ability is measured with three tests each. The theoretical model of how each variable relates to every other variable is shown below.
-
-```{r, echo = FALSE, fig.align='center', fig.cap="General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension"}
-knitr::include_graphics("Reading.svg")
-```
-
 Here we load packages we will need and create a function for converting raw scores with a specific population mean and standard deviation to *z*-scores:
 
 ```{r load}
@@ -634,7 +711,6 @@ library(tidyr)
 library(dplyr)
 library(purrr)
 library(knitr)
-library(kableExtra)
 library(unusualprofile)
 
 # Function to create *z*-scores
@@ -680,21 +756,19 @@ d_case <- tibble(
   RC2 = 84,
   RC3 = 107
 ) %>% 
-  mutate_all(zscore, mean = 100, sd = 15)
+  mutate_all(zscore, mean = 100, sd = 15) %>% 
+  simstandard::add_composite_scores(m = m_Reading)
 
-fit_reading <- simstandard::sim_standardized_matrices(m_Reading)
-composite_matrix <- fit_reading$Coefficients$composite_score
-d_composites <- as.matrix(d_case) %*% composite_matrix
 
-d_all <- cbind(d_case, d_composites)
 
-d_all %>% 
+d_case %>% 
         gather("Ability","z-score") %>% 
   mutate(SS = as.integer(`z-score` * 15 + 100)) %>%
   select(Ability,SS, `z-score`) %>% 
   kable(digits = 2, 
         caption = "Case Scores") %>%
   kableExtra::kable_styling(., bootstrap_options = "striped")
+
 ```
 
 ## Indicator Scores
@@ -704,13 +778,17 @@ Suppose that we want to know if the academic performance scores are unusual, giv
 First, let's see if the observed score profile is unusual. We can calculate the (unconditional) Mahalanobis distance by putting all the observed variables as dependent variables:
 
 ```{r}
+
 v_Reading <- c("RD1","RD2","RD3","RC1","RC2","RC3")
 v_Cognitive <- c("Ga1","Ga2","Ga3","Gc1","Gc2","Gc3")
 
-cond_maha(
-  data = d_all, 
+cm <- cond_maha(
+  data = d_case, 
   R = R, 
   v_dep = c(v_Reading, v_Cognitive))
+
+
+
 ```
 
 From the probability (p), we see that the overall observed score profile is quite unusual.
@@ -942,4 +1020,4 @@ bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
   
 ```
 
-# References
+# Reference

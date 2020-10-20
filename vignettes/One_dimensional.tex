@@ -17,7 +17,7 @@
 \definecolor{B}{HTML}{FFE1B6}
 \definecolor{C}{HTML}{7A9EB1}
 
-\usepackage[nomessages]{fp}% 
+\usepackage[nomessages]{fp}%
 
 \def\Primary{{I,V,S,N,P,F,M}}
 
@@ -46,7 +46,7 @@
 \node[ob, right = 4mm of x1] (x2) {\emph{x}$_{\text{2}}$};
 \node[ob, right = 4mm of x2] (x3) {\emph{x}$_{\text{3}}$};
 \node[ob, right = 4mm of x3] (x4) {\emph{x}$_{\text{4}}$};
-\node[latent, above = 40mm of $(x1)!0.5!(x4)$] (g) {\emph{g}};
+\node[latent, above = 40mm of $(x1)!0.5!(x4)$] (g) {\emph{X}};
 \coordinate (firstg1) at ($(x1.north |- g.south)!0.47!(x1.north) + (-1,0)$);
 \coordinate (lastg1) at ($(x4.north |- g.south)!0.47!(x4.north)+ (1,0)$);
 \path[single] (g) to (x1);

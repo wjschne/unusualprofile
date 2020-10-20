@@ -85,5 +85,5 @@ cm <- cond_maha(data = d_example,
 cm
 
 # Plot
-plot_cond_maha(cm)
+plot(cm)
 ```

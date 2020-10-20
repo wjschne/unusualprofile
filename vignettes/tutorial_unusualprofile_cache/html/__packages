@@ -11,6 +11,7 @@ simstandard
 knitr
 kableExtra
 ggplot2
+glue
 sysfonts
 showtextdb
 showtext

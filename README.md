@@ -92,7 +92,7 @@ cm
 #> Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539
 
 # Plot
-plot_cond_maha(cm)
+plot(cm)
 ```
 
 <img src="man/figures/README-example-1.svg" width="100%" />

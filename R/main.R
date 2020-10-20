@@ -465,9 +465,10 @@ cond_maha <- function(data,
 } else {
   # If there are no independent variables
   M <- list(dM_dep = dM_dep,
-       dM_dep_df = k_dep,
-       dM_dep_p = dM_dep_p,
-       label = label)
+            dM_dep_df = k_dep,
+            dM_dep_p = dM_dep_p,
+            d_dep = d_dep,
+            label = label)
   class(M) <- c("maha",class(M))
   M
   }
@@ -518,7 +519,7 @@ format.maha <- function(x, ...) {
 #' @noRd
 #' @keywords internal
 #' @export
-print.maha <- function(x, ...) format(x, ...)
+print.maha <- function(x, ...) cat(format(x, ...))
 
 
 
@@ -893,7 +894,7 @@ proportion2percentile <- function(p,
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
 #'
-plot_cond_maha <- function(cm, family = "serif", score_digits = 2) {
+plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
 
   cm$d_score %>%
     dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE * .data$sigma),
@@ -973,3 +974,90 @@ plot_cond_maha <- function(cm, family = "serif", score_digits = 2) {
     ggplot2::scale_color_grey()
 }
 
+#' Plot objects of the maha class (i.e, the results of the cond_maha function using dependent variables only).
+#'
+#' @export
+#' @param cm The results of the cond_maha function.
+#' @param family Font family.
+#' @param score_digits Number of digits to round scores.
+#' @importFrom rlang .data
+#'
+plot.maha <- function(cm, family = "serif", score_digits = 2) {
+
+  cm$d_dep %>%
+    dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE * .data$sigma),
+                  yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
+                  id = factor(.data$id),
+                  Role = factor(.data$Role, levels = c("Unconditional", "Conditional"))) %>%
+    ggplot2::ggplot(ggplot2::aes(.data$Variable, .data$Score, fill = .data$Role)) +
+    ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
+                        scales = "free",
+                        space = "free") +
+    ggnormalviolin::geom_normalviolin(
+      mapping = ggplot2::aes(
+        mu = .data$yhat,
+        sigma = .data$SD,
+        face_right = .data$Role == "Conditional",
+        face_left = .data$Role != "Conditional"),
+      fill = "gray90",
+      width = 0.85) +
+    ggnormalviolin::geom_normalviolin(
+      mapping = ggplot2::aes(
+        mu = .data$mu,
+        sigma = .data$sigma,
+        face_right = .data$Role != "Conditional"),
+      fill = "gray65",
+      width = 0.85) +
+    ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = formatC(.data$Score, score_digits, format = "f"),
+        color = .data$id
+      ),
+      vjust = -0.5,
+      family = family
+    ) +
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        color = .data$id,
+        label = dplyr::if_else(
+          .data$Role == "Unconditional",
+          "",
+          paste0(
+            "italic(c*p)=='",
+            proportion_round(.data$cp),
+            "'"))),
+      vjust = 2.3,
+      size = 3,
+      parse = TRUE,
+      family = family) +
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        color = .data$id,
+        label = paste0(
+          "italic(phantom(c)*p)=='",
+          proportion_round(.data$p),
+          "'"
+        )
+      ),
+      vjust = 1.3,
+      size = 3,
+      parse = TRUE,
+      family = family) +
+    ggplot2::scale_y_continuous("Scores") +
+    ggplot2::scale_x_discrete(NULL,
+                              expand = ggplot2::expansion(add = 1)) +
+    ggplot2::labs(title = bquote(list(
+      Conditional ~ Mahalanobis == .(formatC(cm$dCM, 2, format = "f")),
+      italic(p) == .(proportion_round(cm$dCM_p))
+    )),
+    caption = expression(
+      list(
+        italic(p) == "Population proportion",
+        italic(c * p) == "Conditional proportion"
+      )
+    )) +
+    ggplot2::theme_light(base_family = family) +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::scale_color_grey()
+}
