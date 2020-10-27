@@ -20,7 +20,7 @@ body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif';
       font-size:18px; 
       line-height:1.25;}
 
-.caption {text-align:right; font-size:0.9rem}
+.caption {text-align:right; font-size:10pt}
 
 img {border: none}
 ```
