@@ -1,16 +1,25 @@
 #' Calculate the conditional Mahalanobis distance for any variables.
 #'
 #' @export
-#' @param data Data.frame with the independent and dependent variables. Unless mu and sigma are specified, data are assumed to be z-scores.
+#' @param data Data.frame with the independent and dependent variables.
+#' Unless mu and sigma are specified, data are assumed to be z-scores.
 #' @param R Correlation among all variables.
 #' @param v_dep Vector of names of the dependent variables in your profile.
-#' @param v_ind Vector of names of independent variables you would like to control for.
-#' @param v_ind_composites Vector of names of independent variables that are composites of dependent variables
-#' @param mu A vector of means. A single value means that all variables have the same mean.
-#' @param sigma A vector of standard deviations. A single value means that all variables have the same standard deviation
-#' @param use_sample_stats If TRUE, estimate R, mu, and sigma from data. Only complete cases are used (i.e., no missing values in v_dep, v_ind, v_ind_composites).
+#' @param v_ind Vector of names of independent variables you would like to
+#' control for.
+#' @param v_ind_composites Vector of names of independent variables that are
+#' composites of dependent variables
+#' @param mu A vector of means. A single value means that all variables have
+#' the same mean.
+#' @param sigma A vector of standard deviations. A single value means that
+#' all variables have the same standard deviation
+#' @param use_sample_stats If TRUE, estimate R, mu, and sigma from data.
+#' Only complete cases are used (i.e., no missing values in v_dep, v_ind,
+#' v_ind_composites).
 #' @param label optional tag for labeling output
-#' @return conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
+#' @return conditional Mahalanobis distance, percentiles for each case based
+#' on the Chi-square distribution formed by conditional Mahalanobis distance
+#' and predicted Deps based on Inds.
 #' @examples
 #' library(unusualprofile)
 #' library(simstandard)
@@ -45,7 +54,7 @@ cond_maha <- function(data,
                       sigma = 1,
                       use_sample_stats = FALSE,
                       label = NA) {
-  # Convert d to matrix
+  # Convert data to matrix
   if (is.vector(data)) {
     data <- matrix(data, nrow = 1, dimnames = list(NULL, names(data)))
   }
@@ -56,14 +65,47 @@ cond_maha <- function(data,
   v_ind <- unique(
     c(v_ind,
       v_ind_composites))
+
   # Checks ----
+
+  # Check if v_dep are in colnames of data and R
+  if (!is.null(v_dep)) {
+    if (!all(v_dep %in% colnames(data))) {
+      v_dep_not_in_d <- paste(v_dep[!(v_ind_composites %in%
+                                        colnames(data))],
+                              collapse = ", ")
+      stop(paste0("Some variables in v_dep are not in data: ",
+                  v_dep_not_in_d))
+    }
+
+    if (!all(v_dep %in% colnames(R))) {
+      v_dep_not_in_R <- paste(v_dep[!(v_dep %in%
+                                        colnames(R))],
+                              collapse = ", ")
+      stop(paste0("Some variables in v_dep are not in R: ",
+                  v_dep_not_in_R))
+    }
+  }
+
+
 
   # Check if v_ind_composites are in colnames of data
   if (!is.null(v_ind_composites)) {
     if (!all(v_ind_composites %in% colnames(data))) {
-      v_ind_not_in_d <- paste(v_ind_composites[!(v_ind_composites %in% colnames(data))],
+      v_ind_not_in_d <- paste(v_ind_composites[!(v_ind_composites %in%
+                                                   colnames(data))],
                               collapse = ", ")
       stop(paste0("Some variables in v_ind_composites are not in data: ",
+                  v_ind_not_in_d))
+    }}
+
+  # Check if v_ind_composites are in R
+  if (!is.null(v_ind_composites)) {
+    if (!all(v_ind_composites %in% colnames(R))) {
+      v_ind_not_in_d <- paste(v_ind_composites[!(v_ind_composites %in%
+                                                   colnames(R))],
+                              collapse = ", ")
+      stop(paste0("Some variables in v_ind_composites are not in R: ",
                   v_ind_not_in_d))
     }}
 
@@ -75,6 +117,16 @@ cond_maha <- function(data,
       stop(paste0("Some variables in v_ind are not in data: ",
                   v_ind_not_in_d))
     }
+
+
+    if (!all(v_ind %in% colnames(R))) {
+      v_ind_not_in_R <- paste(v_ind[!(v_ind %in% colnames(R))],
+                              collapse = ", ")
+      stop(paste0("Some variables in v_ind are not in R: ",
+                  v_ind_not_in_R))
+    }
+
+
 
     # Check if v_dep and v_ind have overlapping v
     if (any(v_dep %in% v_ind)) {
@@ -88,7 +140,7 @@ cond_maha <- function(data,
 
 
 
-  # Check if v_dep are in colnames d
+  # Check if v_dep are in colnames of data
   if (!all(v_dep %in% colnames(data))) {
     v_Dep_not_in_d <- paste(v_dep[!(v_dep %in% colnames(data))],
                             collapse = ", ")
@@ -178,10 +230,18 @@ cond_maha <- function(data,
 
   # means and sd of dependent variables
 
-  mu <- matrix(mu, ncol = 1, dimnames = list(names(mu),NULL))[v_all,, drop = FALSE]
-  sigma <- matrix(sigma, ncol = 1, dimnames = list(names(sigma)))[v_all,, drop = FALSE]
+  mu <- matrix(mu,
+               ncol = 1,
+               dimnames = list(names(mu),NULL))[v_all,, drop = FALSE]
+  sigma <- matrix(sigma,
+                  ncol = 1,
+                  dimnames = list(names(sigma)))[v_all,, drop = FALSE]
   mu_dep <- mu[v_dep,, drop = FALSE]
   sigma_dep <- sigma[v_dep,, drop = FALSE]
+
+
+
+
 
   R <- R[v_all, v_all, drop = FALSE]
   # Check if R is a correlation matrix
@@ -217,8 +277,8 @@ cond_maha <- function(data,
 
 
   # Data for just dependent variables
-  d_dep <- data[, v_dep, drop = F]
-  d_dep_z <- d_z[, v_dep, drop = F]
+  d_dep <- data[, v_dep, drop = FALSE]
+  d_dep_z <- d_z[, v_dep, drop = FALSE]
 
   # Number of dependent variables
   k_dep <- length(v_dep)
@@ -266,14 +326,15 @@ cond_maha <- function(data,
     SEE <- sqrt(1 - R2)
 
     # Data for just independent variables
-    d_ind <- data[, v_ind, drop = F]
-    d_ind_z <- d_z[, v_ind, drop = F]
+    d_ind <- data[, v_ind, drop = FALSE]
+    d_ind_z <- d_z[, v_ind, drop = FALSE]
     d_ind_p <- stats::pnorm(d_ind_z)
 
     # Make predicted deps
     d_predicted_z <- d_ind_z %*% reg_beta
     d_deviations_z <- d_dep_z - d_predicted_z
-    d_predicted <- d_predicted_z * colsigma[, v_dep, drop = FALSE] + colmu[,v_dep, drop = FALSE]
+    d_predicted <- d_predicted_z * colsigma[, v_dep, drop = FALSE] +
+      colmu[,v_dep, drop = FALSE]
     d_deviations <- d_dep - d_predicted
 
 
@@ -358,7 +419,7 @@ cond_maha <- function(data,
 
 
     d_person <- tibble::tibble(
-      id = 1:nrow(data),
+      id = seq_len(nrow(data)),
       dCM = dCM,
       dCM_df = dCM_df,
       dCM_p = dCM_p,
@@ -467,7 +528,11 @@ cond_maha <- function(data,
   M <- list(dM_dep = dM_dep,
             dM_dep_df = k_dep,
             dM_dep_p = dM_dep_p,
-            d_dep = d_dep,
+            d_dep = tibble::as_tibble(d_dep),
+            v_dep = v_dep,
+            data = tibble::as_tibble(data),
+            mu = mu[v_dep, 1],
+            sigma = sigma[v_dep, 1],
             label = label)
   class(M) <- c("maha",class(M))
   M
@@ -701,10 +766,12 @@ dcm_cor <- function(model, v_dep, v_ind, n = 10000) {
 #' Confidence interval of the reliability (accuracy index)
 #'
 #' @export
-#' @param model Population relations among variables represented by Lavaan Syntax
+#' @param model character string representing a model in lavaan syntax
 #' @param v_dep Vector of names of the dependent variables in your profile.
-#' @param v_ind Vector of names of independent variables you would like to control for.
-#' @param v_ind_composites Vector of names of independent variables that are composites of dependent variables
+#' @param v_ind Vector of names of independent variables you would like
+#' to control for.
+#' @param v_ind_composites Vector of names of independent variables
+#' that are composites of dependent variables
 #' @param replications The number of trials
 #' @param sample_size The number of cases
 #' @importFrom rlang .data
@@ -756,7 +823,7 @@ boot_dcm <- function(model,
     m = model,
     n = sample_size * replications,
     factor_scores = TRUE,
-    errors = FALSE, observed = F)
+    errors = FALSE, observed = FALSE)
 
   R_all  = simstandard::sim_standardized_matrices(model)$Correlations$R_all
 
@@ -801,7 +868,9 @@ boot_dcm <- function(model,
 #' @keywords internal
 #' @return label string
 p2label <- function(p) {
-  thresholds <- purrr::map_int(p, function(x) sum(x > stats::pnorm(seq(60,90,10), 100, 15)) + sum(x >= stats::pnorm(seq(110,140,10), 100, 15)) + 1L)
+  thresholds <- purrr::map_int(p, function(x) {
+    sum(x > stats::pnorm(seq(60,90,10), 100, 15)) +
+      sum(x >= stats::pnorm(seq(110,140,10), 100, 15)) + 1L})
   vlabels <- c(
     "Extremely Low",
     "Very Low",
@@ -844,23 +913,28 @@ proportion_round <- function(p, digits = 2) {
 
   p1 <- dplyr::if_else(p < 0.5, p, 1 - p)
 
-  r <- dplyr::if_else(p <= 0 | p >= 1 | p > lower_limit & p < upper_limit, digits, -floor(log10(abs(p1))) + (p < lower_limit))
+  r <- dplyr::if_else(p <= 0 | p >= 1 | p > lower_limit & p < upper_limit,
+                      true = digits,
+                      false = -floor(log10(abs(p1))) + (p < lower_limit))
   r <- dplyr::if_else(r > 1 & p < 1 & p > 0 & !is.na(p), r, digits)
 
-  p2 <- stringr::str_replace(string = purrr::map2_chr(p, r, formatC, format = "f"),
-                       pattern = "^0\\.",
-                       replacement = ".")
+  p2 <- stringr::str_replace(
+    string = purrr::map2_chr(p, r, formatC, format = "f"),
+    pattern = "^0\\.",
+    replacement = ".")
   dplyr::if_else(is.na(p), NA_character_, p2)
 
 }
 
-#' Rounds proportions to significant digits both near 0 and 1, then converts to percentiles
+#' Rounds proportions to significant digits both near 0 and 1,
+#' then converts to percentiles
 #'
-#' @param p probabiity
+#' @param p probability
 #' @param digits rounding digits. Defaults to 2
-#' @param remove_leading_zero Remove leading zero for small percentiles, Defaults to TRUE
+#' @param remove_leading_zero Remove leading zero for small percentiles,
+#' Defaults to TRUE
 #' @param add_percent_character Append percent character. Defaults to FALSE
-#' @return chracter vector
+#' @return character vector
 #' @export
 #'
 #' @examples
@@ -870,13 +944,13 @@ proportion2percentile <- function(p,
                                   digits = 2,
                                   remove_leading_zero = TRUE,
                                   add_percent_character = FALSE) {
-  p1 <- as.character(100 * as.numeric(proportion_round(as.numeric(p), digits = digits)))
+  p1 <- as.character(100 * as.numeric(proportion_round(as.numeric(p),
+                                                       digits = digits)))
   if (remove_leading_zero) {
     p1 <- gsub(pattern = "^0\\.",
                replacement = ".",
                x = p1)
   }
-
 
   if (add_percent_character) {
     p1 <- paste0(p1,"%")
@@ -897,11 +971,16 @@ proportion2percentile <- function(p,
 plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
 
   cm$d_score %>%
-    dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE * .data$sigma),
+    dplyr::mutate(SD = ifelse(test = is.na(.data$SEE),
+                              yes = .data$sigma,
+                              no = .data$SEE * .data$sigma),
            yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
            id = factor(.data$id),
-           Role = factor(.data$Role, levels = c("Unconditional", "Conditional"))) %>%
-    ggplot2::ggplot(ggplot2::aes(.data$Variable, .data$Score, fill = .data$Role)) +
+           Role = factor(.data$Role,
+                         levels = c("Unconditional", "Conditional"))) %>%
+    ggplot2::ggplot(ggplot2::aes(x = .data$Variable,
+                                 y = .data$Score,
+                                 fill = .data$Role)) +
     ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
                scales = "free",
                space = "free") +
@@ -974,41 +1053,41 @@ plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
     ggplot2::scale_color_grey()
 }
 
-#' Plot objects of the maha class (i.e, the results of the cond_maha function using dependent variables only).
+#' Plot objects of the maha class (i.e, the results of the cond_maha function
+#' using dependent variables only).
 #'
 #' @export
 #' @param cm The results of the cond_maha function.
+#' @param p_tail Proportion in violin tail (defaults to 0).
 #' @param family Font family.
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
 #'
-plot.maha <- function(cm, family = "serif", score_digits = 2) {
+plot.maha <- function(cm, p_tail = 0, family = "serif", score_digits = 2) {
+
+  d_stats <- tibble::tibble(Variable = cm$v_dep, mu = cm$mu, sigma = cm$sigma)
 
   cm$d_dep %>%
-    dplyr::mutate(SD = ifelse(is.na(.data$SEE), .data$sigma, .data$SEE * .data$sigma),
-                  yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
-                  id = factor(.data$id),
-                  Role = factor(.data$Role, levels = c("Unconditional", "Conditional"))) %>%
-    ggplot2::ggplot(ggplot2::aes(.data$Variable, .data$Score, fill = .data$Role)) +
-    ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
-                        scales = "free",
-                        space = "free") +
-    ggnormalviolin::geom_normalviolin(
-      mapping = ggplot2::aes(
-        mu = .data$yhat,
-        sigma = .data$SD,
-        face_right = .data$Role == "Conditional",
-        face_left = .data$Role != "Conditional"),
-      fill = "gray90",
-      width = 0.85) +
-    ggnormalviolin::geom_normalviolin(
-      mapping = ggplot2::aes(
-        mu = .data$mu,
-        sigma = .data$sigma,
-        face_right = .data$Role != "Conditional"),
-      fill = "gray65",
-      width = 0.85) +
-    ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
+    tibble::rownames_to_column("id") %>%
+    dplyr::mutate(id = factor(.data$id)) %>%
+    tidyr::pivot_longer(-.data$id,
+                        names_to = "Variable",
+                        values_to = "Score") %>%
+    dplyr::left_join(d_stats, by = "Variable") %>%
+    dplyr::mutate(
+      z = (.data$Score - .data$mu) / .data$sigma,
+      z_p = stats::pnorm(.data$z),
+      in_tail = .data$z_p < p_tail / 2 | .data$z_p > (1 - p_tail / 2)) %>%
+    ggplot2::ggplot(ggplot2::aes(.data$Variable, .data$Score)) +
+    ggnormalviolin::geom_normalviolin(data = d_stats,
+                                      ggplot2::aes(x = .data$Variable,
+                                          mu = .data$mu,
+                                          sigma = .data$sigma),
+                                      inherit.aes = FALSE,
+                                      fill = "gray65",
+                                      p_tail = p_tail) +
+    ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id,
+                                               shape = .data$in_tail)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
         label = formatC(.data$Score, score_digits, format = "f"),
@@ -1020,44 +1099,27 @@ plot.maha <- function(cm, family = "serif", score_digits = 2) {
     ggplot2::geom_text(
       mapping = ggplot2::aes(
         color = .data$id,
-        label = dplyr::if_else(
-          .data$Role == "Unconditional",
-          "",
-          paste0(
-            "italic(c*p)=='",
-            proportion_round(.data$cp),
-            "'"))),
-      vjust = 2.3,
-      size = 3,
-      parse = TRUE,
-      family = family) +
-    ggplot2::geom_text(
-      mapping = ggplot2::aes(
-        color = .data$id,
-        label = paste0(
-          "italic(phantom(c)*p)=='",
-          proportion_round(.data$p),
-          "'"
-        )
-      ),
+        label = paste0("italic(p)=='",
+                       proportion_round(.data$z_p),
+                       "'")),
       vjust = 1.3,
       size = 3,
       parse = TRUE,
       family = family) +
+    ggplot2::theme_minimal(base_family = family) +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::scale_color_viridis_d() +
+    ggplot2::scale_shape_manual(values=c(16, 0)) +
     ggplot2::scale_y_continuous("Scores") +
     ggplot2::scale_x_discrete(NULL,
                               expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
-      Conditional ~ Mahalanobis == .(formatC(cm$dCM, 2, format = "f")),
-      italic(p) == .(proportion_round(cm$dCM_p))
+      Mahalanobis == .(formatC(cm$dM_dep, 2, format = "f")),
+      italic(p) == .(proportion_round(cm$dM_dep_p))
     )),
     caption = expression(
       list(
-        italic(p) == "Population proportion",
-        italic(c * p) == "Conditional proportion"
+        italic(p) == "Population proportion"
       )
-    )) +
-    ggplot2::theme_light(base_family = family) +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::scale_color_grey()
-}
+    ))
+  }

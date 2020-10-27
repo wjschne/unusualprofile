@@ -3,6 +3,7 @@
 S3method(format,cond_maha)
 S3method(format,maha)
 S3method(plot,cond_maha)
+S3method(plot,maha)
 S3method(print,cond_maha)
 S3method(print,maha)
 export(boot_dcm)

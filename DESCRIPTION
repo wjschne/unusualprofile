@@ -2,7 +2,6 @@ Package: unusualprofile
 Type: Package
 Title: Calculates Conditional Mahalanobis Distances
 Version: 0.1.0
-Date: 2019-06-24
 Author: W. Joel Schneider & Feng Ji
 Authors@R: c(
     person(given = "W. Joel",
@@ -25,20 +24,20 @@ Depends:
 Imports:
     lavaan,
     magrittr,
-    glue,
-    mvtnorm,
     dplyr,
-    tidyr,
+    tidyr (>= 1.1.2),
     tibble,
     stats,
     purrr,
-    simstandard,
+    simstandard (>= 0.5.0),
     ggplot2,
     ggnormalviolin,
     rlang (>= 0.1.2)
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
+    glue,
+    mvtnorm,
     extrafont,
     kableExtra,
     forcats,

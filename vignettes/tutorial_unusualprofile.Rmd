@@ -21,6 +21,8 @@ body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif';
       line-height:1.25;}
 
 .caption {text-align:right; font-size:0.9rem}
+
+img {border: none}
 ```
 
 ```{r setup, include = FALSE}
@@ -312,6 +314,7 @@ knitr::include_graphics("One_dimensional.svg")
 In the plot below, two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven.
 
 ```{r conditional_dist, echo = FALSE, fig.cap=glue("<em>Figure {fig()}</em>. Conditional distributions for people with a composite score of 1.")}
+
 library(ggnormalviolin)
 set.seed(1000)
 elevation <- 1
@@ -344,7 +347,7 @@ d %>%
   mutate(id = factor(id),
          pdM = PropRound(CM$dCM_p)) %>% 
   gather("Variable","X",-id, -pdM) %>% 
-  ggplot(aes(Variable, X)) + 
+  ggplot(aes(Variable, X)) +
   geom_normalviolin(
     aes(
       x = id,
@@ -354,7 +357,8 @@ d %>%
                   sigma = sqrt(diag(cov_cond))), 
     inherit.aes = F,
     alpha = 0.5, 
-    upper_limit = 3) +
+    upper_limit = 3,
+    face_left = F) +
   geom_line(aes(group = id, 
                 color = id), 
             alpha = 1, 
@@ -410,6 +414,28 @@ d %>%
     size = 6, 
     lineheight = 0.85) +
   annotate(
+    "label", 
+    x = 2.5, 
+    y = -1.75, 
+    label = "Population\nDistribution", 
+    color = "gray", 
+    label.padding = unit(0, "lines"), 
+    label.size = 0, 
+    vjust = 0.5,
+    size = 5, 
+    lineheight = 0.85) + 
+  annotate(
+    "label", 
+    x = 3.5, 
+    y = 1.75, 
+    label = "Conditional\nDistribution", 
+    color = "gray", 
+    label.padding = unit(0, "lines"), 
+    label.size = 0, 
+    vjust = 0.5,
+    size = 5, 
+    lineheight = 0.85) +
+  annotate(
     "segment", 
     x = 1.5, 
     y = -0.4, 
@@ -428,24 +454,61 @@ d %>%
     size = 1, color = "steelblue", 
     arrow = arrow(length = unit(0.35,"cm"), 
                          angle = 17, type = "closed")) + 
+  annotate(
+    "segment", 
+    x = 2.5, 
+    y = -1.55, 
+    xend = 2.8, 
+    yend = -1.2, 
+    size = 1, 
+    color = "gray", 
+    arrow = arrow(length = unit(0.35,"cm"), 
+                         angle = 17, type = "closed")) +
+  annotate(
+    "segment", 
+    x = 3.5, 
+    y = 1.55, 
+    xend = 3.25, 
+    yend = 1.3, 
+    size = 1, 
+    color = "gray", 
+    arrow = arrow(length = unit(0.35,"cm"), 
+                         angle = 17, type = "closed")) +
   ggtitle("Two profiles with the same elevation but different shapes") + 
   theme(legend.position = "none") +
-  coord_cartesian(ylim = c(-3,3))
+  coord_cartesian(ylim = c(-3,3)) + 
+  geom_normalviolin(aes(mu = mu, sigma = sigma, x = Variable), data = tibble(Variable = factor(c("x1","x2","x3","x4")), mu = 0, sigma = 1, X = 1), alpha = 0.3, face_right = F)
 
 ```
 
 # A Worked Example
 
-Suppose that
-
-$$X=\{X_1,  X_2, X_3, X_4\} = \{0, 2, -1, -1\}. $$
-
-```{r standardized_scores}
+```{r standardized_scores, echo=FALSE}
 # Standardized observed scores
 X <- c(X_1 = 0, 
        X_2 = 1, 
        X_3 = -1,
        X_4 = -1)
+```
+
+Suppose that among standard multivariate normal
+
+$$X=\{X_1,X_2, X_3, X_4\} = \{`r paste0(X, collapse = ",")`\}. $$
+
+```{r, echo = F, fig.cap=glue("<em>Figure {fig()}</em>. Example profile in a standard multivariate normal distribution.")}
+tibble(Variable = paste0("italic(X)[",1:4,"]"), Score = X,
+       vjust = c(1.5, -0.5, 1.5, 1.5)) %>% 
+  ggplot(aes(Variable, Score)) + 
+  geom_normalviolin(aes(mu = 0, sigma = 1), fill = "gray", alpha = .4) +
+  geom_line(aes(group = 1), color = "firebrick") +
+  geom_point(pch = 16, color = "firebrick", size = 2) +
+  geom_text(aes(label = Score, vjust = vjust), color = "firebrick") +
+  scale_x_discrete(NULL, labels = function(l) parse(text=l)) +
+  scale_y_continuous()
+```
+
+```{r, ref.label = 'standardized_scores'}
+
 ```
 
 How can we calculate the Mahalanobis distance for profiles that all have the same elevation? We will show how to do so in two ways. The easier of the two methods will be to use the simstandard package to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we will also see how to do everything "by hand" using matrix algebra.
@@ -491,11 +554,18 @@ d <- t(X) %>%
 d
 
 # Calculate the conditional Mahalanobis distance
-cond_maha(data = d,
-          R = R_all,
-          v_dep = v_observed,
-          v_ind_composites = v_composite)
+cm <- cond_maha(data = d,
+                R = R_all,
+                v_dep = v_observed,
+                v_ind_composites = v_composite)
+cm
 ```
+
+```{r, fig.cap=glue("<em>Figure {fig()}</em>. A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score")}
+plot(cm, family = myfont)
+```
+
+Here we can see that the profile is more unusual than `r round(100*cm$dCM_p, 0)` of profiles with the same elevation (i.e., a composite score of *z* = `r round(d$X_Composite, 2)`).
 
 ### Calculations with Matrix Algebra
 
@@ -782,12 +852,11 @@ First, let's see if the observed score profile is unusual. We can calculate the 
 v_Reading <- c("RD1","RD2","RD3","RC1","RC2","RC3")
 v_Cognitive <- c("Ga1","Ga2","Ga3","Gc1","Gc2","Gc3")
 
-cm <- cond_maha(
-  data = d_case, 
-  R = R, 
-  v_dep = c(v_Reading, v_Cognitive))
+m <- cond_maha(data = d_case, 
+               R = R, 
+               v_dep = c(v_Reading, v_Cognitive))
 
-
+plot(m, p_tail = 0.05)
 
 ```
 
@@ -919,22 +988,25 @@ Thus, we can see that all three decoding tests are lower than expectations, part
   theme_light(base_family = myfont, base_size = 14) + 
   theme(legend.position = "none", strip.text = element_text(size = 10)) + 
   coord_cartesian(ylim = c(55,145))
+
+Cognitive_Composite <- paste0(c("Ga", "Gc"),"_Composite")
+Reading_Composite <- paste0(c("RD", "RC"),"_Composite")
 ```
 
 # Composite Score Model
 
 Often, all we need do is calculate the composite scores and see if they are within expectations.
 
-```{r}
-Cognitive_Composite <- paste0(c("Ga", "Gc"),"_Composite")
-Reading_Composite <- paste0(c("RD", "RC"),"_Composite")
+```{r, eval=F}
+
+
 
 # Unconditional Reading Profile
-cond_maha(data = d_all, 
+cond_maha(data = d_case, 
           R = R, 
           v_dep = Reading_Composite) 
 # Conditional Reading Profile
-cond_maha(data = d_all, 
+cond_maha(data = d_case, 
           R = R, 
           v_dep = Reading_Composite, 
           v_ind = Cognitive_Composite) 
@@ -942,11 +1014,11 @@ cond_maha(data = d_all,
 ```
 
 ```{r, echo = FALSE}
-dCM_composite <- cond_maha(data = d_all, 
+dCM_composite <- cond_maha(data = d_case, 
           R = R, 
           v_dep = Reading_Composite, 
           v_ind = Cognitive_Composite) 
-d_all %>% 
+d_case %>% 
   select(contains("Composite")) %>% 
   gather("Variable","Score") %>% 
   mutate(Variable = str_remove(Variable, "_Composite") %>% fct_inorder(),
@@ -970,7 +1042,7 @@ d_all %>%
 Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.
 
 ```{r}
-dCM_Gc <- cond_maha(d_all, 
+dCM_Gc <- cond_maha(d_case, 
                     R = R, 
                     v_dep = c("Gc1", "Gc2", "Gc3"), 
                     v_ind = "Gc_Composite")
@@ -983,10 +1055,10 @@ dCM_Gc$d_dep_cp
 
 ```
 
-Here we see that the Gc profile is somewhat unusual, but not particularly so. Among people with a composite Gc of `r round(d_all$Gc_Composite * 15 + 100)`, this profile is more unusual than `r round(dCM_Gc$dCM_p * 100)`% of profiles. From the plot below, Gc2 is a little high (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc2, 2)`) and Gc3 is a little low (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc3, 2)`).
+Here we see that the Gc profile is somewhat unusual, but not particularly so. Among people with a composite Gc of `r round(d_case$Gc_Composite * 15 + 100)`, this profile is more unusual than `r round(dCM_Gc$dCM_p * 100)`% of profiles. From the plot below, Gc2 is a little high (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc2, 2)`) and Gc3 is a little low (standardized residual = `r round(dCM_Gc$d_dep_residuals_z$Gc3, 2)`).
 
 ```{r, echo = FALSE}
-bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
+bind_rows(d_case %>% select(Gc1:Gc3) * 15 + 100,
           dCM_Gc$d_predicted * 15 + 100,
           dCM_Gc$SEE * 15) %>% 
   mutate(Type = c("Score","Predicted","SEE")) %>% 
@@ -995,7 +1067,7 @@ bind_rows(d_all %>% select(Gc1:Gc3) * 15 + 100,
   mutate(Role = "Conditional Distributions, Given Gc") %>% 
   add_row(Variable = "Gc",
           Predicted = 100, 
-          Score = d_all$Gc_Composite * 15 + 100 ,
+          Score = d_case$Gc_Composite * 15 + 100 ,
           SEE = 15,
           Role = "Unconditional") %>% 
   mutate(Role = fct_rev(Role)) %>% 

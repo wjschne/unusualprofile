@@ -14,13 +14,15 @@ boot_dcm(
 )
 }
 \arguments{
-\item{model}{Population relations among variables represented by Lavaan Syntax}
+\item{model}{character string representing a model in lavaan syntax}
 
 \item{v_dep}{Vector of names of the dependent variables in your profile.}
 
-\item{v_ind}{Vector of names of independent variables you would like to control for.}
+\item{v_ind}{Vector of names of independent variables you would like
+to control for.}
 
-\item{v_ind_composites}{Vector of names of independent variables that are composites of dependent variables}
+\item{v_ind_composites}{Vector of names of independent variables
+that are composites of dependent variables}
 
 \item{sample_size}{The number of cases}
 

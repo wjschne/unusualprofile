@@ -2,7 +2,8 @@
 % Please edit documentation in R/main.R
 \name{proportion2percentile}
 \alias{proportion2percentile}
-\title{Rounds proportions to significant digits both near 0 and 1, then converts to percentiles}
+\title{Rounds proportions to significant digits both near 0 and 1,
+then converts to percentiles}
 \usage{
 proportion2percentile(
   p,
@@ -12,19 +13,21 @@ proportion2percentile(
 )
 }
 \arguments{
-\item{p}{probabiity}
+\item{p}{probability}
 
 \item{digits}{rounding digits. Defaults to 2}
 
-\item{remove_leading_zero}{Remove leading zero for small percentiles, Defaults to TRUE}
+\item{remove_leading_zero}{Remove leading zero for small percentiles,
+Defaults to TRUE}
 
 \item{add_percent_character}{Append percent character. Defaults to FALSE}
 }
 \value{
-chracter vector
+character vector
 }
 \description{
-Rounds proportions to significant digits both near 0 and 1, then converts to percentiles
+Rounds proportions to significant digits both near 0 and 1,
+then converts to percentiles
 }
 \examples{
 proportion2percentile(0.01111)

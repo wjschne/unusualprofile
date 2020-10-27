@@ -1,6 +1,7 @@
-pandoc: 2.7.3
-pkgdown: 1.4.1.9000
-pkgdown_sha: 134033d9d744c548c6fbe297bc0fbd1a2f498e83
+pandoc: 2.9.2.1
+pkgdown: 1.6.1
+pkgdown_sha: ~
 articles:
   tutorial_unusualprofile: tutorial_unusualprofile.html
+last_built: 2020-10-20T00:04Z
 

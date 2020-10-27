@@ -12,23 +12,27 @@ population relations and their clients' data — unusualness • unusualprofile<
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -45,7 +49,6 @@ population relations and their clients' data — unusualness" />
 <meta property="og:description" content="Wrapper for finding out Mahalanobis distance between variables:
 this one gives everything for practitioners to use when they only have
 population relations and their clients' data" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -63,7 +66,7 @@ population relations and their clients' data" />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -107,7 +110,7 @@ population relations and their clients' data" />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/wjschne/unusualprofile">
+  <a href="https://github.com/wjschne/unusualprofile/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -138,7 +141,7 @@ this one gives everything for practitioners to use when they only have
 population relations and their clients' data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>unusualness</span>(<span class='no'>data</span>, <span class='no'>model</span>, <span class='no'>v_dep</span>, <span class='no'>v_ind</span>)</pre>
+    <pre class="usage"><span class='fu'>unusualness</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>model</span>, <span class='va'>v_dep</span>, <span class='va'>v_ind</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,7 +172,7 @@ distance and predicted Deps based on Inds.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Standardized structural model in lavaan syntax</span>
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='st'>"
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='st'>"
 Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
 Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
 Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
@@ -180,25 +183,26 @@ Math ~ 0.20 * Gc + 0.30 * Gf
 "</span>
 
 <span class='co'># Put observed scores in data.frame</span>
-<span class='no'>d_demo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-          <span class='kw'>Gc_1</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
-          <span class='kw'>Gc_2</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-          <span class='kw'>Gc_3</span> <span class='kw'>=</span> -<span class='fl'>0.2</span>,
-          <span class='kw'>Gf_1</span> <span class='kw'>=</span> <span class='fl'>1.1</span>,
-          <span class='kw'>Gf_2</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
-          <span class='kw'>Gf_3</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-          <span class='kw'>Read_1</span> <span class='kw'>=</span> -<span class='fl'>0.5</span>,
-          <span class='kw'>Read_2</span> <span class='kw'>=</span> -<span class='fl'>1</span>,
-          <span class='kw'>Read_3</span> <span class='kw'>=</span> -<span class='fl'>1.4</span>,
-          <span class='kw'>Math_1</span> <span class='kw'>=</span> <span class='fl'>1.1</span>,
-          <span class='kw'>Math_2</span> <span class='kw'>=</span> <span class='fl'>1.3</span>,
-          <span class='kw'>Math_3</span> <span class='kw'>=</span> <span class='fl'>0.7</span>
-)
-<span class='fu'>unusualness</span>(
-     <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>d_demo</span>,
-     <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>m</span>,
-     <span class='kw'>v_dep</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Math"</span>, <span class='st'>"Read"</span>),
-     <span class='kw'>v_ind</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Gc"</span>, <span class='st'>"Gf"</span>))</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
+<span class='va'>d_demo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
+          Gc_1 <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
+          Gc_2 <span class='op'>=</span> <span class='fl'>0.5</span>,
+          Gc_3 <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.2</span>,
+          Gf_1 <span class='op'>=</span> <span class='fl'>1.1</span>,
+          Gf_2 <span class='op'>=</span> <span class='fl'>1.3</span>,
+          Gf_3 <span class='op'>=</span> <span class='fl'>2</span>,
+          Read_1 <span class='op'>=</span> <span class='op'>-</span><span class='fl'>0.5</span>,
+          Read_2 <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
+          Read_3 <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1.4</span>,
+          Math_1 <span class='op'>=</span> <span class='fl'>1.1</span>,
+          Math_2 <span class='op'>=</span> <span class='fl'>1.3</span>,
+          Math_3 <span class='op'>=</span> <span class='fl'>0.7</span>
+<span class='op'>)</span>
+<span class='fu'>unusualness</span><span class='op'>(</span>
+     data <span class='op'>=</span> <span class='va'>d_demo</span>,
+     model <span class='op'>=</span> <span class='va'>m</span>,
+     v_dep <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Math"</span>, <span class='st'>"Read"</span><span class='op'>)</span>,
+     v_ind <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Gc"</span>, <span class='st'>"Gf"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
 #&gt;   Measure      dCM `dCM Percentile` `dCM Level`    dM `dM Percentile` `dM Level`
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>           </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     
 #&gt; </span><span style='color: #555555;'>1</span><span> </span><span style='color: #555555;'>"</span><span>Latent D~  1.65           0.744  Average      1.87           0.827 High Aver~
@@ -208,13 +212,9 @@ Math ~ 0.20 * Gc + 0.30 * Gf
 #&gt; </span><span style='color: #555555;'>5</span><span> </span><span style='color: #555555;'>"</span><span>All Obse~  2.59           0.125  Low Average  3.65           0.653 Average   </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -225,7 +225,7 @@ Math ~ 0.20 * Gc + 0.30 * Gf
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

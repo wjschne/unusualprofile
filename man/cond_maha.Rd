@@ -17,26 +17,35 @@ cond_maha(
 )
 }
 \arguments{
-\item{data}{Data.frame with the independent and dependent variables. Unless mu and sigma are specified, data are assumed to be z-scores.}
+\item{data}{Data.frame with the independent and dependent variables.
+Unless mu and sigma are specified, data are assumed to be z-scores.}
 
 \item{R}{Correlation among all variables.}
 
 \item{v_dep}{Vector of names of the dependent variables in your profile.}
 
-\item{v_ind}{Vector of names of independent variables you would like to control for.}
+\item{v_ind}{Vector of names of independent variables you would like to
+control for.}
 
-\item{v_ind_composites}{Vector of names of independent variables that are composites of dependent variables}
+\item{v_ind_composites}{Vector of names of independent variables that are
+composites of dependent variables}
 
-\item{mu}{A vector of means. A single value means that all variables have the same mean.}
+\item{mu}{A vector of means. A single value means that all variables have
+the same mean.}
 
-\item{sigma}{A vector of standard deviations. A single value means that all variables have the same standard deviation}
+\item{sigma}{A vector of standard deviations. A single value means that
+all variables have the same standard deviation}
 
-\item{use_sample_stats}{If TRUE, estimate R, mu, and sigma from data. Only complete cases are used (i.e., no missing values in v_dep, v_ind, v_ind_composites).}
+\item{use_sample_stats}{If TRUE, estimate R, mu, and sigma from data.
+Only complete cases are used (i.e., no missing values in v_dep, v_ind,
+v_ind_composites).}
 
 \item{label}{optional tag for labeling output}
 }
 \value{
-conditional Mahalanobis distance, percentiles for each case based on the Chi-square distribution formed by conditional Mahalanobis distance and predicted Deps based on Inds.
+conditional Mahalanobis distance, percentiles for each case based
+on the Chi-square distribution formed by conditional Mahalanobis distance
+and predicted Deps based on Inds.
 }
 \description{
 Calculate the conditional Mahalanobis distance for any variables.

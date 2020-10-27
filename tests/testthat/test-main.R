@@ -22,9 +22,9 @@ d <- sim_standardized(
 )
 
 # Model-implied correlation matrix
-v_dep = c("X_1", "X_2", "X_3",
+v_dep <- c("X_1", "X_2", "X_3",
           "Y_1", "Y_2", "Y_3")
-v_ind_composites = c("X_Composite", "Y_Composite")
+v_ind_composites <- c("X_Composite", "Y_Composite")
 v_ind <- NULL
 v_all <- c(v_ind, v_ind_composites, v_dep)
 R <- sim_standardized_matrices(model)$Correlations$R_all[v_all,
@@ -117,7 +117,7 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of data", {
       data = d,
       R = R,
       v_dep = v_dep,
-      v_ind <- "fred",
+      v_ind = "fred",
       v_ind_composites = v_ind_composites
     ),
     "Some variables in v_ind are not in data"
@@ -138,7 +138,48 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of data", {
       v_dep = v_dep,
       v_ind_composites = c(v_ind_composites, "fred")
     ),
-    "Some variables in v_ind_composites are not in dat"
+    "Some variables in v_ind_composites are not in data"
+  )
+})
+
+
+test_that("v_ind, v_ind_composites, and v_dep are in colnames of R", {
+
+  d1 <- d %>% mutate(fred = 1)
+
+
+  expect_error(
+    cond_maha(
+      data = d1,
+      R = R,
+      v_dep = v_dep,
+      v_ind = "fred",
+      v_ind_composites = v_ind_composites
+    ),
+    "Some variables in v_ind are not in R: fred"
+  )
+
+
+
+  expect_error(
+    cond_maha(
+      data = d1,
+      R = R,
+      v_dep = c(v_dep, "fred"),
+      v_ind = NULL,
+      v_ind_composites = v_ind_composites
+    ),
+    "Some variables in v_dep are not in R: fred"
+  )
+
+  expect_error(
+    cond_maha(
+      data = d1,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = c(v_ind_composites, "fred")
+    ),
+    "Some variables in v_ind_composites are not in R: fred"
   )
 })
 
@@ -264,36 +305,39 @@ test_that("Labeling",{
 })
 
 
+
+
+
+
+data <- bind_rows(d,d %>% mutate(across(everything(), function(x) x - 1)))
+
 cm <- cond_maha(
-  data = d,
+  data = data,
   R = R,
   v_dep = v_dep,
-  v_ind_composites = v_ind_composites
+  # v_ind_composites = v_ind_composites
 )
+use_sample_stats <- FALSE
+mu <- 0
+sigma <- 1
+library(ggplot2)
+p_tail <- 0.40
+plot(cm, p_tail = 0.05)
 
-
-
-# data <- bind_rows(d,d)
-# use_sample_stats = FALSE
-# mu = 0
-# sigma = 1
-# library(ggplot2)
-# plot_cond_maha(cm)
-
-m <- "
-Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
-Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
-Gs =~ 0.70 * Gs_1 + 0.80 * Gs_2 + 0.80 * Gs_3
-Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
-Math =~ 0.40 * Math_1 + 0.90 * Math_2 + 0.70 * Math3
-Gc ~ 0.60 * Gf + 0.10 * Gs
-Gf ~ 0.50 * Gs
-Read ~ 0.40 * Gc + 0.10 * Gf
-Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
-"
-boot_dcm(model = m,
-         v_dep = c("Math", "Read"),
-         v_ind = c("Gc", "Gf", "Gs"),
-         sample_size = 100,
-         replications = 100)
-v_ind_composites <- NULL
+# m <- "
+# Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
+# Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
+# Gs =~ 0.70 * Gs_1 + 0.80 * Gs_2 + 0.80 * Gs_3
+# Read =~ 0.66 * Read_1 + 0.85 * Read_2 + 0.91 * Read_3
+# Math =~ 0.40 * Math_1 + 0.90 * Math_2 + 0.70 * Math3
+# Gc ~ 0.60 * Gf + 0.10 * Gs
+# Gf ~ 0.50 * Gs
+# Read ~ 0.40 * Gc + 0.10 * Gf
+# Math ~ 0.20 * Gc + 0.30 * Gf + 0.10 * Gs
+# "
+# boot_dcm(model = m,
+#          v_dep = c("Math", "Read"),
+#          v_ind = c("Gc", "Gf", "Gs"),
+#          sample_size = 100,
+#          replications = 100)
+# v_ind_composites <- NULL
