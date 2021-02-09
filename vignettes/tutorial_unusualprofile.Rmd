@@ -38,8 +38,7 @@ knitr::opts_chunk$set(
   fig.width = 7.2916667,
   fig.height = 7.2916667,
   message = FALSE,
-  warning = FALSE,
-  cache = T
+  warning = FALSE
 )
 
 options(digits = 2)
@@ -1268,6 +1267,13 @@ Where
 > $R_{FX}$ is a correlation matrix between the common factors and the observed variables.\
 > $R_{XX}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
 > $X$ is a vector of a person's standardized scores on the observed variables.
+
+Fortunately, the simstandard package can add factor scores to existing data like so:
+
+```{r}
+
+```
+
 
 <!-- # Predicting a profile's extremity in a population -->
 
