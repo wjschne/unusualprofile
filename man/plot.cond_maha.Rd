@@ -4,7 +4,12 @@
 \alias{plot.cond_maha}
 \title{Plot the variables from the results of the cond_maha function.}
 \usage{
-\method{plot}{cond_maha}(cm, family = "serif", score_digits = 2)
+\method{plot}{cond_maha}(
+  cm,
+  p_tail = 0,
+  family = "serif",
+  score_digits = ifelse(min(cm$sigma) >= 10, 0, 2)
+)
 }
 \arguments{
 \item{cm}{The results of the cond_maha function.}

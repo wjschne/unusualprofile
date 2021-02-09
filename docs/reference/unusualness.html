@@ -105,6 +105,9 @@ population relations and their clients' data" />
     <li>
       <a href="../articles/tutorial_unusualprofile.html">Introduction to the unusualprofile package</a>
     </li>
+    <li>
+      <a href="../articles/unusualprofile_calculations.html">Calculations performed by the unusualprofile package</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -202,14 +205,7 @@ Math ~ 0.20 * Gc + 0.30 * Gf
      model <span class='op'>=</span> <span class='va'>m</span>,
      v_dep <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Math"</span>, <span class='st'>"Read"</span><span class='op'>)</span>,
      v_ind <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Gc"</span>, <span class='st'>"Gf"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 7</span><span>
-#&gt;   Measure      dCM `dCM Percentile` `dCM Level`    dM `dM Percentile` `dM Level`
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>           </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     
-#&gt; </span><span style='color: #555555;'>1</span><span> </span><span style='color: #555555;'>"</span><span>Latent D~  1.65           0.744  Average      1.87           0.827 High Aver~
-#&gt; </span><span style='color: #555555;'>2</span><span> </span><span style='color: #555555;'>"</span><span>Observed~  2.07           0.360  Average      2.24           0.457 Average   
-#&gt; </span><span style='color: #555555;'>3</span><span> </span><span style='color: #555555;'>"</span><span>Observed~  1.23           0.042</span><span style='text-decoration: underline;'>1</span><span> Low          2.24           0.457 Average   
-#&gt; </span><span style='color: #555555;'>4</span><span> </span><span style='color: #555555;'>"</span><span>Observed~  2.28           0.482  Average      3.01           0.828 High Aver~
-#&gt; </span><span style='color: #555555;'>5</span><span> </span><span style='color: #555555;'>"</span><span>All Obse~  2.59           0.125  Low Average  3.65           0.653 Average   </div></span></pre>
+</div><div class='output co'>#&gt; <span class='error'>Error in .f(v_dep = .l[[1L]][[i]], v_ind = .l[[2L]][[i]], label = .l[[3L]][[i]],     ...): Some variables in v_dep are not in data: </span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

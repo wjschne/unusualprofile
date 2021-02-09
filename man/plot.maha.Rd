@@ -5,7 +5,12 @@
 \title{Plot objects of the maha class (i.e, the results of the cond_maha function
 using dependent variables only).}
 \usage{
-\method{plot}{maha}(cm, p_tail = 0, family = "serif", score_digits = 2)
+\method{plot}{maha}(
+  cm,
+  p_tail = 0,
+  family = "serif",
+  score_digits = ifelse(min(cm$sigma) >= 10, 0, 2)
+)
 }
 \arguments{
 \item{cm}{The results of the cond_maha function.}

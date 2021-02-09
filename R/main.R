@@ -17,9 +17,41 @@
 #' Only complete cases are used (i.e., no missing values in v_dep, v_ind,
 #' v_ind_composites).
 #' @param label optional tag for labeling output
-#' @return conditional Mahalanobis distance, percentiles for each case based
-#' on the Chi-square distribution formed by conditional Mahalanobis distance
-#' and predicted Deps based on Inds.
+#' @return a list with the conditional Mahalanobis distance
+#' \itemize{
+#' \item{\code{dCM} = Conditional Mahalanobis distance}
+#' \item{\code{dCM_df} = Degrees of freedom for the conditional Mahalanobis distance}
+#' \item{\code{dCM_p} = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if \code{dCM_p} = 0.88, this profile is more unsual than 88 percent of profiles after controlling for the independent variables.}
+#' \item{\code{dM_dep} = Mahalanobis distance of just the dependent variables}
+#' \item{\code{dM_dep_df} = Degrees of freedom for the Mahalanobis distance of the dependent variables}
+#' \item{\code{dM_dep_p} = Proportion associated with the Mahalanobis distance of the dependent variables}
+#' \item{\code{dM_ind} = Mahalanobis distance of just the independent variables}
+#' \item{\code{dM_ind_df} = Degrees of freedom for the Mahalanobis distance of the independent variables}
+#' \item{\code{dM_ind_p} = Proportion associated with the Mahalanobis distance of the independent variables}
+#' \item{\code{v_dep} = Depdendent variable names}
+#' \item{\code{v_ind} = Independent variable names}
+#' \item{\code{v_ind_singular} = Independent variables that can be perfectly predicted from the dependent variables (e.g., composite scores)}
+#' \item{\code{v_ind_nonsingular} = Independent variables that are not perfectly predicted from the dependent variables}
+#' \item{\code{data} = data used in the calculations}
+#' \item{\code{d_ind} = indepedent variable data}
+#' \item{\code{d_inp_p} = Assuming normality, cumulative distribution function of the independent variables}
+#' \item{\code{d_dep} = depedent variable data}
+#' \item{\code{d_dep_predicted} = predicted values of the depedent variables}
+#' \item{\code{d_dep_deviations = d_dep - d_dep_predicted} (i.e., residuals of the dependent variables)}
+#' \item{\code{d_dep_residuals_z} = standardized residuals of the depedent variables}
+#' \item{\code{d_dep_cp} = conditional proportions associated with standardized residuals}
+#' \item{\code{d_dep_p} = Assuming normality, cumulative distribution function of the dependent variables}
+#' \item{\code{R2} = Proportion of variance in each dependent variable explained by the indepdent variables}
+#' \item{\code{SEE} = Standard error of the estimate for each dependent variable}
+#' \item{\code{ConditionalCovariance} = Covariance matrix of the dependent variables after controlling for the independent variables}
+#' \item{\code{distance_reduction = 1 - (dCM / dM_dep)} (Degree to which the independent variables decrease the Mahalanobis distance of the dependent variables. Negative reductions mean that the profile is more unusual after controlling for the independent variables. Returns 0 if \code{dM_dep} is 0.)}
+#' \item{\code{variability_reduction = 1 - sum((X_dep - predicted_dep) ^ 2) / sum((X_dep - mu_dep) ^ 2)} (Degree to which the independent variables decrease the variability the dependent variables (\code{X_dep}). Negative reductions mean that the profile is more variable after controlling for the independent variables. Returns 0 if \code{X_dep == mu_dep})}
+#' \item{\code{mu} = Variable means}
+#' \item{\code{sigma} = Variable standard deviations}
+#' \item{\code{d_person} = Data frame consisting of Mahalanobis distance data for each person}
+#' \item{\code{d_variable} = Data frame consisting of variable characteristics}
+#' \item{\code{label} = label slot}
+#' }
 #' @examples
 #' library(unusualprofile)
 #' library(simstandard)
@@ -336,6 +368,7 @@ cond_maha <- function(data,
     d_predicted <- d_predicted_z * colsigma[, v_dep, drop = FALSE] +
       colmu[,v_dep, drop = FALSE]
     d_deviations <- d_dep - d_predicted
+    variability_reduction <- 1 -  sum(d_deviations ^ 2) / sum((d_dep - mu_dep[,1, drop = TRUE]) ^ 2)
 
 
     # Conditional Variance
@@ -460,8 +493,10 @@ cond_maha <- function(data,
         tibble::rowid_to_column("id") %>%
         dplyr::mutate(type = "Predicted")
       ) %>%
-      dplyr::mutate(Role = "Conditional") %>%
-      tidyr::gather("Variable", "Value", !!v_dep) %>%
+      dplyr::mutate(Role = "Dependent") %>%
+      tidyr::pivot_longer(!!v_dep,
+                          names_to = "Variable",
+                          values_to = "Value") %>%
       dplyr::bind_rows(
         dplyr::bind_rows(
           d_ind %>%
@@ -472,10 +507,10 @@ cond_maha <- function(data,
             tibble::as_tibble() %>%
             tibble::rowid_to_column("id") %>%
             dplyr::mutate(type = "p")) %>%
-          dplyr::mutate(Role = "Unconditional") %>%
-          tidyr::gather("Variable", "Value", !!v_ind)
+          dplyr::mutate(Role = "Independent") %>%
+          tidyr::pivot_longer(!!v_ind, names_to = "Variable", values_to = "Value")
         ) %>%
-      tidyr::spread(.data$type, .data$Value) %>%
+      tidyr::pivot_wider(names_from = .data$type, values_from = .data$Value) %>%
       dplyr::left_join(d_variable, by = "Variable") %>%
       dplyr::mutate(Variable = factor(.data$Variable, levels = v_all))
 
@@ -508,7 +543,8 @@ cond_maha <- function(data,
       R2 = R2,
       SEE = SEE,
       ConditionalCovariance = cov_cond,
-      variability_explained = 1 - (dCM / dM_dep) ^ 2,
+      distance_reduction = ifelse(dM_dep == 0, 0, 1 - (dCM / dM_dep)),
+      variability_reduction = variability_reduction,
       mu = mu[, 1],
       sigma = sigma[, 1],
       d_person = d_person,
@@ -645,7 +681,12 @@ unusualness <- function(
   # Model matrices
   sm <- simstandard::sim_standardized_matrices(model)
 
-  data <- simstandard::add_factor_scores(data, model)
+  # Select only observed scores,
+  # Add factor scores,
+  # Rename them to latent variables
+  d <- data[, sm$v_names$v_observed, drop = FALSE] %>%
+    simstandard::add_factor_scores(model) %>%
+    dplyr::rename_with(stringr::str_remove, pattern = "_FS")
 
   # Observed variables
   v_dep_obs <- lavaan::lavaanify(model) %>%
@@ -660,7 +701,7 @@ unusualness <- function(
     dplyr::pull(.data$rhs) %>%
     unique()
 
-  # Calculate Conditional mahalanobis distances
+  # Calculate Conditional Mahalanobis distances
   cm_all <- list(
     ind_lat2dep_lat = list(
       v_dep = v_dep,
@@ -968,7 +1009,36 @@ proportion2percentile <- function(p,
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
 #'
-plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
+plot.cond_maha <- function(cm,
+                           p_tail = 0,
+                           family = "serif",
+                           score_digits = ifelse(min(cm$sigma) >= 10, 0, 2)) {
+
+  if (length(unique(cm$d_score$id)) > 1) stop("Can only plot one case at a time")
+
+  break_width <- max(cm$sigma)
+  break_min <- min(cm$mu - 10 * cm$sigma)
+  break_max <- max(cm$mu + 10 * cm$sigma)
+  minor_break_width <- ifelse(break_width %% 3 == 0, break_width / 3, break_width / 2)
+  major_breaks <- seq(break_min, break_max, break_width)
+  minor_breaks <- seq(break_min, break_max, minor_break_width)
+
+  label_independent <- paste0("list(Independent~italic(d[M])==\"",
+                              formatC(cm$dM_ind,
+                                   digits = 2,
+                                   format = "f"),
+                              "\",italic(p)==\"",
+                              proportion_round(cm$dM_ind_p),
+                              "\")")
+
+
+  label_dependent <- paste0("list(Dependent~italic(d[M])==\"",
+                            formatC(cm$dM_dep,
+                                    digits = 2,
+                                    format = "f"),
+                            "\",italic(p)==\"",
+                            proportion_round(cm$dM_dep_p),
+                            "\")")
 
   cm$d_score %>%
     dplyr::mutate(SD = ifelse(test = is.na(.data$SEE),
@@ -977,28 +1047,32 @@ plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
            yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
            id = factor(.data$id),
            Role = factor(.data$Role,
-                         levels = c("Unconditional", "Conditional"))) %>%
+                         levels = c("Independent", "Dependent"),
+                         labels = c(label_independent, label_dependent))) %>%
     ggplot2::ggplot(ggplot2::aes(x = .data$Variable,
                                  y = .data$Score,
                                  fill = .data$Role)) +
     ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
                scales = "free",
-               space = "free") +
+               space = "free",
+               labeller = label_parsed) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$yhat,
         sigma = .data$SD,
-        face_right = .data$Role == "Conditional",
-        face_left = .data$Role != "Conditional"),
+        face_right = .data$Role == label_dependent,
+        face_left = .data$Role != label_dependent),
+      p_tail = p_tail,
       fill = "gray90",
       width = 0.85) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$mu,
         sigma = .data$sigma,
-        face_right = .data$Role != "Conditional"),
+        face_right = .data$Role != label_dependent),
       fill = "gray65",
-      width = 0.85) +
+      width = 0.85,
+      p_tail = p_tail) +
     ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
@@ -1012,7 +1086,7 @@ plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
       mapping = ggplot2::aes(
         color = .data$id,
         label = dplyr::if_else(
-          .data$Role == "Unconditional",
+          .data$Role == label_independent,
           "",
           paste0(
             "italic(c*p)=='",
@@ -1035,17 +1109,24 @@ plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
       size = 3,
       parse = TRUE,
       family = family) +
-    ggplot2::scale_y_continuous("Scores") +
+    ggplot2::scale_y_continuous("Scores",
+                                breaks = major_breaks,
+                                minor_breaks = minor_breaks) +
     ggplot2::scale_x_discrete(NULL,
                      expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
-      Conditional ~ Mahalanobis == .(formatC(cm$dCM, 2, format = "f")),
+      Conditional ~ Mahalanobis ~ Distance ~ (italic(d[CM])) == .(formatC(cm$dCM, 2, format = "f")),
       italic(p) == .(proportion_round(cm$dCM_p))
+    )),
+    subtitle = bquote(list(
+      Distance ~ Reduction == .(paste0(round(100 * cm$distance_reduction), "%")),
+      Variability ~ Reduction == .(paste0(round(100 * cm$variability_reduction), "%"))
     )),
     caption = expression(
       list(
         italic(p) == "Population proportion",
-        italic(c * p) == "Conditional proportion"
+        italic(c * p) == "Conditional proportion",
+        italic(d[M]) == "Mahalanobis Distance"
       )
     )) +
     ggplot2::theme_light(base_family = family) +
@@ -1063,7 +1144,19 @@ plot.cond_maha <- function(cm, family = "serif", score_digits = 2) {
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
 #'
-plot.maha <- function(cm, p_tail = 0, family = "serif", score_digits = 2) {
+plot.maha <- function(cm,
+                      p_tail = 0,
+                      family = "serif",
+                      score_digits = ifelse(min(cm$sigma) >= 10, 0, 2)) {
+
+  if (nrow(cm$d_dep) > 1) stop("Can only plot one case at a time")
+
+  break_width <- max(cm$sigma)
+  break_min <- min(cm$mu - 10 * cm$sigma)
+  break_max <- max(cm$mu + 10 * cm$sigma)
+  minor_break_width <- ifelse(break_width %% 3 == 0, break_width / 3, break_width / 2)
+  major_breaks <- seq(break_min, break_max, break_width)
+  minor_breaks <- seq(break_min, break_max, minor_break_width)
 
   d_stats <- tibble::tibble(Variable = cm$v_dep, mu = cm$mu, sigma = cm$sigma)
 
@@ -1086,8 +1179,7 @@ plot.maha <- function(cm, p_tail = 0, family = "serif", score_digits = 2) {
                                       inherit.aes = FALSE,
                                       fill = "gray65",
                                       p_tail = p_tail) +
-    ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id,
-                                               shape = .data$in_tail)) +
+    ggplot2::geom_point(mapping = ggplot2::aes(shape = .data$in_tail)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
         label = formatC(.data$Score, score_digits, format = "f"),
@@ -1098,7 +1190,6 @@ plot.maha <- function(cm, p_tail = 0, family = "serif", score_digits = 2) {
     ) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
-        color = .data$id,
         label = paste0("italic(p)=='",
                        proportion_round(.data$z_p),
                        "'")),
@@ -1108,9 +1199,11 @@ plot.maha <- function(cm, p_tail = 0, family = "serif", score_digits = 2) {
       family = family) +
     ggplot2::theme_minimal(base_family = family) +
     ggplot2::theme(legend.position = "none") +
-    ggplot2::scale_color_viridis_d() +
+    ggplot2::scale_color_grey() +
     ggplot2::scale_shape_manual(values=c(16, 0)) +
-    ggplot2::scale_y_continuous("Scores") +
+    ggplot2::scale_y_continuous("Scores",
+                                breaks = major_breaks,
+                                minor_breaks = minor_breaks) +
     ggplot2::scale_x_discrete(NULL,
                               expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(

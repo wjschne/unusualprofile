@@ -1,5 +1,8 @@
 base
 extrafont
+sysfonts
+showtextdb
+showtext
 dplyr
 tidyr
 forcats
@@ -12,8 +15,6 @@ knitr
 kableExtra
 ggplot2
 glue
-sysfonts
-showtextdb
-showtext
 purrr
 ggnormalviolin
+patchwork

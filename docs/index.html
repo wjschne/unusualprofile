@@ -57,6 +57,9 @@
 <li>
       <a href="articles/tutorial_unusualprofile.html">Introduction to the unusualprofile package</a>
     </li>
+    <li>
+      <a href="articles/unusualprofile_calculations.html">Calculations performed by the unusualprofile package</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -92,9 +95,9 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"wjschne/unusualprofile"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"wjschne/unusualprofile"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="example" class="section level1">
 <h1 class="hasAnchor">
@@ -103,18 +106,18 @@
 <p>Suppose we have set of variables that have the following relationships:</p>
 <p><img src="reference/figures/rm_model.svg" alt="Multivariate normal model"></p>
 <p>First, we load the packages that we will use later:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile">unusualprofile</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile">unusualprofile</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/ggnormalviolin">ggnormalviolin</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <p>Included with the unusualprofile package, the <code>d_example</code> data set has a single row of data generated from the path diagram depicted above.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#&gt; # A tibble: 1 x 8</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt;     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 8</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01</span></span></code></pre></div>
 <p>Also included with the unusualprofile package is the path diagram’s model-implied correlation matrix:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="va">R_example</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">R_example</span>
 <span class="co">#&gt;              X_1  X_2  X_3  Y_1  Y_2  Y_3 X_Composite Y_Composite</span>
 <span class="co">#&gt; X_1         1.00 0.35 0.56 0.34 0.29 0.38        0.81        0.39</span>
 <span class="co">#&gt; X_2         0.35 1.00 0.40 0.24 0.21 0.27        0.74        0.28</span>
@@ -123,13 +126,13 @@
 <span class="co">#&gt; Y_2         0.29 0.21 0.34 0.56 1.00 0.63        0.35        0.84</span>
 <span class="co">#&gt; Y_3         0.38 0.27 0.43 0.72 0.63 1.00        0.46        0.90</span>
 <span class="co">#&gt; X_Composite 0.81 0.74 0.83 0.40 0.35 0.46        1.00        0.47</span>
-<span class="co">#&gt; Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00</span></pre></div>
+<span class="co">#&gt; Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00</span></code></pre></div>
 <div id="using-the-cond_maha-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-the-cond_maha-function" class="anchor"></a>Using the <code>cond_maha</code> function</h2>
 <p>We can specify the correlations (<code>R</code>), means (<code>mu</code>), standard deviations (<code>sigma</code>). independent variables (<code>v_ind</code>), and dependent variables (<code>v_dep</code>). In this case, the independent variables are composite scores summarizing the dependent variables.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># Conditional Mahalanobis distance</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Conditional Mahalanobis distance</span>
 <span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_example</span>, 
           R <span class="op">=</span> <span class="va">R_example</span>,
           mu <span class="op">=</span> <span class="fl">0</span>,
@@ -142,7 +145,7 @@
 <span class="co">#&gt; Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539</span>
 
 <span class="co"># Plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-example-1.svg" width="100%"></p>
 </div>
 </div>

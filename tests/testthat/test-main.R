@@ -312,11 +312,12 @@ test_that("Labeling",{
 data <- bind_rows(d,d %>% mutate(across(everything(), function(x) x - 1)))
 
 cm <- cond_maha(
-  data = data,
+  data = d,
   R = R,
   v_dep = v_dep,
   # v_ind_composites = v_ind_composites
 )
+
 use_sample_stats <- FALSE
 mu <- 0
 sigma <- 1
@@ -324,6 +325,24 @@ library(ggplot2)
 p_tail <- 0.40
 plot(cm, p_tail = 0.05)
 
+
+cond_maha(
+  data = d,
+  R = R,
+  v_dep = v_dep,
+  v_ind_composites = v_ind_composites
+) %>%
+  plot()
+
+cond_maha(
+  data = ,
+  R = R,
+  v_dep = v_dep,
+  v_ind_composites = v_ind_composites
+) %>%
+  plot()
+
+cm$d_score
 # m <- "
 # Gc =~ 0.85 * Gc_1 + 0.68 * Gc_2 + 0.80 * Gc_3
 # Gf =~ 0.80 * Gf_1 + 0.90 * Gf_2 + 0.80 * Gf_3
