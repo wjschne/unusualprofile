@@ -39,36 +39,32 @@ Suppose we have set of variables that have the following relationships:
 
 ![Multivariate normal model](man/figures/rm_model.svg)
 
-First, we load the packages that we will use later:
+First, we load the unusualprofile package.
 
 ``` r
 library(unusualprofile)
-library(ggnormalviolin)
-library(dplyr)
 ```
 
 Included with the unusualprofile package, the `d_example` data set has a
 single row of data generated from the path diagram depicted above.
 
-    #> # A tibble: 1 x 8
-    #>     X_1   X_2   X_3   Y_1    Y_2   Y_3 X_Composite Y_Composite
-    #>   <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl>       <dbl>       <dbl>
-    #> 1  2.00  1.45  2.70  1.66 -0.843  1.81        2.59        1.01
+    #>   X_1 X_2 X_3 Y_1   Y_2 Y_3   X   Y
+    #> 1   2 1.4 2.7 1.7 -0.84 1.8 2.3 1.2
 
 Also included with the unusualprofile package is the path diagram’s
 model-implied correlation matrix:
 
 ``` r
 R_example
-#>              X_1  X_2  X_3  Y_1  Y_2  Y_3 X_Composite Y_Composite
-#> X_1         1.00 0.35 0.56 0.34 0.29 0.38        0.81        0.39
-#> X_2         0.35 1.00 0.40 0.24 0.21 0.27        0.74        0.28
-#> X_3         0.56 0.40 1.00 0.38 0.34 0.43        0.83        0.44
-#> Y_1         0.34 0.24 0.38 1.00 0.56 0.72        0.40        0.87
-#> Y_2         0.29 0.21 0.34 0.56 1.00 0.63        0.35        0.84
-#> Y_3         0.38 0.27 0.43 0.72 0.63 1.00        0.46        0.90
-#> X_Composite 0.81 0.74 0.83 0.40 0.35 0.46        1.00        0.47
-#> Y_Composite 0.39 0.28 0.44 0.87 0.84 0.90        0.47        1.00
+#>      X_1  X_2  X_3  Y_1  Y_2  Y_3    X    Y
+#> X_1 1.00 0.35 0.56 0.34 0.29 0.38 0.70 0.42
+#> X_2 0.35 1.00 0.40 0.24 0.21 0.27 0.50 0.30
+#> X_3 0.56 0.40 1.00 0.38 0.34 0.43 0.80 0.48
+#> Y_1 0.34 0.24 0.38 1.00 0.56 0.72 0.48 0.80
+#> Y_2 0.29 0.21 0.34 0.56 1.00 0.63 0.42 0.70
+#> Y_3 0.38 0.27 0.43 0.72 0.63 1.00 0.54 0.90
+#> X   0.70 0.50 0.80 0.48 0.42 0.54 1.00 0.60
+#> Y   0.42 0.30 0.48 0.80 0.70 0.90 0.60 1.00
 ```
 
 ## Using the `cond_maha` function
@@ -84,12 +80,12 @@ cm <- cond_maha(data = d_example,
           R = R_example,
           mu = 0,
           sigma = 1,
-          v_ind_composites = c("X_Composite", "Y_Composite"),
+          v_ind_composites = c("X", "Y"),
           v_dep = c("X_1", "X_2", "X_3",
                     "Y_1", "Y_2", "Y_3"))
 
 cm
-#> Conditional Mahalanobis Distance = 3.1117, df = 4, p = 0.9539
+#> Conditional Mahalanobis Distance = 3.5167, df = 4, p = 0.9852
 
 # Plot
 plot(cm)

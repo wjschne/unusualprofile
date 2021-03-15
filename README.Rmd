@@ -16,9 +16,6 @@ knitr::opts_chunk$set(
 )
 options(digits = 2)
 library(unusualprofile)
-library(simstandard)
-library(ggnormalviolin)
-library(dplyr)
 ```
 
 # unusualprofile
@@ -48,12 +45,10 @@ Suppose we have set of variables that have the following relationships:
 
 ![Multivariate normal model](man/figures/rm_model.svg)
 
-First, we load the packages that we will use later:
+First, we load the unusualprofile package.
 
 ```{r}
 library(unusualprofile)
-library(ggnormalviolin)
-library(dplyr)
 ```
 
 Included with the unusualprofile package, the `d_example` data set has a single row of data generated from the path diagram depicted above.
@@ -78,7 +73,7 @@ cm <- cond_maha(data = d_example,
           R = R_example,
           mu = 0,
           sigma = 1,
-          v_ind_composites = c("X_Composite", "Y_Composite"),
+          v_ind_composites = c("X", "Y"),
           v_dep = c("X_1", "X_2", "X_3",
                     "Y_1", "Y_2", "Y_3"))
 

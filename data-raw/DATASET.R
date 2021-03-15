@@ -11,21 +11,25 @@ Y ~ 0.6 * X
 # Ensure that random data will be the same as in the example.
 set.seed(281)
 
+vnames <- c(
+  "X_1", "X_2", "X_3",
+  "Y_1", "Y_2", "Y_3",
+  "X", "Y")
+
 # Randomly generated case
 d_example <- sim_standardized(
   model,
   n = 1,
   observed = TRUE,
-  latent = FALSE,
+  latent = TRUE,
   errors = FALSE,
-  composites = TRUE)
+  composites = FALSE)
 
-vnames <- c(
-  "X_1", "X_2", "X_3",
-  "Y_1", "Y_2", "Y_3",
-  "X_Composite", "Y_Composite")
+
+
+
 
 # Model-implied correlation matrix
-R_example <- sim_standardized_matrices(model)$Correlations$R_all[vnames, vnames]
+R_example <- get_model_implied_correlations(model, latent = T)
 
 usethis::use_data(R_example, d_example, overwrite = TRUE)

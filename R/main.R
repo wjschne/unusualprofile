@@ -1055,7 +1055,7 @@ plot.cond_maha <- function(cm,
     ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
                scales = "free",
                space = "free",
-               labeller = label_parsed) +
+               labeller = ggplot2::label_parsed) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$yhat,
@@ -1119,8 +1119,8 @@ plot.cond_maha <- function(cm,
       italic(p) == .(proportion_round(cm$dCM_p))
     )),
     subtitle = bquote(list(
-      Distance ~ Reduction == .(paste0(round(100 * cm$distance_reduction), "%")),
-      Variability ~ Reduction == .(paste0(round(100 * cm$variability_reduction), "%"))
+      Mahalanobis ~ Distance ~ Reduction == .(paste0(round(100 * cm$distance_reduction), "%")),
+      Euclidean ~ Distance ~ Reduction == .(paste0(round(100 * cm$variability_reduction), "%"))
     )),
     caption = expression(
       list(
@@ -1200,7 +1200,7 @@ plot.maha <- function(cm,
     ggplot2::theme_minimal(base_family = family) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::scale_color_grey() +
-    ggplot2::scale_shape_manual(values=c(16, 0)) +
+    ggplot2::scale_shape_manual(values = c(16, 0)) +
     ggplot2::scale_y_continuous("Scores",
                                 breaks = major_breaks,
                                 minor_breaks = minor_breaks) +

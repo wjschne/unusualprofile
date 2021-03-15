@@ -33,6 +33,7 @@ img {border: none}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  dev = "svg",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
@@ -64,7 +65,7 @@ library(purrr)
 ```{r more-setup, echo=FALSE}
 myfont <- "Titillium Web"
 
-font_add_google("Titillium Web", "Titillium Web")
+# font_add_google("Titillium Web", "Titillium Web") 
 extrafont::loadfonts(device = "win")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
@@ -1268,11 +1269,161 @@ Where
 > $R_{XX}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
 > $X$ is a vector of a person's standardized scores on the observed variables.
 
-Fortunately, the simstandard package can add factor scores to existing data like so:
+Fortunately, the the `add_factor_scores` function from the simstandard package can add factor scores to existing data. For each latent variable in the model, a factor score with "`_FS`" is appended to the variable name. Using the option `CI = TRUE` will produce the lower bounds ("`_FS_LB`") and upper bounds ("`_FS_UB`") of the factor scores' confidence intervals.
 
 ```{r}
+d_case <- tibble(
+  Ga1 = 61,
+  Ga2 = 65,
+  Ga3 = 69,
+  Gc1 = 109,
+  Gc2 = 97,
+  Gc3 = 103,
+  RD1 = 77,
+  RD2 = 71,
+  RD3 = 81,
+  RC1 = 90,
+  RC2 = 94,
+  RC3 = 99
+) %>% 
+  simstandard::add_factor_scores(m = m_reading, 
+                                 mu = 100, 
+                                 sigma = 15, 
+                                 CI = T)
+
+d_case %>% 
+  select(contains("_FS")) %>% 
+  pivot_longer(everything(), 
+               names_to = "Variable", 
+               values_to = "Score") 
+```
+
+Because factor scores are estimates, they are presented with confidence intervals in Figure&nbsp;\@ref(fig:factor-scores).
+
+```{r factor-scores, fig.height=4.5, fig.cap="Estimated factor scores with 95% confidence intervals", echo = FALSE}
+d_factor_scores <- d_case %>% 
+  select(contains("_FS")) %>% 
+  pivot_longer(everything(), names_to = "Variable", values_to = "Score") %>% 
+  mutate(Variable = if_else(str_ends(Variable, "_FS"), Variable, str_remove(Variable, "_FS"))) %>% 
+  separate(Variable, c("Variable", "Type")) %>% 
+  pivot_wider(id_cols = Variable, names_from = Type, values_from = Score) %>% 
+  mutate(se = simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score_se[1:4] * 15)
+
+d_factor_scores %>% 
+  mutate(w = 1.25) %>% 
+  add_row(Variable = "Population", 
+          FS = 100, 
+          se = 15, 
+          LB = 100 + qnorm(.025) * 15,
+          UB = 100 + qnorm(.975) * 15,
+          w = 2) %>% 
+  mutate(Variable = factor(Variable, c("Population", "Ga", "Gc", "RD", "RC")) %>% fct_rev()) %>% 
+  ggplot(aes(Variable, FS)) +
+  ggnormalviolin::geom_normalviolin(aes(mu = FS, sigma = se, width = w), face_left = F,p_tail = 0.05) + 
+  geom_point() +
+  # geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.075, color = "dodgerblue") + 
+  geom_label(aes(label = scales::number(FS, 1)), 
+             label.padding = unit(0, "lines"),
+             label.size = 0,
+             size = 4, 
+             hjust = 0.5,
+             vjust = 1,
+             nudge_x = -0.07,
+             color = "gray20",
+             fontface = "bold") + 
+  geom_label(aes(y = UB, label = scales::number(UB, 1)), 
+             label.padding = unit(0, "lines"),
+             label.size = 0, 
+             hjust = 0.5,
+             vjust = 1,
+             nudge_x = -0.07,
+             color = "gray30") + 
+  geom_label(aes(y = LB, label = scales::number(LB, 1)), 
+             label.padding = unit(0, "lines"),
+             label.size = 0, 
+             hjust = 0.5,
+             vjust = 1,
+             nudge_x = -0.07,
+             color = "gray30") +
+  scale_y_continuous("Factor Score (With 95% CI)", breaks = seq(40, 160, 15), minor_breaks = seq(40, 160, 5)) + 
+  scale_x_discrete(NULL, expand = expansion(c(.075,.2))) + 
+  coord_flip() 
 
 ```
+
+
+There are two ways we can think of factor scores. From one perspective, they are composite scores with each component given a different weight. 
+
+For example, to make factor scores for the reading model (See Figure&nbsp;\@ref(fig:reading-model)), one would use the factor-score coefficients presented in Figure&nbsp;\@ref(fig:factor-score-coefficients). The matrix of factor-score coefficients can be obtained like so:
+
+```{r, eval=FALSE}
+simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score
+```
+
+
+```{r, factor-score-coefficients, echo=FALSE, fig.cap="Factor score coefficients for the reading model"}
+
+simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1:4] %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column("Observed") %>% 
+  pivot_longer(-Observed, names_to = "Latent", values_to = "Coefficient") %>% 
+  mutate(Latent = str_remove(Latent, "_FS$"),
+         Observed = fct_rev(Observed)) %>% 
+  ggplot(aes(Latent, Observed)) +
+  geom_tile(aes(fill = sqrt(Coefficient)), 
+            color = "gray40") + 
+  geom_text(aes(label = scales::number(Coefficient, .001) %>% 
+                str_remove("^0")), 
+            size = 4.5) +
+  scale_fill_gradient2(low = "royalblue",
+                       high = "firebrick", 
+                       limits = c(-1, 1)) + 
+  scale_x_discrete(position = "top", 
+                   expand = expansion(mult = 0)) +
+  scale_y_discrete(expand = expansion(mult = 0)) +
+  theme(legend.position = "none", 
+        panel.grid = element_blank())
+
+```
+
+
+
+
+```{r, eval = F, echo=FALSE}
+Ga_coef <- simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1] %>% 
+  scales::number(.001) %>% str_remove("^0")
+
+Ga_names <- simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1] %>% names %>% 
+  str_replace("(?=\\d)", "}_") 
+
+Ga_equation <- paste0("\\text{Ga}=", paste0(Ga_coef, "\\text{", Ga_names, collapse = "+")) %>% 
+  str_replace("3\\+", "3}+ \\\\\\\\ ")
+
+```
+
+
+
+$$
+\begin{split}
+\text{Ga}=&.136\text{Ga}_1&+.305\text{Ga}_2&+.496\text{Ga}_3&+\\
+&.014\text{Gc}_1&+.005\text{Gc}_2&+.011\text{Gc}_3&+\\
+&.041\text{RD}_1&+.021\text{RD}_2&+.018\text{RD}_3&+\\
+&.007\text{RC}_1&+.004\text{RC}_2&+.006\text{RC}_3
+\end{split}
+$$
+
+Factor scores generally have a smaller standard deviation than the latent scores they estimate. Instead, their standard deviation is proportional to their validity. If a factor score measures a latent score poorly, it strongly regresses to the mean, resulting in a smaller variance than that of the latent variable. 
+
+```{r}
+R_factor <- get_model_implied_correlations(m_reading, observed = T, factor_scores = T)
+
+cond_maha(d_case, R = R_factor, sigma = c(rep(1, 12), sim_standardized_matrices(m_reading)$Coefficients$composite_score_validity), v_dep = colnames(R_factor)[1:12],
+          v_ind_composites = sim_standardized_matrices(m_reading)$v_names$v_factor_score[1:4]) %>% 
+  plot()
+sim_standardized_matrices(m_reading)
+
+```
+
 
 
 <!-- # Predicting a profile's extremity in a population -->

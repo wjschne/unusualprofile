@@ -1,0 +1,25 @@
+library(tidyverse)
+library(lavaan)  
+
+
+R <- tibble::tribble(
+         ~R, ~Math, ~English, ~Reading, ~RMET, ~SSQ,
+     "Math",     1,     0.68,     0.56,  0.20, 0.24,
+  "English",  0.68,        1,     0.74,  0.30, 0.33,
+  "Reading",  0.56,     0.74,        1,  0.28, 0.31,
+     "RMET",  0.20,     0.30,     0.28,     1, 0.35,
+      "SSQ",  0.24,     0.33,     0.31,  0.35,    1
+  ) %>%
+  tibble::column_to_rownames("R") %>% 
+  as.matrix
+
+m <- "
+TOM =~ RMET + SSQ 
+g ~~ 0 * g
+TOM ~ g
+g <~ Math + 1 * English + Reading
+"
+
+sem(m, sample.cov = R, sample.nobs = 278) %>% 
+  summary(standardized = T)
+

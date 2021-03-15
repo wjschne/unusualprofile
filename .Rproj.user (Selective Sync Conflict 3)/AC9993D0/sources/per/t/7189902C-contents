@@ -1,0 +1,812 @@
+---
+title: "Exercise 2: Reliability Analyses with R"
+date: "W. Joel Schneider"
+author: "EDUC 5529 Tests and Measurements"
+output: 
+  html_document: 
+    css: ../tutorial.css
+    fig_caption: yes
+    fig_height: 8
+    fig_width: 8
+    highlight: zenburn
+    includes:
+      in_header: header.html
+    theme: journal
+    toc: yes
+    toc_float: yes
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, dev = "svg")
+library(tidyverse)
+extrafont::loadfonts(device = "postscript")
+library(simstandard)
+library(psych)
+library(GPArotation)
+options(digits = 4)
+bg_color <- "#ECE5D3"
+fore_color <- "#2d2718"
+line_color <- "#7C4728"
+
+update_geom_defaults("point", list(colour =  fore_color))
+theme_set(theme_grey(base_size = 16, base_family = hrbrthemes::font_tw) +
+            theme(panel.background = element_rect(bg_color)))
+
+CurrentQuestion <- 0
+
+inc_num <- function() {
+  CurrentQuestion <<- CurrentQuestion + 1
+  CurrentQuestion
+  }
+
+show_answer <- FALSE
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(color = "white", position = c("top", "right"),)
+```
+
+
+```{r data, echo=FALSE, eval = F}
+set.seed(16)
+k <- 10
+E_lambda <- round(rbeta(k, 17, 3),2)
+E_lambda[c(4)] <- 0.05
+
+N_lambda <- round(rbeta(k, 15, 5),2)
+N_lambda[c(2)] <- 0.05
+  
+E1 <- paste0("E_1 =~ ", paste0(E_lambda," * E_1_" ,1:k, collapse = " + "))
+E2 <- paste0("E_2 =~ ", paste0(E_lambda," * E_2_" ,1:k, collapse = " + "))
+
+N1 <- paste0("N_1 =~ ", paste0(N_lambda," * N_1_" ,1:k, collapse = " + "))
+N2 <- paste0("N_2 =~ ", paste0(N_lambda," * N_2_" ,1:k, collapse = " + "))
+
+vE1 <- paste0("E_1_",1:k, " ~~ ", 1 - E_lambda ^ 2," * E_1_" ,1:k, collapse = "\n")
+vE2 <- paste0("E_2_",1:k, " ~~ ", 1 - E_lambda ^ 2," * E_2_" ,1:k, collapse = "\n")
+vN1 <- paste0("N_1_",1:k, " ~~ ", 1 - N_lambda ^ 2," * N_1_" ,1:k, collapse = "\n")
+vN2 <- paste0("N_2_",1:k, " ~~ ", 1 - N_lambda ^ 2," * N_2_" ,1:k, collapse = "\n")
+
+
+m <- paste(E1, E2, N1, N2, vE1, vE2, vN1, vN2,
+           "E_1 ~~ 0.97 * E_2", "N_1 ~~ 0.94 * N_2", 
+           "E_1_1 | -2.01 * t1 + -0.65 * t2 + -0.03 * t3 + 0.53 * t4",
+           "E_1_2 | -1.52 * t1 + -0.55 * t2 + 0.06 * t3 + 0.69 * t4",
+           "E_1_3 | -1.44 * t1 + -0.5 * t2 + 0.18 * t3 + 0.76 * t4",
+           "E_1_4 | -1.37 * t1 + -0.39 * t2 + 0.18 * t3 + 0.9 * t4",
+           "E_1_5 | -1.26 * t1 + -0.36 * t2 + 0.22 * t3 + 1.1 * t4",
+           "E_1_6 | -1.01 * t1 + -0.26 * t2 + 0.31 * t3 + 1.37 * t4",
+           "E_1_7 | -0.88 * t1 + -0.26 * t2 + 0.4 * t3 + 1.39 * t4",
+           "E_1_8 | -0.87 * t1 + -0.26 * t2 + 0.42 * t3 + 1.54 * t4",
+           "E_1_9 | -0.76 * t1 + -0.21 * t2 + 0.47 * t3 + 1.55 * t4",
+           "E_1_10 | -0.65 * t1 + -0.19 * t2 + 0.51 * t3 + 2.42 * t4",
+           "E_2_1 | -2.01 * t1 + -0.65 * t2 + -0.03 * t3 + 0.53 * t4",
+           "E_2_2 | -1.52 * t1 + -0.55 * t2 + 0.06 * t3 + 0.69 * t4",
+           "E_2_3 | -1.44 * t1 + -0.5 * t2 + 0.18 * t3 + 0.76 * t4",
+           "E_2_4 | -1.37 * t1 + -0.39 * t2 + 0.18 * t3 + 0.9 * t4",
+           "E_2_5 | -1.26 * t1 + -0.36 * t2 + 0.22 * t3 + 1.1 * t4",
+           "E_2_6 | -1.01 * t1 + -0.26 * t2 + 0.31 * t3 + 1.37 * t4",
+           "E_2_7 | -0.88 * t1 + -0.26 * t2 + 0.4 * t3 + 1.39 * t4",
+           "E_2_8 | -0.87 * t1 + -0.26 * t2 + 0.42 * t3 + 1.54 * t4",
+           "E_2_9 | -0.76 * t1 + -0.21 * t2 + 0.47 * t3 + 1.55 * t4",
+           "E_2_10 | -0.65 * t1 + -0.19 * t2 + 0.51 * t3 + 2.42 * t4",
+           "N_1_1 | -2.01 * t1 + -0.65 * t2 + -0.03 * t3 + 0.53 * t4",
+           "N_1_2 | -1.52 * t1 + -0.55 * t2 + 0.06 * t3 + 0.69 * t4",
+           "N_1_3 | -1.44 * t1 + -0.5 * t2 + 0.18 * t3 + 0.76 * t4",
+           "N_1_4 | -1.37 * t1 + -0.39 * t2 + 0.18 * t3 + 0.9 * t4",
+           "N_1_5 | -1.26 * t1 + -0.36 * t2 + 0.22 * t3 + 1.1 * t4",
+           "N_1_6 | -1.01 * t1 + -0.26 * t2 + 0.31 * t3 + 1.37 * t4",
+           "N_1_7 | -0.88 * t1 + -0.26 * t2 + 0.4 * t3 + 1.39 * t4",
+           "N_1_8 | -0.87 * t1 + -0.26 * t2 + 0.42 * t3 + 1.54 * t4",
+           "N_1_9 | -0.76 * t1 + -0.21 * t2 + 0.47 * t3 + 1.55 * t4",
+           "N_1_10 | -0.65 * t1 + -0.19 * t2 + 0.51 * t3 + 2.42 * t4",
+           "N_2_1 | -2.01 * t1 + -0.65 * t2 + -0.03 * t3 + 0.53 * t4",
+           "N_2_2 | -1.52 * t1 + -0.55 * t2 + 0.06 * t3 + 0.69 * t4",
+           "N_2_3 | -1.44 * t1 + -0.5 * t2 + 0.18 * t3 + 0.76 * t4",
+           "N_2_4 | -1.37 * t1 + -0.39 * t2 + 0.18 * t3 + 0.9 * t4",
+           "N_2_5 | -1.26 * t1 + -0.36 * t2 + 0.22 * t3 + 1.1 * t4",
+           "N_2_6 | -1.01 * t1 + -0.26 * t2 + 0.31 * t3 + 1.37 * t4",
+           "N_2_7 | -0.88 * t1 + -0.26 * t2 + 0.4 * t3 + 1.39 * t4",
+           "N_2_8 | -0.87 * t1 + -0.26 * t2 + 0.42 * t3 + 1.54 * t4",
+           "N_2_9 | -0.76 * t1 + -0.21 * t2 + 0.47 * t3 + 1.55 * t4",
+           "N_2_10 | -0.65 * t1 + -0.19 * t2 + 0.51 * t3 + 2.42 * t4",
+           sep = "\n")
+
+d <- lavaan::simulateData(m, parameterization = "theta") %>% 
+  as_tibble() %>% 
+  mutate(E_1_8 = recode(E_1_8, `1` = 4, `2` = 4, `3` = 4))
+
+write_csv(d, "EDUC5529/HW2.csv")
+
+```
+
+# Package installation
+
+We are going to use the tidyverse package for data management and the psych package to calculate reliability coefficients. 
+
+This code will install the packages if they have not been installed yet. If the packages are already installed, nothing will happen. 
+
+```{r}
+if (!require(psych)) install.packages("psych")
+if (!require(tidyverse)) install.packages("tidyverse")
+```
+
+# Load packages
+
+Once installed, there is no need to reinstall packages each time you use them. However, you will need to load the packages each time you begin working in your R session. To load the packages, use the `library` function:
+
+```{r}
+library(tidyverse)
+library(psych)
+```
+
+# Import Data
+
+Suppose we have a 10-item questionnaire measuring [extraversion](https://www.wikiwand.com/en/Extraversion_and_introversion) and a 10-item questionnaire measuring [neuroticism](https://www.wikiwand.com/en/Neuroticism). Each item is scored from 1 to 5, with high values corresponding to high levels of extraversion or neuroticism. The test was given to a sample of 300 adults twice, 2 years apart.
+
+This code will import the data set:
+
+```{r, message=FALSE}
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/HW2.csv")
+```
+
+# View Data Structure 
+
+Always look at the data to make sure it looks like it should. Because `d` is a tibble, it will print the first 10 rows and as many columns that will fit on the screen. Any remaining column names will be printed at the bottom.
+
+```{r}
+d
+```
+
+As nice alternative, we can see the first 20 or so values of every variable using the `glimpse` function.
+
+```{r}
+glimpse(d)
+```
+
+Here we see that the first administration variables are `E_1_1` to `E_1_10` for extraversion and `N_1_1` to `N_1_10` for neuroticism. The second administration variables are `E_2_1` to `E_2_10` for extraversion and `N_2_1` to `N_2_10` for neuroticism.
+
+# Composite Scores
+
+Each of the ten extraversion items at time 1 range from 1 to 5. We want to create a time 1 extraversion variable that averages items `E_1_1` to `E_1_10` for each person. 
+
+## Selecting variables
+
+We will select `E_1_1` to `E_1_10` and then average across rows. There are many ways to select variables in R. If you name your variables in a consistent manner, you can use its many selection functions. In this case, we are using dplyr's `starts_with` function to select all variables that start with the string "E_1_". 
+
+**Be careful!** Always check to make sure that your selection statement only selects the variables you intend to select. If you have additional variables that also start with "E_1_" then these will be selected unintentionally.
+
+
+```{r}
+# Mean extraversion score for the time 1 test items
+d$Extraversion_1 <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  rowMeans(na.rm = TRUE)
+
+# Mean extraversion score for the time 2 test items
+d$Extraversion_2 <- d %>% 
+  select(starts_with("E_2_")) %>% 
+  rowMeans(na.rm = TRUE)
+```
+
+### What does `na.rm = TRUE` mean? 
+
+Sometimes examinees accidentally skip questions or choose to omit answers. By default, the `rowMeans` function returns `NA` (missing) for the person if any of the items for the person are missing. Setting the `na.rm` parameter to `TRUE` averages all the items that are not missing. Now, `NA` will be returned only if all items are missing for a person.
+
+### What does `d$` mean?
+
+There are several ways to create new variables in a data frame. The `$` operator can  be used to create new variables in a data frame (and can also extract a column as a vector.). So `d$Extraversion_1 <-` means "In data frame `d`, create a new variable called `Extraversion_1`."
+
+
+
+# Retest Reliability
+
+The *retest reliability coefficient* is also known as the *stability coefficient* or *test-retest reliability coefficient*. 
+
+It is simply the correlation of the same test given to the same people at two different times.
+
+```{r retestplot, out.width=800, echo=FALSE, warning = FALSE, fig.cap="*Figure 1*. Time 1--Time 2 Retest Reliability for Extraversion"}
+ggplot(d, aes(Extraversion_1, Extraversion_2)) +
+  geom_jitter(alpha = 0.6, 
+              pch = 16, 
+              color = fore_color,
+              size = 1) + 
+  geom_smooth(method = "lm", 
+              color = line_color, 
+              fullrange = T) +
+  labs(x = "Extraversion (Time 1)",
+       y = "Extraversion (Time 2)") + 
+  xlim(1,5) +
+  ylim(1,5) + 
+  coord_equal() + 
+  annotate("label", 3, 4.75, label = glue::glue("rho[12] == {round(cor(d$Extraversion_1, d$Extraversion_2), 2)}"), parse = T, size = 6.5, fill = bg_color, label.size = 0, label.padding = unit(0,"mm"))
+
+
+```
+
+To calculate the retest reliability coefficient, we need to select the Extraversion score at time 1 and at time 2 and then calculate the correlation coefficient.
+
+```{r}
+d %>% 
+  select(Extraversion_1, Extraversion_2) %>% 
+  cor()
+```
+
+An alternate way of returning just the correlation (not the whole 2 &times; 2 correlation matrix), would be:
+
+```{r}
+cor(d$Extraversion_1, d$Extraversion_2)
+```
+
+If we wanted to know if the correlation coefficient was statistically significant (i.e., the sample coefficient is improbable if the true parameter is 0), we can call the `corr.test` function from the psych package. 
+
+```{r}
+corr.test(d$Extraversion_1, d$Extraversion_2)
+```
+
+<span class = "question">**Question `r inc_num()`**: What is the retest reliability coefficient for neuroticism? </span>
+
+<span class = "hint">**Hint**: Create the time 1 and time 2 composite variables for neuroticism in the same way that composite variables for extraversion were created. Then use the `cor` function.</span>
+
+```{r QuestionRetest, include=show_answer, purl=F}
+# Mean neuroticism score for the time 1 test items
+N_1 <- d %>% 
+  select(starts_with("N_1_")) %>% 
+  rowMeans(na.rm = TRUE)
+
+# Mean neuroticism score for the time 2 test items
+N_2 <- d %>% 
+  select(starts_with("N_2_")) %>% 
+  rowMeans(na.rm = TRUE)
+
+cor(N_1, N_2)
+
+```
+
+
+
+# Split-Half Reliability
+
+To compute the split-half reliability coefficient, you need to split the test in half. Suppose we want to correlate the even items with the odd items. First we make totals and then call the `cor` function.
+
+```{r}
+d$Extraversion_1_odd <- d %>% 
+  select(E_1_1, E_1_3, E_1_5, E_1_7, E_1_9) %>% 
+  rowMeans(na.rm = TRUE)
+
+d$Extraversion_1_even <- d %>% 
+  select(E_1_2, E_1_4, E_1_6, E_1_8, E_1_10) %>% 
+  rowMeans(na.rm = TRUE)
+
+cor(d$Extraversion_1_odd, d$Extraversion_1_even)
+
+```
+
+<span class = "question">**Question `r inc_num()`**: What is the *uncorrected* split-half reliability between the extraversion time-1 items 1 to 5 and extraversion time-1 items 6 to 10?</span>
+
+<div class = "hint">
+
+
+**Hint**: Typing all the item variable names can be tedious:
+
+```{r}
+d$Extraversion_FirstHalf <- d %>% 
+  select(E_1_1, E_1_2,  E_1_3,  E_1_4, E_1_5) %>% 
+  rowMeans(na.rm = TRUE) 
+```
+
+If all the items in your composite score are in a sequence, you can save yourself the bother of typing them by using the `:` operator:
+
+```{r}
+d$Extraversion_FirstHalf <- d %>% 
+  select(E_1_1:E_1_5) %>% 
+  rowMeans(na.rm = TRUE) 
+```
+
+This means, "Select all the variables in data frame `d` from `E_1_1` to `E_1_5`." 
+</div>
+
+```{r QuestionSplitHalfUncorrected, include = show_answer, purl=F}
+d$Extraversion_FirstHalf <- d %>% 
+  select(E_1_1:E_1_5) %>% 
+  rowMeans(na.rm = TRUE) 
+
+d$Extraversion_SecondHalf <- d %>% 
+  select(E_1_6:E_1_10) %>% 
+  rowMeans(na.rm = TRUE) 
+
+cor(d$Extraversion_FirstHalf, d$Extraversion_SecondHalf)
+```
+
+So, the uncorrected split-half reliability of the even vs. odd items is `r round(cor(d$Extraversion_1_odd, d$Extraversion_1_even), 2)`. If we want to know what the reliability of the entire test, we can apply the Spearman-Brown Prophecy Formula.
+
+$$\rho_{\text{Whole}}=\frac{k\rho_{\text{Part}}}{1+(k-1)\rho_{\text{Part}}}$$
+
+* $k$ is the number of parts
+* $\rho_{Part}$ is the reliability of the parts
+* $\rho_{Whole}$ is the reliability of the whole
+
+```{r}
+k <- 2
+r_part <- cor(d$Extraversion_1_odd, d$Extraversion_1_even)
+r_whole <- k * r_part / (1 + (k - 1) * r_part) 
+r_whole
+```
+
+
+<span class = "question">**Question `r inc_num()`**: By applying the Spearman-Brown Prophecy Formula, what is the *corrected* split-half reliability between the extraversion time-1 items 1 to 5 and extraversion time-1 items 6 to 10?</span>
+
+```{r QuestionSplitHalfCorrected, include=show_answer, purl=F}
+k <- 2
+r_part <- cor(d$Extraversion_FirstHalf, d$Extraversion_SecondHalf)
+r_whole <- k * r_part / (1 + (k - 1) * r_part) 
+r_whole
+```
+
+One problem with the split-half coefficient is that the answer depends on how the scale is split. Using the  `splitHalf` function from the psych package, we can average across many split-half coefficients.
+
+```{r}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  splitHalf()
+```
+
+
+```{r, echo = FALSE}
+sh <- round(splitHalf(d %>% select(starts_with("E_1_")))$meanr, 2)
+```
+
+Here we see that the average split-half reliability coefficient is `r sh`.
+
+<span class = "question">**Question `r inc_num()`**: What is the average split-half reliability coefficient of neuroticism at time 2?</span>
+
+```{r QuestionSplitHalfAverage, include=show_answer, purl=F}
+splitHalf(d %>% select(starts_with("N_2_")))
+```
+
+
+# Coefficient &alpha;
+
+Coefficient &alpha; is an estimate of internal consistency that is appropriate for true-score equivalent data. How to test whether the data are true-score equivalent is a more advanced topic that we will cover later in the course. Suppose that we have reason to believe that coefficient &alpha; is appropriate for the data.
+
+First we select the time 1 variables, and then we call the `alpha` function. To make sure that `alpha` from the psych package is called and not `alpha` from the scales package (loaded with the tidyverse), we call `alpha` with the psych package prefix:  `psych::alpha`.
+
+```{r}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  psych::alpha()
+```
+
+```{r, include=FALSE}
+e_alpha_1 <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  psych::alpha()
+```
+
+
+Let's go through this output, section by section.
+
+## Summary statistics
+
+```{r, echo=FALSE}
+e_alpha_1$total
+```
+
+* `raw_alpha` is Coefficient &alpha; for the 10 items at time 1.
+* `std.alpha` is what &alpha; would be if all the items were standardized first (i.e., converted to z-scores). 
+* `G6 (smc)` refers to Guttman's Lambda 6 statistic, which estimates how much variance in each item that can be accounted by the remaining items in the scale.
+* The `average_r` is the average correlation among the items. 
+* `S/N` is the Signal/Noise ratio which equals $\frac{nr}{1-nr}$, where *n* is the number of items in the scale and *r* is the average correlation among the items.
+* `ase` is the standard error of the &alpha; coefficient.
+* `mean` is the mean of the scale.
+* `sd` is the standard deviation of the scale.
+* `median_r` is the median correlation among the items.
+* `lower` and `upper` are the bounds of &alpha;'s confidence interval
+
+<span class = "question">**Question `r inc_num()`**: What is the raw &alpha; for neuroticism at time 1? </span>
+
+```{r QuestionAlphaN1, include = show_answer, purl=F}
+d %>% 
+  select(starts_with("N_1_")) %>% 
+  psych::alpha()
+```
+
+
+
+## Drop Item Statistics
+
+The next section of results helps us identify items that could be dropped. It is possible that one or more items do not correlate with the other items. Such items can introduce error into the scale, reducing the overall reliability of the scale. It is worth considering whether dropping these items would create a more reliable scale.
+
+The following results are a display of how the summary statistics for the total scale would change if a particular item were dropped. For example, if item `E_1_9` were dropped, the raw &alpha; of the sum of the remaining items would be 0.8572, which is lower than its current value of 0.8747. Thus, dropping `E_1_9` would lower the internal consistency of the total scale. In contrast, dropping either `E_1_4` or `E_1_8` would result in higher internal consistency.
+
+```{r, echo=FALSE}
+e_alpha_1$alpha.drop
+```
+
+<span class = "question">**Question `r inc_num()`**: Dropping which item for neuroticism at time 1 would result in the largest increase in &alpha;? </span>
+
+```{r QuestionAlphaN1Drop, include = show_answer, purl=F}
+d %>% 
+  select(starts_with("N_1_")) %>% 
+  psych::alpha()
+```
+
+## Item Statistics
+
+It can be useful to inspect the characteristics of the items to make sure that they are performing as expected.
+
+```{r, echo=FALSE}
+e_alpha_1$item.stats
+```
+
+* `raw.r` is the correlation of the item with the whole scale.
+* `std.r` is the correlation of the standardized item with the sum of the items after they have been standardized.
+* `r.drop` refers to the correlation of the item with the total scale after the item has been removed.
+
+Let's see what would happen if item 4 were removed. If an item in the `select` function has a minus sign, it is removed.
+
+```{r}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4) %>% 
+  psych::alpha()
+```
+
+As we already saw from the drop item statistics, the new &alpha; is a little higher than the original extraversion time 1 scale: 0.87 &rarr; 0.91.
+
+## Item Response Frequencies
+
+If an item seems not to be working out, it is useful to examine the response frequencies to see if anything is off, such as items with a lot of missing data. Another frequent problem is when almost everyone gives the same answer to a question (e.g., Almost everyone will agree with the statement "I dislike rude people."). When there is little variability in item responses, the item may have a low correlation with the rest of the scale.
+
+```{r, echo=FALSE}
+e_alpha_1$response.freq
+```
+
+There does not seem to be anything unusual about the frequency responses to item 4. However, on item 8 almost everyone answered 4 (Agree), and a few answered 5 (Strongly Agree). This response pattern is quite unusual for a questionnaire and thus deserves careful consideration. Suppose the question was "In my life, I have experienced positive emotions at least once." Essentially no one would deny having experienced positive emotions at least once. If this were the item, it could probably be dropped. However, there may be circumstances in which an item that *almost* everyone agrees with is helpful---such as when you are trying to identify extreme traits and attitudes like psychopathy, narcissism, criminality, and extreme bigotry.
+
+# McDonald's &omega;
+
+McDonald's &omega; (i.e., "Omega Total") is more accurate than &alpha; when the true score variance differs from item to item. However, with well-designed scales, the difference between &alpha; and &omega; is small. McDonald's &omega; is typically slightly larger than &alpha;. In general, you should use McDonald's &omega; whenever you can and use Cronbach's &alpha; only when other people insist than you must even after you explain that &omega; is a better estimate of reliability than &alpha;. In that case, include both coefficients.
+
+The `omega` function has the capability of helping us understand multifactorial tests--- tests that measure more than one construct at a time. For now, let's specify that the time-1 extraversion items measure a single factor by setting the `nfactors` parameter to 1. 
+
+```{r, warning=FALSE, message=FALSE}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  omega(nfactors = 1)
+
+```
+
+There is a lot of output from this function. For now, we only need to find `Omega Total`. You can see that it is just a little larger than &alpha;. 
+
+In the output for the `alpha` function, we learned that Item 4 had a low correlation with the total scale. In the output for the `omega` function, similar information is found in the `Schmid Leiman Factor loadings greater than 0.2` section. The first column `g` is the item's correlation with the general factor of the test, which in this case is the only factor. In this case, `E_1_4`'s factor loading on `g` is less than 0.2 and is omitted from the output. If we were to peak at it directly, we would see that it is near zero (.034). This means that it is nearly uncorrelated with the construct we are trying to measure and is probably not worth keeping in the scale.
+
+
+Let's see what happens if we remove Item 4:
+
+
+```{r, warning=FALSE}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4) %>% 
+  omega(nfactors = 1)
+```
+
+Here we see that both &alpha and &omega; Total are larger, and the difference between them is negligible. 
+
+Item 8 has a low factor loading (0.37). In general (but not always), factor loadings above 0.2 are safe to keep. Let's see what happens if Item 8 is also removed:
+
+
+```{r, warning=FALSE}
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4, -E_1_8) %>% 
+  omega(nfactors = 1)
+```
+
+The `Omega Total` increased slightly. If maximizing &omega; were our only concern, then dropping Item 8 is an easy decision. However, if Item 8 measures an aspect of extraversion that the other items do not, we may choose to keep it so that the scale covers the full breadth of the extraversion construct. Here we are concerned with *content validity*, the degree to which the scale measures all aspects of the psychological construct.
+
+<span class = "question">**Question `r inc_num()`**: What is the `Omega Total` reliability coefficient for neuroticism at time 1? </span>
+
+<span class = "question">**Question `r inc_num()`**: What is the `Omega Total` reliability coefficient for neuroticism at time 1 if the item that is least correlated with the general factor is removed? </span>
+
+```{r QuestionOmegaN1, warning=FALSE, include = show_answer, purl=F}
+d %>% 
+  select(starts_with("N_1_")) %>% 
+  omega(nfactors = 1)
+
+d %>% 
+  select(starts_with("N_1_")) %>% 
+  select(-N_1_2) %>% 
+  omega(nfactors = 1)
+```
+
+# Desired Reliability
+
+```{r, warning=FALSE, include = FALSE}
+E_om <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4, -E_1_8) %>% 
+  omega(nfactors = 1)
+
+E_om_total <- E_om$omega.tot
+
+E_om_Desired <- 0.95
+k <- 8
+Items_Needed <- k * ((E_om_Desired) / (1 - E_om_Desired)) * ((1 - E_om_total)/(E_om_total))
+
+```
+
+By eliminating extraversion time 1 items 4 and 8, the &omega; Total coefficient is `r E_om_total`. That is not bad for only `r k` items, but suppose that we need our measure of extraversion to have a reliability coefficient of at least 0.95. How many additional items---similar those we already have---would we need to add to our measure?
+
+We can rearrange the Spearman-Brown Prophecy Formula to obtain this useful formula:
+
+$$\text{Items Needed}=\text{Current Number of Items}\frac{\rho_{\text{Desired}}}{1-\rho_{\text{Desired}}}\frac{1-\rho_{\text{Current}}}{\rho_{\text{Current}}}$$
+
+Making the appropriate substitutions:
+
+$$`r Items_Needed` = `r k`\frac{0.95}{1-0.95}\frac{1-`r E_om_total`}{`r E_om_total`}$$
+
+Rounding up, we need about `r ceiling(Items_Needed)` items to create a measure with a reliability coefficient of at least 0.95. That is, we need `r ceiling(Items_Needed) - k` additional items beyond the `r k` items we already have.
+
+Let's make R do all the work. When we run the `omega` function, it creates an object that contains many variables and then prints a lot of information the programmer (personality psychologist [William Revelle](http://www.personality-project.org/revelle.html)) thought would be useful. 
+
+Suppose we want to extract the &omega; total as a variable and use it later. Instead of running `omega`, let's assign it to a variable.
+
+```{r, message=FALSE, warning=FALSE}
+Extra1_omega <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4, -E_1_8) %>% 
+  omega(nfactors = 1)
+```
+
+The `Extra1_omega` variable contains a lot of information, which we can access as needed. To look inside it, we can use the `View` function---note the capital "V"---to open up a navigable page you can explore interactively (not shown here).
+
+```{r, eval = F}
+View(Extra1_omega)
+```
+
+Or you can use the `str` function (short for "structure") to print the entire object. I happen to know it will spew out way more stuff than you need to see, but if you just wan to see the first level of structure, you can to this:
+
+```{r, eval=F}
+str(Extra1_omega, max.level = 1)
+```
+
+If you run the code above, you will see that there is a slot called `omega.tot` which has what we need.
+
+```{r}
+Extra1_omega$omega.tot
+```
+
+Okay, we now can plug this value into a formula to find the number of items we need to obtain a scale with a reliability coefficient of at least 0.95:
+
+```{r}
+# Number of items in current scale
+items_now <- 8
+# Reliability of current scale
+rxx_now <- Extra1_omega$omega.tot
+# Reliability desired
+rxx_desired <- 0.95
+# Number of items needed
+# ceiling function round up to the nearest integer
+ceiling(items_now*rxx_desired/(1-rxx_desired)*(1-rxx_now)/rxx_now)
+
+```
+
+If we want to use this formula many times, it might be good to create a function that automates this process:
+
+```{r}
+items_needed <- function(items_now, rxx_now, rxx_desired) {
+  ceiling(items_now*rxx_desired/(1-rxx_desired)*(1-rxx_now)/rxx_now)
+}
+```
+
+Once we run this function, we can simply type:
+
+```{r}
+items_needed(
+  items_now = 8,
+  rxx_now = Extra1_omega$omega.tot,
+  rxx_desired = 0.95
+)
+```
+
+This function will also work if we have a questionnaire with many items, and we want to shorten it. Suppose a questionnaire with 30 questions has a current reliability of 0.96. We want to know how many items we need in a shortened form of the questionnaire that will still have a reliability coefficient of at least 0.90.
+
+```{r}
+items_needed(
+  items_now = 30, 
+  rxx_now = 0.96, 
+  rxx_desired = 0.90)
+```
+
+Going from 30 items to `r items_needed(items_now = 30, rxx_now = 0.96, rxx_desired = 0.90)` items would be nice if we are running a study in which we want to reduce the administration time.
+
+<span class = "question">**Question `r inc_num()`**: Suppose we want the neuroticism scale to have a reliability coefficient of at least 0.97. How many items total would we need in the neuroticism scale? To estimate current reliability, use the &omega; total from the **nine** good time 1 neuroticism items (i.e., there are nine items after removing the bad item previously identified). </span>
+
+```{r QuestionItemsNeededN1, include=show_answer, purl=F}
+Neuro1_omega <- d %>% 
+  select(starts_with("N_1_")) %>% 
+  select(-N_1_2) %>% 
+  omega(nfactors = 1)
+
+items_needed(
+  items_now = 9, 
+  rxx_now = Neuro1_omega$omega.tot, 
+  rxx_desired = 0.97)
+```
+
+
+```{r, fig.cap="<small>*Figure 2*. This spirograph displays this tutorial's color palette,<br>which is derived from Johannes Vermeer's [The Milkmaid](https://www.wikiwand.com/en/The_Milkmaid_(Vermeer)),<br>using Edwin Thoen's [`dutchmasters`](https://github.com/EdwinTh/dutchmasters) package.</small>",echo=FALSE, fig.align="center"}
+knitr::include_graphics("../dutchmasters.svg")
+```
+
+
+
+# All the code in one place
+
+```{r, eval = F}
+# Install packages if needed
+if (!require(psych)) install.packages("psych")
+if (!require(tidyverse)) install.packages("tidyverse")
+
+# Load packages
+library(tidyverse)
+library(psych)
+
+# Import data
+d <- read_csv("https://github.com/wjschne/EDUC5529/raw/master/HW2.csv")
+
+#View data
+d
+
+# Alternate view of data
+glimpse(d)
+
+
+# Mean extraversion score for the time 1 test items
+d$Extraversion_1 <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  rowMeans(na.rm = TRUE)
+
+# Mean extraversion score for the time 2 test items
+d$Extraversion_2 <- d %>% 
+  select(starts_with("E_2_")) %>% 
+  rowMeans(na.rm = TRUE)
+
+
+# Retest reliability: Correlation of Extraversion at time 1 and time 2
+d %>% 
+  select(Extraversion_1, Extraversion_2) %>% 
+  cor()
+
+# Alternate way of getting the correlation of time 1 and 2 Extraversion
+cor(d$Extraversion_1, d$Extraversion_2)
+
+# Statistical test of the correlation of time 1 and 2 Extraversion
+corr.test(d$Extraversion_1, d$Extraversion_2)
+
+# Calculate Mean of odd Extraversion items
+d$Extraversion_1_odd <- d %>% 
+  select(E_1_1, E_1_3, E_1_5, E_1_7, E_1_9) %>% 
+  rowMeans(na.rm = TRUE)
+
+# Calculate Mean of even Extraversion items
+d$Extraversion_1_even <- d %>% 
+  select(E_1_2, E_1_4, E_1_6, E_1_8, E_1_10) %>% 
+  rowMeans(na.rm = TRUE)
+
+# Split-half reliability: Correlation of even and odd Extraversion items at time 1
+cor(d$Extraversion_1_odd, d$Extraversion_1_even)
+
+# Calculate mean of first half of Extraversion items
+d$Extraversion_FirstHalf <- d %>% 
+  select(E_1_1, E_1_2,  E_1_3,  E_1_4, E_1_5) %>% 
+  rowMeans(na.rm = TRUE) 
+
+# Calculate mean of second half of Extraversion items
+d$Extraversion_FirstHalf <- d %>% 
+  select(E_1_1:E_1_5) %>% 
+  rowMeans(na.rm = TRUE) 
+
+
+# Number parallel tests
+k <- 2
+# Split-half reliability: Correlation of the even and odd part scores
+r_part <- cor(d$Extraversion_1_odd, d$Extraversion_1_even)
+# Corrected split-half reliability
+r_whole <- k * r_part / (1 + (k - 1) * r_part) 
+r_whole
+
+
+# Average split-half reliability coefficient for Extraversion items
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  splitHalf()
+
+
+# Cronbach's alpha: Internal consistency coefficient for Extraversion items
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  psych::alpha()
+
+
+# Cronbach's alpha after removing item 4
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4) %>% 
+  psych::alpha()
+
+
+# McDonald's omega: Internal consistency coefficient for Extraversion items
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  omega(nfactors = 1)
+
+
+# McDonald's omega after removing item 4
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4) %>% 
+  omega(nfactors = 1)
+
+
+# McDonald's omega after removing item 4 and item 8
+d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4, -E_1_8) %>% 
+  omega(nfactors = 1)
+
+# Assign McDonald's omega output to a variable (Extra1_omega)
+Extra1_omega <- d %>% 
+  select(starts_with("E_1_")) %>% 
+  select(-E_1_4, -E_1_8) %>% 
+  omega(nfactors = 1)
+
+# View omega total only
+Extra1_omega$omega.tot
+
+# Number of items in current scale
+items_now <- 10
+
+# Reliability of current scale
+rxx_now <- Extra1_omega$omega.tot
+
+# Reliability desired
+rxx_desired <- 0.95
+
+# Number of items needed
+# ceiling function round up to the nearest integer
+ceiling(items_now*rxx_desired/(1-rxx_desired)*(1-rxx_now)/rxx_now)
+
+
+# Items needed function
+items_needed <- function(items_now, rxx_now, rxx_desired) {
+  ceiling(items_now*rxx_desired/(1-rxx_desired)*(1-rxx_now)/rxx_now)
+}
+
+
+# How many items needed to get omega = 0.95
+items_needed(
+  items_now = 8,
+  rxx_now = Extra1_omega$omega.tot,
+  rxx_desired = 0.95
+)
+
+# How many items needed to get omega = 0.90 if it is .96 now
+items_needed(
+  items_now = 30, 
+  rxx_now = 0.96, 
+  rxx_desired = 0.90)
+```
+
+
+
+
+
+
+
+
+
