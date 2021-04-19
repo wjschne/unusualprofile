@@ -9,3 +9,5 @@
 ^codecov\.yml$
 ^README_files$
 ^data-raw$
+^R/oldfunctions\.R$
+/.Rproj.user*

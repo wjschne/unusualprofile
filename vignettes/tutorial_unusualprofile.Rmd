@@ -33,7 +33,7 @@ img {border: none}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev = "svg",
+  dev = "ragg_png",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
@@ -205,7 +205,7 @@ bmatrix <- function(x, digits = 2) {
 
 ```
 
-The unusualprofile package can identify multivariate outliers conditional on predictors [@ji2018].
+The unusualprofile package can identify multivariate outliers conditioned on a set of predictors [@ji2018].
 
 # Univariate Outliers
 
@@ -648,7 +648,7 @@ tibble(Variable = paste0("italic(X)[",1:4,"]"), Score = X,
   annotate("text", x = 3.5, y = d$X_Composite, label = paste0("Composite = ", formatC(d$X_Composite, 2, format = "f")), vjust = -.6, size = 4.5)
 ```
 
-How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? We will show how to do so in two ways. The easier of the two methods will be to use the simstandard package to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we also see how to do everything "by hand" using matrix algebra in the [Calculations performed by the unusualprofile package vignette](unusualprofile_calculations.html).
+How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? We will show how to do so in two ways. The easier of the two methods will be to use the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we also see how to do everything "by hand" using matrix algebra in the [Calculations performed by the unusualprofile package vignette](https://wjschne.github.io/unusualprofile/articles/unusualprofile_calculations.html).
 
 ## Calculations Using the simstandard and unusualprofile Packages
 
@@ -660,14 +660,14 @@ library(dplyr)
 library(simstandard)
 ```
 
-The simstandard package can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
+The [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
 
 ```{r, ref.label="worked-model"}
 
 ```
 
 
-Using the simstandard package, we can find the model-implied correlation matrix. 
+Using the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html), we can find the model-implied correlation matrix. 
 
 ```{r simstandard}
 # Model-implied correlations of all variables
@@ -1077,7 +1077,7 @@ We can use [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html) to spec
 ```
 
 
-Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to *z*-scores. Finally, we use the simstandard package's `add_composite_scores` and `add_factor_scores` function to add composite scores and estimated factor scores to the data frame.
+Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to *z*-scores. Finally, we use the [simstandard package's](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) `add_composite_scores` and `add_factor_scores` function to add composite scores and estimated factor scores to the data frame.
 
 ```{r scores, ref.label="make-scores", echo=TRUE, eval=FALSE}
 
@@ -1269,13 +1269,13 @@ Where
 > $R_{XX}^{-1}$ is the inverse of the correlation matrix among the observed variables.\
 > $X$ is a vector of a person's standardized scores on the observed variables.
 
-Fortunately, the the `add_factor_scores` function from the simstandard package can add factor scores to existing data. For each latent variable in the model, a factor score with "`_FS`" is appended to the variable name. Using the option `CI = TRUE` will produce the lower bounds ("`_FS_LB`") and upper bounds ("`_FS_UB`") of the factor scores' confidence intervals.
+Fortunately, the `add_factor_scores` function from the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can add factor scores to existing data. For each latent variable in the model, a factor score with "`_FS`" is appended to the variable name. Using the option `CI = TRUE` will produce the lower bounds ("`_FS_LB`") and upper bounds ("`_FS_UB`") of the factor scores' confidence intervals.
 
 ```{r}
 d_case <- tibble(
   Ga1 = 61,
-  Ga2 = 65,
-  Ga3 = 69,
+  Ga2 = 69,
+  Ga3 = 65,
   Gc1 = 109,
   Gc2 = 97,
   Gc3 = 103,
@@ -1283,8 +1283,8 @@ d_case <- tibble(
   RD2 = 71,
   RD3 = 81,
   RC1 = 90,
-  RC2 = 94,
-  RC3 = 99
+  RC2 = 99,
+  RC3 = 94
 ) %>% 
   simstandard::add_factor_scores(m = m_reading, 
                                  mu = 100, 
@@ -1295,7 +1295,8 @@ d_case %>%
   select(contains("_FS")) %>% 
   pivot_longer(everything(), 
                names_to = "Variable", 
-               values_to = "Score") 
+               values_to = "Score") %>% 
+  arrange(Variable)
 ```
 
 Because factor scores are estimates, they are presented with confidence intervals in Figure&nbsp;\@ref(fig:factor-scores).
@@ -1303,11 +1304,17 @@ Because factor scores are estimates, they are presented with confidence interval
 ```{r factor-scores, fig.height=4.5, fig.cap="Estimated factor scores with 95% confidence intervals", echo = FALSE}
 d_factor_scores <- d_case %>% 
   select(contains("_FS")) %>% 
-  pivot_longer(everything(), names_to = "Variable", values_to = "Score") %>% 
-  mutate(Variable = if_else(str_ends(Variable, "_FS"), Variable, str_remove(Variable, "_FS"))) %>% 
+  pivot_longer(everything(), 
+               names_to = "Variable", 
+               values_to = "Score") %>% 
+  mutate(Variable = if_else(str_ends(Variable, "_FS"), 
+                            Variable, 
+                            str_remove(Variable, "_FS"))) %>% 
   separate(Variable, c("Variable", "Type")) %>% 
-  pivot_wider(id_cols = Variable, names_from = Type, values_from = Score) %>% 
-  mutate(se = simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score_se[1:4] * 15)
+  pivot_wider(id_cols = Variable, 
+              names_from = Type, 
+              values_from = Score) %>% 
+  mutate(se = get_factor_score_validity_se(m_reading) * 15)
 
 d_factor_scores %>% 
   mutate(w = 1.25) %>% 
@@ -1357,13 +1364,13 @@ There are two ways we can think of factor scores. From one perspective, they are
 For example, to make factor scores for the reading model (See Figure&nbsp;\@ref(fig:reading-model)), one would use the factor-score coefficients presented in Figure&nbsp;\@ref(fig:factor-score-coefficients). The matrix of factor-score coefficients can be obtained like so:
 
 ```{r, eval=FALSE}
-simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score
+simstandard::get_factor_score_coefficients(m_reading)
 ```
 
 
 ```{r, factor-score-coefficients, echo=FALSE, fig.cap="Factor score coefficients for the reading model"}
 
-simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1:4] %>% 
+simstandard::get_factor_score_coefficients(m_reading) %>% 
   as.data.frame() %>% 
   tibble::rownames_to_column("Observed") %>% 
   pivot_longer(-Observed, names_to = "Latent", values_to = "Coefficient") %>% 
@@ -1412,19 +1419,60 @@ $$
 \end{split}
 $$
 
-Factor scores generally have a smaller standard deviation than the latent scores they estimate. Instead, their standard deviation is proportional to their validity. If a factor score measures a latent score poorly, it strongly regresses to the mean, resulting in a smaller variance than that of the latent variable. 
+Factor scores generally have a smaller standard deviation than the latent scores they estimate. Instead, their standard deviation is proportional to their validity. If a factor score measures a latent score poorly, it strongly regresses to the mean, resulting in a much smaller variance than that of the latent variable. 
 
 ```{r}
-R_factor <- get_model_implied_correlations(m_reading, observed = T, factor_scores = T)
+# Correlation matrix
+R_factor <- get_model_implied_correlations(m_reading, 
+                                           factor_scores = T)
+# Factor Score Validity
+fs_validity <- get_factor_score_validity(m_reading)
 
-cond_maha(d_case, R = R_factor, sigma = c(rep(1, 12), sim_standardized_matrices(m_reading)$Coefficients$composite_score_validity), v_dep = colnames(R_factor)[1:12],
-          v_ind_composites = sim_standardized_matrices(m_reading)$v_names$v_factor_score[1:4]) %>% 
+# Model names
+m_names <- get_model_names(m_reading)
+
+# Observed score names
+ob_names <- m_names$v_observed
+
+# Factor Score names
+fs_names <- m_names$v_factor_score
+
+
+
+# Standard Deviations
+s <- 15 * c(rep(1, length(ob_names)), fs_validity)
+
+# Plot
+cond_maha(d_case, 
+          R = R_factor, 
+          mu = 100, 
+          sigma = s, 
+          v_dep = ob_names,
+          v_ind_composites = fs_names) %>% 
   plot()
-sim_standardized_matrices(m_reading)
-
 ```
 
+A second interpretation of the factor scores is that they are best estimates of a latent variable. Here, we get the model-implied correlation matrix of observed and latent variables (instead of factor score estimates).
 
+```{r}
+# Get model-implied correlations of observed and latent variables
+R_latent <- get_model_implied_correlations(m_reading, latent = T)
+
+# Latent variable names
+v_latent <- m_names$v_latent
+
+# Plot
+d_case %>% 
+  rename_with(.fn = ~ str_remove(.x, "_FS$")) %>% 
+  cond_maha(R = R_latent, 
+            mu = 100, 
+            sigma = 15, 
+            v_dep = ob_names,
+            v_ind = v_latent) %>% 
+  plot()
+```
+
+Note that we had to rename the factor score variables from `r m_names$v_factor_score` to `r m_names$v_latent`. In addition, the latent variable are no longer composite variables, but independent variables. 
 
 <!-- # Predicting a profile's extremity in a population -->
 

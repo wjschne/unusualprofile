@@ -5,14 +5,19 @@
 \title{Plot the variables from the results of the cond_maha function.}
 \usage{
 \method{plot}{cond_maha}(
-  cm,
+  x,
+  ...,
   p_tail = 0,
   family = "serif",
-  score_digits = ifelse(min(cm$sigma) >= 10, 0, 2)
+  score_digits = ifelse(min(x$sigma) >= 10, 0, 2)
 )
 }
 \arguments{
-\item{cm}{The results of the cond_maha function.}
+\item{x}{The results of the cond_maha function.}
+
+\item{...}{Arguments passed to print function}
+
+\item{p_tail}{The proportion of the tail to shade}
 
 \item{family}{Font family.}
 

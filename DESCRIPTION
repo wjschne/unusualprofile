@@ -29,10 +29,12 @@ Imports:
     tibble,
     stats,
     purrr,
-    simstandard (>= 0.5.0),
+    simstandard (>= 0.6.2),
     ggplot2,
     ggnormalviolin,
-    rlang (>= 0.1.2)
+    rlang (>= 0.1.2),
+    patchwork,
+    scales
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
@@ -45,7 +47,9 @@ Suggests:
     showtext,
     rmarkdown,
     covr,
-    roxygen2
+    roxygen2,
+    bookdown,
+    ragg
 VignetteBuilder: knitr
 URL: https://github.com/wjschne/unusualprofile
 BugReports: https://github.com/wjschne/unusualprofile/issues
