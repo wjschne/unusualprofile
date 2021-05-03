@@ -40,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -66,7 +66,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/wjschne/unusualprofile/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -80,15 +80,14 @@
 
       
 
-      </header><script src="tutorial_unusualprofile_files/header-attrs-2.5/header-attrs.js"></script><link href="tutorial_unusualprofile_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="tutorial_unusualprofile_files/anchor-sections-1.0/anchor-sections.js"></script><script src="tutorial_unusualprofile_files/kePrint-0.0.1/kePrint.js"></script><link href="tutorial_unusualprofile_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+      </header><script src="tutorial_unusualprofile_files/header-attrs-2.7/header-attrs.js"></script><script src="tutorial_unusualprofile_files/kePrint-0.0.1/kePrint.js"></script><link href="tutorial_unusualprofile_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to the unusualprofile package</h1>
                         <h4 class="author">W. Joel Schneider &amp; Feng Ji</h4>
             
-            <h4 class="date">2020-12-11</h4>
+            <h4 class="date">2021-04-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/master/vignettes/tutorial_unusualprofile.Rmd"><code>vignettes/tutorial_unusualprofile.Rmd</code></a></small>
       <div class="hidden name"><code>tutorial_unusualprofile.Rmd</code></div>
@@ -104,18 +103,18 @@ body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif';
       font-size:18px; 
       line-height:1.25;}
 
-.caption {text-align:right; font-size:10pt}
-table caption {text-align:left; font-size:10pt}
+.caption {text-align:right; font-size:11pt}
+table caption {text-align:left; font-size:11pt}
 
 img {border: none}
 </style>
-<p>The unusualprofile package can identify multivariate outliers conditional on predictors <span class="citation">(Ji, 2018)</span>.</p>
+<p>The unusualprofile package can identify multivariate outliers conditioned on a set of predictors <span class="citation">(Ji, 2018)</span>.</p>
 <div id="univariate-outliers" class="section level1">
 <h1 class="hasAnchor">
 <a href="#univariate-outliers" class="anchor"></a>Univariate Outliers</h1>
 <p>A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in the histogram in Figure @ref(fig:univariate).</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/univariate-1.svg" alt="A histogram with a univariate outlier." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/univariate-1.png" alt="A histogram with a univariate outlier." width="100%" height="100%"><p class="caption">
 A histogram with a univariate outlier.
 </p>
 </div>
@@ -127,19 +126,19 @@ A histogram with a univariate outlier.
 <p>A univariate outlier refers to a single case from a single variable. A multivariate outlier refers to a single row of data consisting of 2 or more variables.</p>
 <p>A multivariate outlier might not be unusual on any particular variable, but has an unusual <em>pattern</em> of scores. For example, in Figure @ref(fig:multivariate), the red point is not very unusual in a univariate context—just 1 standard deviation from the mean of either variable. However, because <em>x</em> and <em>y</em> are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/multivariate-1.svg" alt="A scatterplot with a multivariate outlier." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/multivariate-1.png" alt="A scatterplot with a multivariate outlier." width="100%" height="100%"><p class="caption">
 A scatterplot with a multivariate outlier.
 </p>
 </div>
 <p>Scatterplots are great for inspecting multivariate outliers with a small number of variables. Unfortunately, scatterplots can only display 2 or 3 variables at a time. A different way to view multivariate data is to show each case as a profile of scores connected by lines. In the plot below, most of the lines are nearly flat—highly correlated variables with the same means and standard deviations will generally produce flat profiles. The multivariate outlier, in red, is clearly not flat.</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/multivariate-outlier-2-1.svg" alt="A two-variable violin plot with a multivariate outlier." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/multivariate-outlier-2-1.png" alt="A two-variable violin plot with a multivariate outlier." width="100%" height="100%"><p class="caption">
 A two-variable violin plot with a multivariate outlier.
 </p>
 </div>
 <p>Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,−1,1} is much less flat, making it unusual in this context.</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/multivariate-outlier-4-1.svg" alt="A four-variable violin plot with a multivariate outlier." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/multivariate-outlier-4-1.png" alt="A four-variable violin plot with a multivariate outlier." width="100%" height="100%"><p class="caption">
 A four-variable violin plot with a multivariate outlier.
 </p>
 </div>
@@ -281,25 +280,25 @@ Model-implied correlations among variables
 </table>
 <p>The correlations among the four variables are in @ref(tab:cor-table). Suppose from the population of profiles we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a <em>z</em>-score of 1).</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/conditional-dist-1.svg" alt="Conditional distributions for people with a composite score of 1." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/conditional-dist-1.png" alt="Conditional distributions for people with a composite score of 1." width="100%" height="100%"><p class="caption">
 Conditional distributions for people with a composite score of 1.
 </p>
 </div>
 <p>In Figure @ref(fig:conditional-dist), two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven. The light gray vertical normal distribution on the left of each variable shows the population distribution of the unselected profiles, and the darker gray normal distribution on the right shows the conditional distributions of the selected profiles (i.e., all profiles with an elevation of 1). Note that <em>X</em><sub>1</sub> has a relatively narrow conditional distribution because its loading of <em>λ</em> = 0.95 is high, and <em>X</em><sub>4</sub> has a relatively wide conditional distribution because its loading of <em>λ</em> = 0.6 is lower.</p>
 </div>
 </div>
-<div id="a-worked-example" class="section level1">
+<div id="a-worked-example-with-a-simple-model" class="section level1">
 <h1 class="hasAnchor">
-<a href="#a-worked-example" class="anchor"></a>A Worked Example</h1>
+<a href="#a-worked-example-with-a-simple-model" class="anchor"></a>A Worked Example with a Simple Model</h1>
 <p>Suppose that among standard multivariate normal variables, there is a profile of scores <span class="math inline">\(X\)</span>:</p>
 <p><span class="math display">\[X=\{X_1,X_2, X_3, X_4\} = \{2,3,1,2\}. \]</span></p>
 <p>As seen in Figure @ref(fig:example-profile), this profile of scores is summarized by a composite score of 2.30.</p>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/example-profile-1.svg" alt="Example profile in a standard multivariate normal distribution." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/example-profile-1.png" alt="Example profile in a standard multivariate normal distribution." width="100%" height="100%"><p class="caption">
 Example profile in a standard multivariate normal distribution.
 </p>
 </div>
-<p>How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? We will show how to do so in two ways. The easier of the two methods will be to use the simstandard package to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we also see how to do everything “by hand” using matrix algebra in the <a href="unusualprofile_calculations.html">Calculations performed by the unusualprofile package vignette</a>.</p>
+<p>How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? We will show how to do so in two ways. The easier of the two methods will be to use the <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package</a> to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we also see how to do everything “by hand” using matrix algebra in the <a href="https://wjschne.github.io/unusualprofile/articles/unusualprofile_calculations.html">Calculations performed by the unusualprofile package vignette</a>.</p>
 <div id="calculations-using-the-simstandard-and-unusualprofile-packages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calculations-using-the-simstandard-and-unusualprofile-packages" class="anchor"></a>Calculations Using the simstandard and unusualprofile Packages</h2>
@@ -308,13 +307,13 @@ Example profile in a standard multivariate normal distribution.
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile">unusualprofile</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/simstandard">simstandard</a></span><span class="op">)</span></code></pre></div>
-<p>The simstandard package can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using <a href="http://lavaan.ugent.be/tutorial/syntax1.html">lavaan syntax</a>:</p>
+<p>The <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package</a> can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using <a href="http://lavaan.ugent.be/tutorial/syntax1.html">lavaan syntax</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"X =~ 0.95 * X_1 + 
                0.90 * X_2 + 
                0.85 * X_3 + 
                0.60 * X_4"</span></code></pre></div>
-<p>Using the simstandard package, we can find the model-implied correlation matrix.</p>
+<p>Using the <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package</a>, we can find the model-implied correlation matrix.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Model-implied correlations of all variables</span>
 <span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">model</span>, composites <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -370,7 +369,7 @@ Example profile in a standard multivariate normal distribution.
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></code></pre></div>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/cond-maha-1.svg" alt="A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score." width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/cond-maha-1.png" alt="A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score." width="100%" height="100%"><p class="caption">
 A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score.
 </p>
 </div>
@@ -392,9 +391,41 @@ d_{CM}^2 +  \text{Independent}~d_M^2 &amp;= \text{Dependent}~d_M^2\\
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="a-more-complex-example" class="section level1">
+<div id="a-worked-example-with-a-more-complex-model" class="section level1">
 <h1 class="hasAnchor">
-<a href="#a-more-complex-example" class="anchor"></a>A More Complex Example</h1>
+<a href="#a-worked-example-with-a-more-complex-model" class="anchor"></a>A Worked Example with a More Complex Model</h1>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d_case</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
+  Ga1 <span class="op">=</span> <span class="fl">61</span>,
+  Ga2 <span class="op">=</span> <span class="fl">65</span>,
+  Ga3 <span class="op">=</span> <span class="fl">69</span>,
+  Gc1 <span class="op">=</span> <span class="fl">109</span>,
+  Gc2 <span class="op">=</span> <span class="fl">97</span>,
+  Gc3 <span class="op">=</span> <span class="fl">103</span>,
+  RD1 <span class="op">=</span> <span class="fl">77</span>,
+  RD2 <span class="op">=</span> <span class="fl">71</span>,
+  RD3 <span class="op">=</span> <span class="fl">81</span>,
+  RC1 <span class="op">=</span> <span class="fl">90</span>,
+  RC2 <span class="op">=</span> <span class="fl">94</span>,
+  RC3 <span class="op">=</span> <span class="fl">99</span>
+<span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span>, CI <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
+
+<span class="va">d_LB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_LB"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_UB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_UB"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_FS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span>
+  <span class="va">d_LB</span>,
+  <span class="va">d_UB</span>,
+  <span class="va">d_FS</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">separate</span><span class="op">(</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ability"</span>, <span class="st">"Role"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Role</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Ability</span>, <span class="va">FS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LB</span>, ymax <span class="op">=</span> <span class="va">UB</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
+<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="100%"></p>
 <div class="figure" style="text-align: center">
 <img src="Reading.svg" alt="General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension" width="100%" height="100%"><p class="caption">
 General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension
@@ -403,14 +434,14 @@ General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predic
 <p>Suppose we have a simplified model of reading ability and its predictors as shown in Figure @ref(fig:reading-model). The two predictors of reading ability are General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Ga is a stronger predictor of RD than of RC. For Gc, the reverse is true. Each cognitive and academic ability is measured with three tests each.</p>
 <p>We want to know if a person’s pattern of reading scores are unusual, given the cognitive scores.</p>
 <p>Here we load packages we will need.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/simstandard">simstandard</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile">unusualprofile</a></span><span class="op">)</span></code></pre></div>
 <p>We can use <a href="http://lavaan.ugent.be/tutorial/syntax1.html">lavaan syntax</a> to specify the standardized coefficients of our model.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Model of Reading</span>
 <span class="va">m_reading</span> <span class="op">&lt;-</span> <span class="st">"
 Ga =~ 0.83 * Ga1 + 0.92 * Ga2 + 0.95 * Ga3
@@ -418,24 +449,24 @@ Gc =~ 0.88 * Gc1 + 0.71 * Gc2 + 0.85 * Gc3
 RD =~ 0.93 * RD1 + 0.87 * RD2 + 0.85 * RD3
 RC =~ 0.91 * RC1 + 0.86 * RC2 + 0.90 * RC3
 Ga ~~ 0.68 * Gc
-RD ~  0.47 * Ga + 0.53 * Gc
+RD ~  0.57 * Ga + 0.33 * Gc
 RC ~  0.05 * Ga + 0.40 * Gc  + 0.43 * RD
 "</span></code></pre></div>
-<p>Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to <em>z</em>-scores. Finally, we use the simstandard package’s <code>add_composite_scores</code> and <code>add_factor_scores</code> function to add composite scores and estimated factor scores to the data frame.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>Here we enter the standard scores (Mean = 100, SD = 15) for a single person. Then we convert each standard score to <em>z</em>-scores. Finally, we use the <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package’s</a> <code>add_composite_scores</code> and <code>add_factor_scores</code> function to add composite scores and estimated factor scores to the data frame.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d_case</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
-  Ga1 <span class="op">=</span> <span class="fl">71</span>,
+  Ga1 <span class="op">=</span> <span class="fl">61</span>,
   Ga2 <span class="op">=</span> <span class="fl">65</span>,
-  Ga3 <span class="op">=</span> <span class="fl">75</span>,
-  Gc1 <span class="op">=</span> <span class="fl">108</span>,
-  Gc2 <span class="op">=</span> <span class="fl">99</span>,
-  Gc3 <span class="op">=</span> <span class="fl">123</span>,
+  Ga3 <span class="op">=</span> <span class="fl">69</span>,
+  Gc1 <span class="op">=</span> <span class="fl">109</span>,
+  Gc2 <span class="op">=</span> <span class="fl">97</span>,
+  Gc3 <span class="op">=</span> <span class="fl">103</span>,
   RD1 <span class="op">=</span> <span class="fl">77</span>,
   RD2 <span class="op">=</span> <span class="fl">71</span>,
   RD3 <span class="op">=</span> <span class="fl">81</span>,
   RC1 <span class="op">=</span> <span class="fl">90</span>,
-  RC2 <span class="op">=</span> <span class="fl">84</span>,
-  RC3 <span class="op">=</span> <span class="fl">107</span>
+  RC2 <span class="op">=</span> <span class="fl">94</span>,
+  RC3 <span class="op">=</span> <span class="fl">99</span>
 <span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
@@ -463,13 +494,13 @@ p
 Ga (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-68
+63
 </td>
 <td style="text-align:right;font-weight: bold;">
--2.12
+-2.50
 </td>
 <td style="text-align:left;font-weight: bold;">
-.02
+.0062
 </td>
 </tr>
 <tr>
@@ -477,31 +508,31 @@ Ga (Composite)
 Ga (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-71
+67
 </td>
 <td style="text-align:right;font-weight: bold;">
--1.96
+-2.21
 </td>
 <td style="text-align:left;font-weight: bold;">
-.03
+.01
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Ga1
 </td>
 <td style="text-align:right;">
-71
+61
 </td>
 <td style="text-align:right;">
--1.93
+-2.60
 </td>
 <td style="text-align:left;">
-.03
+.0047
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Ga2
 </td>
 <td style="text-align:right;">
@@ -515,17 +546,17 @@ Ga2
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Ga3
 </td>
 <td style="text-align:right;">
-75
+69
 </td>
 <td style="text-align:right;">
--1.67
+-2.07
 </td>
 <td style="text-align:left;">
-.05
+.02
 </td>
 </tr>
 <tr>
@@ -533,13 +564,13 @@ Ga3
 Gc (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-111
+103
 </td>
 <td style="text-align:right;font-weight: bold;">
-0.76
+0.23
 </td>
 <td style="text-align:left;font-weight: bold;">
-.78
+.59
 </td>
 </tr>
 <tr>
@@ -547,55 +578,55 @@ Gc (Composite)
 Gc (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-104
+100
 </td>
 <td style="text-align:right;font-weight: bold;">
-0.26
+-0.02
 </td>
 <td style="text-align:left;font-weight: bold;">
-.60
+.49
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Gc1
 </td>
 <td style="text-align:right;">
-108
+109
 </td>
 <td style="text-align:right;">
-0.53
+0.60
 </td>
 <td style="text-align:left;">
-.70
+.73
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Gc2
 </td>
 <td style="text-align:right;">
-99
+97
 </td>
 <td style="text-align:right;">
--0.07
+-0.20
 </td>
 <td style="text-align:left;">
-.47
+.42
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 Gc3
 </td>
 <td style="text-align:right;">
-123
+103
 </td>
 <td style="text-align:right;">
-1.53
+0.20
 </td>
 <td style="text-align:left;">
-.94
+.58
 </td>
 </tr>
 <tr>
@@ -603,13 +634,13 @@ Gc3
 RC (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-93
+94
 </td>
 <td style="text-align:right;font-weight: bold;">
--0.45
+-0.41
 </td>
 <td style="text-align:left;font-weight: bold;">
-.32
+.34
 </td>
 </tr>
 <tr>
@@ -617,17 +648,17 @@ RC (Composite)
 RC (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-93
+92
 </td>
 <td style="text-align:right;font-weight: bold;">
--0.45
+-0.51
 </td>
 <td style="text-align:left;font-weight: bold;">
-.33
+.31
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RC1
 </td>
 <td style="text-align:right;">
@@ -641,31 +672,31 @@ RC1
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RC2
 </td>
 <td style="text-align:right;">
-84
+94
 </td>
 <td style="text-align:right;">
--1.07
+-0.40
 </td>
 <td style="text-align:left;">
-.14
+.34
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RC3
 </td>
 <td style="text-align:right;">
-107
+99
 </td>
 <td style="text-align:right;">
-0.47
+-0.07
 </td>
 <td style="text-align:left;">
-.68
+.47
 </td>
 </tr>
 <tr>
@@ -687,17 +718,17 @@ RD (Composite)
 RD (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-79
+76
 </td>
 <td style="text-align:right;font-weight: bold;">
--1.42
+-1.63
 </td>
 <td style="text-align:left;font-weight: bold;">
-.08
+.05
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RD1
 </td>
 <td style="text-align:right;">
@@ -711,7 +742,7 @@ RD1
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RD2
 </td>
 <td style="text-align:right;">
@@ -725,7 +756,7 @@ RD2
 </td>
 </tr>
 <tr>
-<td style="text-align:left; padding-left:  2em;" indentlevel="1">
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
 RD3
 </td>
 <td style="text-align:right;">
@@ -741,7 +772,7 @@ RD3
 </tbody>
 </table>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/plot-scores-1.svg" alt="Case Scores" width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/plot-scores-1.png" alt="Case Scores" width="100%" height="100%"><p class="caption">
 Case Scores
 </p>
 </div>
@@ -750,14 +781,14 @@ Case Scores
 <a href="#conditional-mahalanobis-distances-with-indicator-scores-only" class="anchor"></a>Conditional Mahalanobis Distances with Indicator Scores Only</h2>
 <p>Suppose that we want to know if the academic performance scores are unusual, given the cognitive predictor scores.</p>
 <p>The variable names for the cognitive predictors and the reading ability scores can be specified like so:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">v_cognitive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Ga"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>,
                  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Gc"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">v_reading</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"RD"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>,
                <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"RC"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Now let’s see if the academic scores are unusual after controlling for the cognitive predictors:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dCM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="va">d_case</span>, 
   R <span class="op">=</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">m_reading</span><span class="op">)</span>, 
@@ -765,12 +796,12 @@ Case Scores
   sigma <span class="op">=</span> <span class="fl">15</span>,
   v_dep <span class="op">=</span> <span class="va">v_reading</span>, 
   v_ind <span class="op">=</span> <span class="va">v_cognitive</span><span class="op">)</span></code></pre></div>
-<p>Controlling for the cognitive predictors, did not alter our conclusion that the reading profile is unusual. It appears that the Reading scores are more unusual than about 93% of Reading profiles from people with the same specified cognitive predictor scores.</p>
+<p>Controlling for the cognitive predictors, did not alter our conclusion that the reading profile is unusual. It appears that the Reading scores are more unusual than about 18% of Reading profiles from people with the same specified cognitive predictor scores.</p>
 <p>We can see that all three decoding tests are lower than expectations, particularly <code>RD2</code>, the reading comprehension tests are within expectations, though <code>RC3</code> is somewhat high.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">dCM</span><span class="op">)</span></code></pre></div>
 <div class="figure">
-<img src="tutorial_unusualprofile_files/figure-html/cond-reading-1.svg" alt="Conditional Distributions for Reading, Controlling for Cognitive Predictors" width="100%" height="100%"><p class="caption">
+<img src="tutorial_unusualprofile_files/figure-html/cond-reading-1.png" alt="Conditional Distributions for Reading, Controlling for Cognitive Predictors" width="100%" height="100%"><p class="caption">
 Conditional Distributions for Reading, Controlling for Cognitive Predictors
 </p>
 </div>
@@ -780,11 +811,15 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
 <h1 class="hasAnchor">
 <a href="#composite-score-model" class="anchor"></a>Composite Score Model</h1>
 <p>Often, all we need do is calculate the composite scores and see if they are within expectations.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">v_cognitive_composite</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ga"</span>, <span class="st">"Gc"</span><span class="op">)</span>,<span class="st">"_Composite"</span><span class="op">)</span>
-<span class="va">v_reading_composite</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"RD"</span>, <span class="st">"RC"</span><span class="op">)</span>,<span class="st">"_Composite"</span><span class="op">)</span>
-
-<span class="co"># Conditional Reading Profile</span>
+<p>First, we specify the composite score variable names to be the same as they are in the <code>d_case</code> tibble.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Independent variable names</span>
+<span class="va">v_cognitive_composite</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ga"</span>, <span class="st">"Gc"</span><span class="op">)</span>,<span class="st">"_Composite"</span><span class="op">)</span>
+<span class="co"># Dependent variable names</span>
+<span class="va">v_reading_composite</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"RD"</span>, <span class="st">"RC"</span><span class="op">)</span>,<span class="st">"_Composite"</span><span class="op">)</span></code></pre></div>
+<p>Now we plot the composite scores:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Conditional Reading Profile</span>
 <span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_case</span>, 
           R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">m_reading</span>, composites <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, 
           v_dep <span class="op">=</span> <span class="va">v_reading_composite</span>, 
@@ -792,13 +827,17 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
           mu <span class="op">=</span> <span class="fl">100</span>, 
           sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-4-1.svg" width="100%" height="100%"></p>
+<div class="figure">
+<img src="tutorial_unusualprofile_files/figure-html/composite-condmaha-1.png" alt="Conditional Distributions for Reading Composites, Controlling for Cognitive Composites" width="100%" height="100%"><p class="caption">
+Conditional Distributions for Reading Composites, Controlling for Cognitive Composites
+</p>
+</div>
 </div>
 <div id="observed-scores-given-composite-scores" class="section level1">
 <h1 class="hasAnchor">
 <a href="#observed-scores-given-composite-scores" class="anchor"></a>Observed Scores, Given Composite Scores</h1>
 <p>Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span><span class="va">d_case</span>,
           R <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">m_reading</span>, composites <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
           v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">v_cognitive</span>, <span class="va">v_reading</span><span class="op">)</span>,
@@ -807,7 +846,7 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
           sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-5-1.svg" width="100%" height="100%"></p>
+<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-4-1.png" width="100%" height="100%"></p>
 <div id="factor-score-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#factor-score-model" class="anchor"></a>Factor-score model</h2>
@@ -817,6 +856,121 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
 <blockquote>
 <p><span class="math inline">\(\hat{F}\)</span> is a vector of a person’s estimated factor scores.<br><span class="math inline">\(R_{FF}\)</span> is the correlation matrix among the latent factors.<br><span class="math inline">\(\Lambda_{FX}\)</span> is the matrix of loadings from factors to observed scores.<br><span class="math inline">\(R_{FX}\)</span> is a correlation matrix between the common factors and the observed variables.<br><span class="math inline">\(R_{XX}^{-1}\)</span> is the inverse of the correlation matrix among the observed variables.<br><span class="math inline">\(X\)</span> is a vector of a person’s standardized scores on the observed variables.</p>
 </blockquote>
+<p>Fortunately, the <code>add_factor_scores</code> function from the <a href="https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html">simstandard package</a> can add factor scores to existing data. For each latent variable in the model, a factor score with “<code>_FS</code>” is appended to the variable name. Using the option <code>CI = TRUE</code> will produce the lower bounds (“<code>_FS_LB</code>”) and upper bounds (“<code>_FS_UB</code>”) of the factor scores’ confidence intervals.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d_case</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>
+  Ga1 <span class="op">=</span> <span class="fl">61</span>,
+  Ga2 <span class="op">=</span> <span class="fl">69</span>,
+  Ga3 <span class="op">=</span> <span class="fl">65</span>,
+  Gc1 <span class="op">=</span> <span class="fl">109</span>,
+  Gc2 <span class="op">=</span> <span class="fl">97</span>,
+  Gc3 <span class="op">=</span> <span class="fl">103</span>,
+  RD1 <span class="op">=</span> <span class="fl">77</span>,
+  RD2 <span class="op">=</span> <span class="fl">71</span>,
+  RD3 <span class="op">=</span> <span class="fl">81</span>,
+  RC1 <span class="op">=</span> <span class="fl">90</span>,
+  RC2 <span class="op">=</span> <span class="fl">99</span>,
+  RC3 <span class="op">=</span> <span class="fl">94</span>
+<span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, 
+                                 mu <span class="op">=</span> <span class="fl">100</span>, 
+                                 sigma <span class="op">=</span> <span class="fl">15</span>, 
+                                 CI <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="va">d_case</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, 
+               names_to <span class="op">=</span> <span class="st">"Variable"</span>, 
+               values_to <span class="op">=</span> <span class="st">"Score"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 12 x 2</span>
+<span class="co">#&gt;    Variable Score</span>
+<span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 Ga_FS     66.0</span>
+<span class="co">#&gt;  2 Ga_FS_LB  59.4</span>
+<span class="co">#&gt;  3 Ga_FS_UB  72.7</span>
+<span class="co">#&gt;  4 Gc_FS     99.6</span>
+<span class="co">#&gt;  5 Gc_FS_LB  90.1</span>
+<span class="co">#&gt;  6 Gc_FS_UB 109. </span>
+<span class="co">#&gt;  7 RC_FS     91.9</span>
+<span class="co">#&gt;  8 RC_FS_LB  84.2</span>
+<span class="co">#&gt;  9 RC_FS_UB  99.6</span>
+<span class="co">#&gt; 10 RD_FS     75.4</span>
+<span class="co">#&gt; 11 RD_FS_LB  67.9</span>
+<span class="co">#&gt; 12 RD_FS_UB  82.8</span></code></pre></div>
+<p>Because factor scores are estimates, they are presented with confidence intervals in Figure @ref(fig:factor-scores).</p>
+<div class="figure">
+<img src="tutorial_unusualprofile_files/figure-html/factor-scores-1.png" alt="Estimated factor scores with 95% confidence intervals" width="100%" height="100%"><p class="caption">
+Estimated factor scores with 95% confidence intervals
+</p>
+</div>
+<p>There are two ways we can think of factor scores. From one perspective, they are composite scores with each component given a different weight.</p>
+<p>For example, to make factor scores for the reading model (See Figure @ref(fig:reading-model)), one would use the factor-score coefficients presented in Figure @ref(fig:factor-score-coefficients). The matrix of factor-score coefficients can be obtained like so:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_factor_score_coefficients.html">get_factor_score_coefficients</a></span><span class="op">(</span><span class="va">m_reading</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<img src="tutorial_unusualprofile_files/figure-html/factor-score-coefficients-1.png" alt="Factor score coefficients for the reading model" width="100%" height="100%"><p class="caption">
+Factor score coefficients for the reading model
+</p>
+</div>
+<p><span class="math display">\[
+\begin{split}
+\text{Ga}=&amp;.136\text{Ga}_1&amp;+.305\text{Ga}_2&amp;+.496\text{Ga}_3&amp;+\\
+&amp;.014\text{Gc}_1&amp;+.005\text{Gc}_2&amp;+.011\text{Gc}_3&amp;+\\
+&amp;.041\text{RD}_1&amp;+.021\text{RD}_2&amp;+.018\text{RD}_3&amp;+\\
+&amp;.007\text{RC}_1&amp;+.004\text{RC}_2&amp;+.006\text{RC}_3
+\end{split}
+\]</span></p>
+<p>Factor scores generally have a smaller standard deviation than the latent scores they estimate. Instead, their standard deviation is proportional to their validity. If a factor score measures a latent score poorly, it strongly regresses to the mean, resulting in a much smaller variance than that of the latent variable.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Correlation matrix</span>
+<span class="va">R_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">m_reading</span>, 
+                                           factor_scores <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+<span class="co"># Factor Score Validity</span>
+<span class="va">fs_validity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_factor_score_validity.html">get_factor_score_validity</a></span><span class="op">(</span><span class="va">m_reading</span><span class="op">)</span>
+
+<span class="co"># Model names</span>
+<span class="va">m_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_names.html">get_model_names</a></span><span class="op">(</span><span class="va">m_reading</span><span class="op">)</span>
+
+<span class="co"># Observed score names</span>
+<span class="va">ob_names</span> <span class="op">&lt;-</span> <span class="va">m_names</span><span class="op">$</span><span class="va">v_observed</span>
+
+<span class="co"># Factor Score names</span>
+<span class="va">fs_names</span> <span class="op">&lt;-</span> <span class="va">m_names</span><span class="op">$</span><span class="va">v_factor_score</span>
+
+
+
+<span class="co"># Standard Deviations</span>
+<span class="va">s</span> <span class="op">&lt;-</span> <span class="fl">15</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">ob_names</span><span class="op">)</span><span class="op">)</span>, <span class="va">fs_validity</span><span class="op">)</span>
+
+<span class="co"># Plot</span>
+<span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span><span class="va">d_case</span>, 
+          R <span class="op">=</span> <span class="va">R_factor</span>, 
+          mu <span class="op">=</span> <span class="fl">100</span>, 
+          sigma <span class="op">=</span> <span class="va">s</span>, 
+          v_dep <span class="op">=</span> <span class="va">ob_names</span>,
+          v_ind_composites <span class="op">=</span> <span class="va">fs_names</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-8-1.png" width="100%" height="100%"></p>
+<p>A second interpretation of the factor scores is that they are best estimates of a latent variable. Here, we get the model-implied correlation matrix of observed and latent variables (instead of factor score estimates).</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Get model-implied correlations of observed and latent variables</span>
+<span class="va">R_latent</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">m_reading</span>, latent <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
+
+<span class="co"># Latent variable names</span>
+<span class="va">v_latent</span> <span class="op">&lt;-</span> <span class="va">m_names</span><span class="op">$</span><span class="va">v_latent</span>
+
+<span class="co"># Plot</span>
+<span class="va">d_case</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="op">~</span> <span class="fu">str_remove</span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_FS$"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R_latent</span>, 
+            mu <span class="op">=</span> <span class="fl">100</span>, 
+            sigma <span class="op">=</span> <span class="fl">15</span>, 
+            v_dep <span class="op">=</span> <span class="va">ob_names</span>,
+            v_ind <span class="op">=</span> <span class="va">v_latent</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-9-1.png" width="100%" height="100%"></p>
+<p>Note that we had to rename the factor score variables from Ga_FS, Gc_FS, RD_FS, RC_FS to Ga, Gc, RD, RC. In addition, the latent variable are no longer composite variables, but independent variables.</p>
 <!-- # Predicting a profile's extremity in a population -->
 <!-- $$d_{C M}=\sqrt{(X-\hat{X})'R_{XX}^{-1}(X-\hat{X})}$$ -->
 <!-- Where -->

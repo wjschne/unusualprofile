@@ -1,8 +1,8 @@
-pandoc: 2.11.2
+pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   tutorial_unusualprofile: tutorial_unusualprofile.html
   unusualprofile_calculations: unusualprofile_calculations.html
-last_built: 2020-12-11T14:29Z
+last_built: 2021-04-19T21:28Z
 

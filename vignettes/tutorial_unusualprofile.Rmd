@@ -2,9 +2,9 @@
 title: "Introduction to the unusualprofile package"
 author: "W. Joel Schneider & Feng Ji"
 date: "`r Sys.Date()`"
-as_is: true
+as_is: yes
 output: 
-  bookdown::html_vignette2: default
+  rmarkdown::html_vignette: default
 bibliography: bibliography.bib
 csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
@@ -34,6 +34,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   dev = "ragg_png",
+  # dev = "svg",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
@@ -209,9 +210,7 @@ The unusualprofile package can identify multivariate outliers conditioned on a s
 
 # Univariate Outliers
 
-
-
-A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in the histogram in Figure&nbsp;\@ref(fig:univariate).
+A univariate outlier is far from most of the other scores in a distribution. You can easily spot a large outlier in this histogram:
 
 ```{r univariate, echo=FALSE, fig.cap="A histogram with a univariate outlier."}
 set.seed(1)
@@ -243,7 +242,7 @@ If we want to quantify the extremity of the univariate outlier, we could convert
 
 A univariate outlier refers to a single case from a single variable. A multivariate outlier refers to a single row of data consisting of 2 or more variables.
 
-A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in Figure&nbsp;\@ref(fig:multivariate), the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
+A multivariate outlier might not be unusual on any particular variable, but has an unusual *pattern* of scores. For example, in the figure below, the red point is not very unusual in a univariate context---just 1 standard deviation from the mean of either variable. However, because *x* and *y* are highly correlated, it is extremely rare for a data point to differ by 2 standard deviations.
 
 ```{r multivariate, echo=FALSE, warning=FALSE, fig.cap="A scatterplot with a multivariate outlier."}
 set.seed(5)
@@ -355,7 +354,7 @@ d_4 %>%
   scale_y_continuous(NULL)
 ```
 
-In Figure&nbsp;\@ref(fig:multivariate-outlier-4), the red profile is obviously unusual. However, we cannot yet tell exactly how unusual it is. We would like a measure of its multivariate extremity.
+In the the figure above, the red profile is obviously unusual. However, we cannot yet tell exactly how unusual it is. We would like a measure of its multivariate extremity.
 
 # Quantifying Multivariate Extremity
 
@@ -409,7 +408,7 @@ knitr::include_graphics("One_dimensional.svg")
 
 ```
 
-Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model in Figure&nbsp;\@ref(fig:one-dimensional). 
+Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model in the figure above. 
 
 ```{r cor-table, echo = F}
 lambda <- c(0.95, 0.90, 0.85, 0.60)
@@ -428,7 +427,7 @@ Ryy %>%
 
 ```
 
-The correlations among the four variables are in \@ref(tab:cor-table). Suppose from the population of profiles we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
+The correlations among the four variables are in the table above. Suppose from the population of profiles we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
 
 
 
@@ -601,7 +600,7 @@ d %>%
 
 ```
 
-In Figure&nbsp;\@ref(fig:conditional-dist), two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven. The light gray vertical normal distribution on the left of each variable shows the population distribution of the unselected profiles, and the darker gray normal distribution on the right shows the conditional distributions of the selected profiles (i.e., all profiles with an elevation of 1). Note that *X*~1~ has a relatively narrow conditional distribution because its loading of *&lambda;*&nbsp;=&nbsp;`r lambda[1]` is high, and *X*~4~ has a relatively wide conditional distribution because its loading of *&lambda;*&nbsp;=&nbsp;`r lambda[4]` is lower.
+In the figure above, two score profiles with an elevation of 1 are shown. The red profile is flat and unremarkable, whereas the blue profile is unusually uneven. The light gray vertical normal distribution on the left of each variable shows the population distribution of the unselected profiles, and the darker gray normal distribution on the right shows the conditional distributions of the selected profiles (i.e., all profiles with an elevation of 1). Note that *X*~1~ has a relatively narrow conditional distribution because its loading of *&lambda;*&nbsp;=&nbsp;`r lambda[1]` is high, and *X*~4~ has a relatively wide conditional distribution because its loading of *&lambda;*&nbsp;=&nbsp;`r lambda[4]` is lower.
 
 # A Worked Example with a Simple Model
 
@@ -632,7 +631,7 @@ Suppose that among standard multivariate normal variables, there is a profile of
 
 $$X=\{X_1,X_2, X_3, X_4\} = \{`r paste0(X, collapse = ",")`\}. $$
 
-As seen in Figure&nbsp;\@ref(fig:example-profile), this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
+As seen in the figure below, this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
 
 ```{r example-profile, echo = F, fig.cap="Example profile in a standard multivariate normal distribution."}
 tibble(Variable = paste0("italic(X)[",1:4,"]"), Score = X,
@@ -731,7 +730,7 @@ plot(cm)
 plot(cm, family = myfont)
 ```
 
-In Figure&nbsp;\@ref(fig:cond-maha), we can see that the profile is more unusual than `r round(100*cm$dCM_p, 2)`% of profiles with the same elevation (i.e., a composite score of *z* = `r round(d$X_Composite, 2)`). The conditional Mahalanobis distance of the dependent variables is `r round(cm$dCM, 2)`, which is a `r round(100 * cm$distance_reduction)`% smaller than the unconditional Mahalanobis distance of the dependent variables `r round(cm$dM_dep, 2)`.
+In the figure above, we can see that the profile is more unusual than `r round(100*cm$dCM_p, 2)`% of profiles with the same elevation (i.e., a composite score of *z* = `r round(d$X_Composite, 2)`). The conditional Mahalanobis distance of the dependent variables is `r round(cm$dCM, 2)`, which is a `r round(100 * cm$distance_reduction)`% smaller than the unconditional Mahalanobis distance of the dependent variables `r round(cm$dM_dep, 2)`.
 
 Note that the Mahalanobis distance of the independent variable is `r round(cm$dM_ind, 2)`. When added, the squared conditional Mahalanobis distance and the squared Mahalanobis distance of the independent variable equal the squared unconditional unconditional Mahalanobis distance of the dependent variables (within rounding error).
 
@@ -1056,7 +1055,7 @@ knitr::include_graphics("Reading.svg")
 
 ```
 
-Suppose we have a simplified model of reading ability and its predictors as shown in Figure&nbsp;\@ref(fig:reading-model). The two predictors of reading ability are General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Ga is a stronger predictor of RD than of RC. For Gc, the reverse is true. Each cognitive and academic ability is measured with three tests each. 
+Suppose we have a simplified model of reading ability and its predictors as shown in the figure above. The two predictors of reading ability are General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Ga is a stronger predictor of RD than of RC. For Gc, the reverse is true. Each cognitive and academic ability is measured with three tests each. 
 
 We want to know if a person's pattern of reading scores are unusual, given the cognitive scores.
 
@@ -1299,7 +1298,7 @@ d_case %>%
   arrange(Variable)
 ```
 
-Because factor scores are estimates, they are presented with confidence intervals in Figure&nbsp;\@ref(fig:factor-scores).
+Because factor scores are estimates, they are presented with confidence intervals in the figure below.
 
 ```{r factor-scores, fig.height=4.5, fig.cap="Estimated factor scores with 95% confidence intervals", echo = FALSE}
 d_factor_scores <- d_case %>% 
@@ -1361,7 +1360,7 @@ d_factor_scores %>%
 
 There are two ways we can think of factor scores. From one perspective, they are composite scores with each component given a different weight. 
 
-For example, to make factor scores for the reading model (See Figure&nbsp;\@ref(fig:reading-model)), one would use the factor-score coefficients presented in Figure&nbsp;\@ref(fig:factor-score-coefficients). The matrix of factor-score coefficients can be obtained like so:
+For example, to make factor scores for the reading model, one would use the factor-score coefficients presented in the figure below. The matrix of factor-score coefficients can be obtained like so:
 
 ```{r, eval=FALSE}
 simstandard::get_factor_score_coefficients(m_reading)

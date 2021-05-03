@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rounds proportions to significant digits both near 0 and 1,
-then converts to percentiles — proportion2percentile • unusualprofile</title>
+<title>An example data.frame — d_example • unusualprofile</title>
 
 
 <!-- jquery -->
@@ -42,10 +41,8 @@ then converts to percentiles — proportion2percentile • unusualprofile</title
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Rounds proportions to significant digits both near 0 and 1,
-then converts to percentiles — proportion2percentile" />
-<meta property="og:description" content="Rounds proportions to significant digits both near 0 and 1,
-then converts to percentiles" />
+<meta property="og:title" content="An example data.frame — d_example" />
+<meta property="og:description" content="A dataset with 1 row of data for a single case." />
 
 
 
@@ -128,53 +125,33 @@ then converts to percentiles" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rounds proportions to significant digits both near 0 and 1,
-then converts to percentiles</h1>
-    <small class="dont-index">Source: <a href='https://github.com/wjschne/unusualprofile/blob/master/R/main.R'><code>R/main.R</code></a></small>
-    <div class="hidden name"><code>proportion2percentile.Rd</code></div>
+    <h1>An example data.frame</h1>
+    <small class="dont-index">Source: <a href='https://github.com/wjschne/unusualprofile/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>d_example.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Rounds proportions to significant digits both near 0 and 1,
-then converts to percentiles</p>
+    <p>A dataset with 1 row of data for a single case.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>proportion2percentile</span><span class='op'>(</span>
-  <span class='va'>p</span>,
-  digits <span class='op'>=</span> <span class='fl'>2</span>,
-  remove_leading_zero <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  add_percent_character <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>d_example</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>p</th>
-      <td><p>probability</p></td>
-    </tr>
-    <tr>
-      <th>digits</th>
-      <td><p>rounding digits. Defaults to 2</p></td>
-    </tr>
-    <tr>
-      <th>remove_leading_zero</th>
-      <td><p>Remove leading zero for small percentiles,
-Defaults to TRUE</p></td>
-    </tr>
-    <tr>
-      <th>add_percent_character</th>
-      <td><p>Append percent character. Defaults to FALSE</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>character vector</p>
+    <p>A data frame with 1 row and 8 variables:</p><dl>
+<dt>X_1</dt><dd><p>A predictor variable</p></dd>
+<dt>X_2</dt><dd><p>A predictor variable</p></dd>
+<dt>X_3</dt><dd><p>A predictor variable</p></dd>
+<dt>Y_1</dt><dd><p>An outcome variable</p></dd>
+<dt>Y_2</dt><dd><p>An outcome variable</p></dd>
+<dt>Y_3</dt><dd><p>An outcome variable</p></dd>
+<dt>X</dt><dd><p>A latent predictor variable</p></dd>
+<dt>Y</dt><dd><p>A latent outcome variable</p></dd>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>proportion2percentile</span><span class='op'>(</span><span class='fl'>0.01111</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "1"</div></pre>
+</dl>
+
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

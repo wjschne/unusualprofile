@@ -33,7 +33,7 @@ img {border: none}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev = "ragg_png",
+  # dev = "svg",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
