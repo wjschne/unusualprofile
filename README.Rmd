@@ -18,7 +18,7 @@ options(digits = 2)
 library(unusualprofile)
 ```
 
-# unusualprofile
+# unusualprofile [![logo](vignettes/logo.png){width=139 style="float: right;"}](https://wjschne.github.io/unusualprofile/)
 
 <!-- badges: start -->
 

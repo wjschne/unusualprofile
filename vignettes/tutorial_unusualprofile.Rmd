@@ -1,5 +1,5 @@
 ---
-title: "Introduction to the unusualprofile package"
+title: 'Introduction to the unusualprofile package'
 author: "W. Joel Schneider & Feng Ji"
 date: "`r Sys.Date()`"
 as_is: yes
@@ -29,11 +29,12 @@ img {border: none}
 ```
 
 ```{r setup, include = FALSE}
-
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   dev = "ragg_png",
+  dpi = 300,
   # dev = "svg",
   out.height = "100%",
   out.width = "100%",
@@ -61,11 +62,13 @@ library(ggplot2)
 library(glue)
 
 library(purrr)
+
+graphics::plot
 ```
 
 ```{r more-setup, echo=FALSE}
 myfont <- "Titillium Web"
-
+plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha, family=!!myfont)
 # font_add_google("Titillium Web", "Titillium Web") 
 extrafont::loadfonts(device = "win")
 theme_set(theme_minimal(16, base_family = myfont))
@@ -405,7 +408,6 @@ One way to define the profile elevation is to create a composite score from the 
 
 ```{r one-dimensional, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
 knitr::include_graphics("One_dimensional.svg")
-
 ```
 
 Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model in the figure above. 
@@ -722,12 +724,8 @@ cm
 
 The output of the `cond_maha` function can be displayed with the `plot` function.
 
-```{r worked-plot-code, echo=TRUE, eval=FALSE}
+```{r cond-maha, fig.cap="A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score.", echo=TRUE}
 plot(cm)
-```
-
-```{r cond-maha, fig.cap="A profile of z-scores in the context of population distributions (darker gray) and conditional distributions (lighter gray) controlling for overall composite score.", echo=FALSE}
-plot(cm, family = myfont)
 ```
 
 In the figure above, we can see that the profile is more unusual than `r round(100*cm$dCM_p, 2)`% of profiles with the same elevation (i.e., a composite score of *z* = `r round(d$X_Composite, 2)`). The conditional Mahalanobis distance of the dependent variables is `r round(cm$dCM, 2)`, which is a `r round(100 * cm$distance_reduction)`% smaller than the unconditional Mahalanobis distance of the dependent variables `r round(cm$dM_dep, 2)`.
@@ -1192,12 +1190,8 @@ Controlling for the cognitive predictors, did not alter our conclusion that the 
 
 We can see that all three decoding tests are lower than expectations, particularly `RD2`, the reading comprehension tests are within expectations, though `RC3` is somewhat high.
 
-```{r cond-reading-display, echo = TRUE, eval = F}
+```{r cond-reading, fig.cap="Conditional Distributions for Reading, Controlling for Cognitive Predictors", echo=TRUE}
 plot(dCM)
-```
-
-```{r cond-reading, fig.cap="Conditional Distributions for Reading, Controlling for Cognitive Predictors", echo=FALSE}
-plot(dCM, family = myfont)
 ```
 
 # Composite Score Model
@@ -1206,7 +1200,7 @@ Often, all we need do is calculate the composite scores and see if they are with
 
 First, we specify the composite score variable names to be the same as they are in the `d_case` tibble.
 
-```{r reading-composite-names}
+```{r reading-composite-names, echo=TRUE}
 # Independent variable names
 v_cognitive_composite <- paste0(c("Ga", "Gc"),"_Composite")
 # Dependent variable names
@@ -1215,7 +1209,7 @@ v_reading_composite <- paste0(c("RD", "RC"),"_Composite")
 
 Now we plot the composite scores:
 
-```{r composite-condmaha-display, echo=TRUE, eval=FALSE}
+```{r composite-condmaha, echo=FALSE, fig.cap="Conditional Distributions for Reading Composites, Controlling for Cognitive Composites", echo=TRUE}
 # Conditional Reading Profile
 cond_maha(data = d_case, 
           R = get_model_implied_correlations(m_reading, composites = TRUE), 
@@ -1224,25 +1218,13 @@ cond_maha(data = d_case,
           mu = 100, 
           sigma = 15) %>% 
   plot()
-
-```
-
-```{r composite-condmaha, echo=FALSE, fig.cap="Conditional Distributions for Reading Composites, Controlling for Cognitive Composites"}
-# Conditional Reading Profile
-cond_maha(data = d_case, 
-          R = get_model_implied_correlations(m_reading, composites = TRUE), 
-          v_dep = v_reading_composite, 
-          v_ind = v_cognitive_composite, 
-          mu = 100, 
-          sigma = 15) %>% 
-  plot(family = myfont)
 ```
 
 # Observed Scores, Given Composite Scores
 
 Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.
 
-```{r}
+```{r plotreadingobserved, echo=TRUE}
 cond_maha(d_case,
           R = get_model_implied_correlations(m_reading, composites = TRUE),
           v_dep = c(v_cognitive, v_reading),
@@ -1435,8 +1417,6 @@ ob_names <- m_names$v_observed
 
 # Factor Score names
 fs_names <- m_names$v_factor_score
-
-
 
 # Standard Deviations
 s <- 15 * c(rep(1, length(ob_names)), fs_validity)

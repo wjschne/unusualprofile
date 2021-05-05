@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# unusualprofile
+# unusualprofile [<img src="vignettes/logo.png" style="float: right;" width="139" alt="logo" />](https://wjschne.github.io/unusualprofile/)
 
 <!-- badges: start -->
 

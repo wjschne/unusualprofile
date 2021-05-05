@@ -34,7 +34,8 @@ Imports:
     ggnormalviolin,
     rlang (>= 0.1.2),
     patchwork,
-    scales
+    scales,
+    ragg
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
@@ -48,8 +49,7 @@ Suggests:
     rmarkdown,
     covr,
     roxygen2,
-    bookdown,
-    ragg
+    bookdown
 VignetteBuilder: knitr
 URL: https://github.com/wjschne/unusualprofile
 BugReports: https://github.com/wjschne/unusualprofile/issues
