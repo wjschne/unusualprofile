@@ -33,7 +33,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  # dev = "ragg_png",
+  dev = "ragg_png",
   # dpi = 300,
   # dev = "svg",
   out.height = "100%",
@@ -46,8 +46,7 @@ knitr::opts_chunk$set(
 
 options(digits = 2)
 
-library(extrafont)
-library(showtext)
+# library(extrafont)
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -67,10 +66,10 @@ graphics::plot
 ```
 
 ```{r more-setup, echo=FALSE}
-myfont <- "Titillium Web"
-plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha, family=!!myfont)
-# font_add_google("Titillium Web", "Titillium Web") 
-extrafont::loadfonts(device = "win")
+myfont <- "sans"
+plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha, family = !!myfont)
+# sysfonts::font_add_google("Titillium Web", "Titillium Web") 
+# extrafont::loadfonts(device = "win")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))

@@ -33,7 +33,7 @@ img {border: none}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  # dev = "svg",
+  dev = "ragg_png",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
@@ -45,7 +45,7 @@ knitr::opts_chunk$set(
 
 options(digits = 2)
 
-library(extrafont)
+# library(extrafont)
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -59,14 +59,13 @@ library(knitr)
 library(kableExtra)
 library(ggplot2)
 library(glue)
-library(showtext)
 library(purrr)
 ```
 
 ```{r more-setup, echo=FALSE}
-myfont <- "Titillium Web"
+myfont <- "sans"
 
-font_add_google("Titillium Web", "Titillium Web")
+# font_add_google("Titillium Web", "Titillium Web")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))
