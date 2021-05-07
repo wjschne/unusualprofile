@@ -4,7 +4,7 @@ author: "W. Joel Schneider & Feng Ji"
 date: "`r Sys.Date()`"
 as_is: true
 output: 
-  bookdown::html_vignette2: default
+  rmarkdown::html_vignette: default
 bibliography: bibliography.bib
 csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
@@ -144,7 +144,7 @@ X <- d[1,-5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
 ```
 
 
-Suppose that there are a set of variables $X$ that are related to each other as seen in the model in  Figure&nbsp;\@ref(fig:one-dimensional):
+Suppose that there are a set of variables $X$ that are related to each other as seen in the model below:
 
 ```{r one-dimensional, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
 knitr::include_graphics("One_dimensional.svg")

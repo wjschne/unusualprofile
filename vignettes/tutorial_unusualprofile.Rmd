@@ -33,8 +33,8 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev = "ragg_png",
-  dpi = 300,
+  # dev = "ragg_png",
+  # dpi = 300,
   # dev = "svg",
   out.height = "100%",
   out.width = "100%",
@@ -663,7 +663,7 @@ library(simstandard)
 
 The [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
 
-```{r, ref.label="worked-model"}
+```{r worked-model-show, ref.label="worked-model"}
 
 ```
 
@@ -787,7 +787,7 @@ d_case <- tibble(
 ```
 
 
-```{r}
+```{r show-profile}
 d_case <- tibble(
   Ga1 = 61,
   Ga2 = 65,
@@ -1252,7 +1252,7 @@ Where
 
 Fortunately, the `add_factor_scores` function from the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can add factor scores to existing data. For each latent variable in the model, a factor score with "`_FS`" is appended to the variable name. Using the option `CI = TRUE` will produce the lower bounds ("`_FS_LB`") and upper bounds ("`_FS_UB`") of the factor scores' confidence intervals.
 
-```{r}
+```{r case-scores}
 d_case <- tibble(
   Ga1 = 61,
   Ga2 = 69,
@@ -1344,7 +1344,7 @@ There are two ways we can think of factor scores. From one perspective, they are
 
 For example, to make factor scores for the reading model, one would use the factor-score coefficients presented in the figure below. The matrix of factor-score coefficients can be obtained like so:
 
-```{r, eval=FALSE}
+```{r get-factor-score-coef, eval=FALSE}
 simstandard::get_factor_score_coefficients(m_reading)
 ```
 
@@ -1402,7 +1402,7 @@ $$
 
 Factor scores generally have a smaller standard deviation than the latent scores they estimate. Instead, their standard deviation is proportional to their validity. If a factor score measures a latent score poorly, it strongly regresses to the mean, resulting in a much smaller variance than that of the latent variable. 
 
-```{r}
+```{r display-reading1}
 # Correlation matrix
 R_factor <- get_model_implied_correlations(m_reading, 
                                            factor_scores = T)
@@ -1433,7 +1433,7 @@ cond_maha(d_case,
 
 A second interpretation of the factor scores is that they are best estimates of a latent variable. Here, we get the model-implied correlation matrix of observed and latent variables (instead of factor score estimates).
 
-```{r}
+```{r display-reading2}
 # Get model-implied correlations of observed and latent variables
 R_latent <- get_model_implied_correlations(m_reading, latent = T)
 
@@ -1467,4 +1467,4 @@ Note that we had to rename the factor score variables from `r m_names$v_factor_s
 
 <!-- $$d_{M_C}^{2} \sim\chi^{2}(k)$$ -->
 
-# Reference
+# References

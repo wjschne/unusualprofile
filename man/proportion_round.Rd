@@ -7,7 +7,7 @@
 proportion_round(p, digits = 2)
 }
 \arguments{
-\item{p}{probabiity}
+\item{p}{probability}
 
 \item{digits}{rounding digits}
 }

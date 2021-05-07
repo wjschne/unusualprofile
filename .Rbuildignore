@@ -11,3 +11,4 @@
 ^data-raw$
 ^R/oldfunctions\.R$
 /.Rproj.user*
+^logo.png$

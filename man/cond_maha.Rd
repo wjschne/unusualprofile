@@ -47,27 +47,27 @@ a list with the conditional Mahalanobis distance
 \itemize{
 \item{\code{dCM} = Conditional Mahalanobis distance}
 \item{\code{dCM_df} = Degrees of freedom for the conditional Mahalanobis distance}
-\item{\code{dCM_p} = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if \code{dCM_p} = 0.88, this profile is more unsual than 88 percent of profiles after controlling for the independent variables.}
+\item{\code{dCM_p} = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if \code{dCM_p} = 0.88, this profile is more unusual than 88 percent of profiles after controlling for the independent variables.}
 \item{\code{dM_dep} = Mahalanobis distance of just the dependent variables}
 \item{\code{dM_dep_df} = Degrees of freedom for the Mahalanobis distance of the dependent variables}
 \item{\code{dM_dep_p} = Proportion associated with the Mahalanobis distance of the dependent variables}
 \item{\code{dM_ind} = Mahalanobis distance of just the independent variables}
 \item{\code{dM_ind_df} = Degrees of freedom for the Mahalanobis distance of the independent variables}
 \item{\code{dM_ind_p} = Proportion associated with the Mahalanobis distance of the independent variables}
-\item{\code{v_dep} = Depdendent variable names}
+\item{\code{v_dep} = Dependent variable names}
 \item{\code{v_ind} = Independent variable names}
 \item{\code{v_ind_singular} = Independent variables that can be perfectly predicted from the dependent variables (e.g., composite scores)}
 \item{\code{v_ind_nonsingular} = Independent variables that are not perfectly predicted from the dependent variables}
 \item{\code{data} = data used in the calculations}
-\item{\code{d_ind} = indepedent variable data}
+\item{\code{d_ind} = independent variable data}
 \item{\code{d_inp_p} = Assuming normality, cumulative distribution function of the independent variables}
-\item{\code{d_dep} = depedent variable data}
-\item{\code{d_dep_predicted} = predicted values of the depedent variables}
+\item{\code{d_dep} = dependent variable data}
+\item{\code{d_dep_predicted} = predicted values of the dependent variables}
 \item{\code{d_dep_deviations = d_dep - d_dep_predicted} (i.e., residuals of the dependent variables)}
-\item{\code{d_dep_residuals_z} = standardized residuals of the depedent variables}
+\item{\code{d_dep_residuals_z} = standardized residuals of the dependent variables}
 \item{\code{d_dep_cp} = conditional proportions associated with standardized residuals}
 \item{\code{d_dep_p} = Assuming normality, cumulative distribution function of the dependent variables}
-\item{\code{R2} = Proportion of variance in each dependent variable explained by the indepdent variables}
+\item{\code{R2} = Proportion of variance in each dependent variable explained by the independent variables}
 \item{\code{SEE} = Standard error of the estimate for each dependent variable}
 \item{\code{ConditionalCovariance} = Covariance matrix of the dependent variables after controlling for the independent variables}
 \item{\code{distance_reduction = 1 - (dCM / dM_dep)} (Degree to which the independent variables decrease the Mahalanobis distance of the dependent variables. Negative reductions mean that the profile is more unusual after controlling for the independent variables. Returns 0 if \code{dM_dep} is 0.)}

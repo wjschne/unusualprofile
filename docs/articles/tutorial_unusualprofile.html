@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Introduction to the unusualprofile package</h1>
                         <h4 class="author">W. Joel Schneider &amp; Feng Ji</h4>
             
-            <h4 class="date">2021-05-05</h4>
+            <h4 class="date">2021-05-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/master/vignettes/tutorial_unusualprofile.Rmd"><code>vignettes/tutorial_unusualprofile.Rmd</code></a></small>
       <div class="hidden name"><code>tutorial_unusualprofile.Rmd</code></div>
@@ -432,7 +432,7 @@ d_{CM}^2 +  \text{Independent}~d_M^2 &amp;= \text{Dependent}~d_M^2\\
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Ability</span>, <span class="va">FS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LB</span>, ymax <span class="op">=</span> <span class="va">UB</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
-<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="100%"></p>
+<p><img src="tutorial_unusualprofile_files/figure-html/show-profile-1.png" width="100%" height="100%"></p>
 <div class="figure" style="text-align: center">
 <img src="Reading.svg" alt="General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension" width="100%" height="100%"><p class="caption">
 General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension
@@ -956,7 +956,7 @@ Factor score coefficients for the reading model
           v_dep <span class="op">=</span> <span class="va">ob_names</span>,
           v_ind_composites <span class="op">=</span> <span class="va">fs_names</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-7-1.png" width="100%" height="100%"></p>
+<p><img src="tutorial_unusualprofile_files/figure-html/display-reading1-1.png" width="100%" height="100%"></p>
 <p>A second interpretation of the factor scores is that they are best estimates of a latent variable. Here, we get the model-implied correlation matrix of observed and latent variables (instead of factor score estimates).</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Get model-implied correlations of observed and latent variables</span>
@@ -974,7 +974,7 @@ Factor score coefficients for the reading model
             v_dep <span class="op">=</span> <span class="va">ob_names</span>,
             v_ind <span class="op">=</span> <span class="va">v_latent</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="tutorial_unusualprofile_files/figure-html/unnamed-chunk-8-1.png" width="100%" height="100%"></p>
+<p><img src="tutorial_unusualprofile_files/figure-html/display-reading2-1.png" width="100%" height="100%"></p>
 <p>Note that we had to rename the factor score variables from Ga_FS, Gc_FS, RD_FS, RC_FS to Ga, Gc, RD, RC. In addition, the latent variable are no longer composite variables, but independent variables.</p>
 <!-- # Predicting a profile's extremity in a population -->
 <!-- $$d_{C M}=\sqrt{(X-\hat{X})'R_{XX}^{-1}(X-\hat{X})}$$ -->
@@ -986,9 +986,9 @@ Factor score coefficients for the reading model
 <!-- $$d_{M_C}^{2} \sim\chi^{2}(k)$$ -->
 </div>
 </div>
-<div id="reference" class="section level1 unnumbered">
+<div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
-<a href="#reference" class="anchor"></a>Reference</h1>
+<a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
 <div id="ref-ji2018" class="csl-entry">
 Ji, F. (2018). Applying conditional distributions to individuals: Using latent variable models. Illinois State University.

@@ -11,8 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%",
   fig.width = 7.2916667,
-  fig.height = 7.2916667,
-  dev = "svg"
+  fig.height = 7.2916667
 )
 options(digits = 2)
 library(unusualprofile)
