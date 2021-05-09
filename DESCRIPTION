@@ -2,7 +2,6 @@ Package: unusualprofile
 Type: Package
 Title: Calculates Conditional Mahalanobis Distances
 Version: 0.1.0
-Author: W. Joel Schneider & Feng Ji
 Authors@R: c(
     person(given = "W. Joel",
            family = "Schneider",
