@@ -8,7 +8,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/unusualprofile)](https://cran.r-project.org/package=unusualprofile)
 [![stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-
+[![R-CMD-check](https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg)](https://github.com/wjschne/unusualprofile/actions)
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
