@@ -112,6 +112,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -207,27 +210,27 @@ v_ind_composites).</p></td>
     <p>a list with the conditional Mahalanobis distance</p><ul>
 <li><p><code>dCM</code> = Conditional Mahalanobis distance</p></li>
 <li><p><code>dCM_df</code> = Degrees of freedom for the conditional Mahalanobis distance</p></li>
-<li><p><code>dCM_p</code> = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if <code>dCM_p</code> = 0.88, this profile is more unsual than 88 percent of profiles after controlling for the independent variables.</p></li>
+<li><p><code>dCM_p</code> = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if <code>dCM_p</code> = 0.88, this profile is more unusual than 88 percent of profiles after controlling for the independent variables.</p></li>
 <li><p><code>dM_dep</code> = Mahalanobis distance of just the dependent variables</p></li>
 <li><p><code>dM_dep_df</code> = Degrees of freedom for the Mahalanobis distance of the dependent variables</p></li>
 <li><p><code>dM_dep_p</code> = Proportion associated with the Mahalanobis distance of the dependent variables</p></li>
 <li><p><code>dM_ind</code> = Mahalanobis distance of just the independent variables</p></li>
 <li><p><code>dM_ind_df</code> = Degrees of freedom for the Mahalanobis distance of the independent variables</p></li>
 <li><p><code>dM_ind_p</code> = Proportion associated with the Mahalanobis distance of the independent variables</p></li>
-<li><p><code>v_dep</code> = Depdendent variable names</p></li>
+<li><p><code>v_dep</code> = Dependent variable names</p></li>
 <li><p><code>v_ind</code> = Independent variable names</p></li>
 <li><p><code>v_ind_singular</code> = Independent variables that can be perfectly predicted from the dependent variables (e.g., composite scores)</p></li>
 <li><p><code>v_ind_nonsingular</code> = Independent variables that are not perfectly predicted from the dependent variables</p></li>
 <li><p><code>data</code> = data used in the calculations</p></li>
-<li><p><code>d_ind</code> = indepedent variable data</p></li>
+<li><p><code>d_ind</code> = independent variable data</p></li>
 <li><p><code>d_inp_p</code> = Assuming normality, cumulative distribution function of the independent variables</p></li>
-<li><p><code>d_dep</code> = depedent variable data</p></li>
-<li><p><code>d_dep_predicted</code> = predicted values of the depedent variables</p></li>
+<li><p><code>d_dep</code> = dependent variable data</p></li>
+<li><p><code>d_dep_predicted</code> = predicted values of the dependent variables</p></li>
 <li><p><code>d_dep_deviations = d_dep - d_dep_predicted</code> (i.e., residuals of the dependent variables)</p></li>
-<li><p><code>d_dep_residuals_z</code> = standardized residuals of the depedent variables</p></li>
+<li><p><code>d_dep_residuals_z</code> = standardized residuals of the dependent variables</p></li>
 <li><p><code>d_dep_cp</code> = conditional proportions associated with standardized residuals</p></li>
 <li><p><code>d_dep_p</code> = Assuming normality, cumulative distribution function of the dependent variables</p></li>
-<li><p><code>R2</code> = Proportion of variance in each dependent variable explained by the indepdent variables</p></li>
+<li><p><code>R2</code> = Proportion of variance in each dependent variable explained by the independent variables</p></li>
 <li><p><code>SEE</code> = Standard error of the estimate for each dependent variable</p></li>
 <li><p><code>ConditionalCovariance</code> = Covariance matrix of the dependent variables after controlling for the independent variables</p></li>
 <li><p><code>distance_reduction = 1 - (dCM / dM_dep)</code> (Degree to which the independent variables decrease the Mahalanobis distance of the dependent variables. Negative reductions mean that the profile is more unusual after controlling for the independent variables. Returns 0 if <code>dM_dep</code> is 0.)</p></li>
