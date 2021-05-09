@@ -23,8 +23,8 @@ R_example
 \description{
 A correlation matrix used for demonstration purposes
 It is the model-implied correlation matrix for this structural model:
-`X =~ 0.7 * X_1 + 0.5 * X_2 + 0.8 * X_3`
-`Y =~ 0.8 * Y_1 + 0.7 * Y_2 + 0.9 * Y_3`
-`Y ~ 0.6 * X`
+\code{X =~ 0.7 * X_1 + 0.5 * X_2 + 0.8 * X_3}
+\code{Y =~ 0.8 * Y_1 + 0.7 * Y_2 + 0.9 * Y_3}
+\code{Y ~ 0.6 * X}
 }
 \keyword{datasets}

@@ -34,7 +34,8 @@ Imports:
     rlang,
     patchwork,
     scales,
-    ragg
+    ragg,
+    lifecycle
 Suggests: 
     testthat,
     knitr,
@@ -50,3 +51,4 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/wjschne/unusualprofile
 BugReports: https://github.com/wjschne/unusualprofile/issues
+Roxygen: list(markdown = TRUE)
