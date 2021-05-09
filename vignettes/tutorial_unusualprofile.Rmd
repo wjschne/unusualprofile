@@ -660,7 +660,7 @@ library(dplyr)
 library(simstandard)
 ```
 
-The [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html):
+The [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) can create simulated multivariate normal data from a structural equation model. The first step is to specify the model using [lavaan syntax](https://lavaan.ugent.be/tutorial/syntax1.html):
 
 ```{r worked-model-show, ref.label="worked-model"}
 
@@ -1066,7 +1066,7 @@ library(simstandard)
 library(unusualprofile)
 ```
 
-We can use [lavaan syntax](http://lavaan.ugent.be/tutorial/syntax1.html) to specify the standardized coefficients of our model.
+We can use [lavaan syntax](https://lavaan.ugent.be/tutorial/syntax1.html) to specify the standardized coefficients of our model.
 
 ```{r display-reading, ref.label="model", eval=FALSE, echo=TRUE}
 
