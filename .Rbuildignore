@@ -13,3 +13,4 @@
 /.Rproj.user*
 ^logo.png$
 ^LICENSE\.md$
+^CRAN-RELEASE$
