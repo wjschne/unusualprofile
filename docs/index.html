@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Calculates Conditional Mahalanobis Distances">
-<meta property="og:description" content="The unusualprofile packages calculates how unusual a score profile is after controlling for a set of predictors.">
+<meta property="og:description" content="Calculates a Mahalanobis distance for every row of a set of outcome variables (Mahalanobis, 1936 &lt;doi: 10.1007/s13171-019-00164-5&gt;). The conditional Mahalanobis distance is calculated using a conditional covariance matrix (i.e., a covariance matrix of the outcome variables after controlling for a set of predictors). Plotting the output of this function can help identify which elements of a profile are unusual after controlling for the predictors.">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -99,8 +99,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
-<p>The goal of unusualprofile is to calculate conditional Mahalanobis distances and related statistics. Such statistics can help find cases with unusual profiles of multivariate normal data.</p>
+<p>The goal of unusualprofile is to calculate conditional Mahalanobis distances and related statistics. Such statistics can help find cases that are unusual, even after controlling for specified predictors.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -189,6 +188,7 @@
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=unusualprofile"><img src="https://www.r-pkg.org/badges/version/unusualprofile" alt="CRAN status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="stable"></a></li>
+<li><a href="https://github.com/wjschne/unusualprofile/actions"><img src="https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 </div>

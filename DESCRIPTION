@@ -12,7 +12,7 @@ Authors@R: c(
            family = "Ji",
            role = "aut",
            email = "fengji@berkeley.edu"))
-Description: The unusualprofile packages calculates how unusual a score profile is after controlling for a set of predictors.
+Description: Calculates a Mahalanobis distance for every row of a set of outcome variables (Mahalanobis, 1936 <doi: 10.1007/s13171-019-00164-5>). The conditional Mahalanobis distance is calculated using a conditional covariance matrix (i.e., a covariance matrix of the outcome variables after controlling for a set of predictors). Plotting the output of this function can help identify which elements of a profile are unusual after controlling for the predictors.
 License: GPL (>= 3)
 Language: en-US
 Encoding: UTF-8

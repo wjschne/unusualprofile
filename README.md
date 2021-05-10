@@ -13,7 +13,7 @@ status](https://www.r-pkg.org/badges/version/unusualprofile)](https://cran.r-pro
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
 distances and related statistics. Such statistics can help find cases
-with unusual profiles of multivariate normal data.
+that are unusual, even after controlling for specified predictors.
 
 # Installation
 
