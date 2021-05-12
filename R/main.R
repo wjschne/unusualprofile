@@ -52,6 +52,7 @@
 #' \item{`d_variable` = Data frame consisting of variable characteristics}
 #' \item{`label` = label slot}
 #' }
+#'
 #' @examples
 #' library(unusualprofile)
 #' library(simstandard)
@@ -732,7 +733,7 @@ proportion2percentile <- function(p,
 #' @param family Font family.
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
-#'
+#' @return A ggplot2-object
 plot.cond_maha <- function(x,
                            ...,
                            p_tail = 0,
@@ -869,7 +870,7 @@ plot.cond_maha <- function(x,
 #' @param family Font family.
 #' @param score_digits Number of digits to round scores.
 #' @importFrom rlang .data
-#'
+#' @return A ggplot2-object
 plot.maha <- function(x,
                       ...,
                       p_tail = 0,

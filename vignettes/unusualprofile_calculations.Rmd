@@ -43,23 +43,13 @@ knitr::opts_chunk$set(
   cache = F
 )
 
-options(digits = 2)
-
-# library(extrafont)
 library(dplyr)
-library(tidyr)
-library(forcats)
 library(stringr)
-library(tibble)
-library(magrittr)
-library(unusualprofile)
 library(ggnormalviolin)
-library(simstandard)
-library(knitr)
-library(kableExtra)
 library(ggplot2)
-library(glue)
 library(purrr)
+library(simstandard)
+library(unusualprofile)
 ```
 
 ```{r more-setup, echo=FALSE}
@@ -147,7 +137,6 @@ Suppose that there are a set of variables $X$ that are related to each other as 
 
 ```{r one-dimensional, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
 knitr::include_graphics("One_dimensional.svg")
-
 ```
 
 Suppose that there is a profile of scores in $X$ such that:

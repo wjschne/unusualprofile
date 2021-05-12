@@ -23,6 +23,9 @@
 
 \item{score_digits}{Number of digits to round scores.}
 }
+\value{
+A ggplot2-object
+}
 \description{
 Plot the variables from the results of the cond_maha function.
 }

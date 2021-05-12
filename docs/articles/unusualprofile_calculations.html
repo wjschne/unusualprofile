@@ -96,7 +96,7 @@
       <h1 data-toc-skip>Calculations performed by the unusualprofile package</h1>
                         <h4 class="author">W. Joel Schneider &amp; Feng Ji</h4>
             
-            <h4 class="date">2021-05-10</h4>
+            <h4 class="date">2021-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/master/vignettes/unusualprofile_calculations.Rmd"><code>vignettes/unusualprofile_calculations.Rmd</code></a></small>
       <div class="hidden name"><code>unusualprofile_calculations.Rmd</code></div>
@@ -150,9 +150,9 @@ Example profile in a standard multivariate normal distribution.
 <span class="va">v_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">v_observed</span>, <span class="va">v_composite</span><span class="op">)</span></code></pre></div>
 <p>We can create a matrix of factor loadings:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">0.90</span>, <span class="fl">0.85</span>, <span class="fl">0.60</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">0.90</span>, <span class="fl">0.85</span>, <span class="fl">0.60</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">v_latent</span><span class="op">)</span>
 
 <span class="va">lambda</span>
@@ -164,15 +164,15 @@ Example profile in a standard multivariate normal distribution.
 <p>Now we calculate the model-implied correlations among the observed variables:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Observed Correlations</span>
-<span class="va">R_X</span> <span class="op">&lt;-</span> <span class="va">lambda</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">R_X</span> <span class="op">&lt;-</span> <span class="va">lambda</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">`diag&lt;-`</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
 
 <span class="va">R_X</span>
-<span class="co">#&gt;      X_1  X_2  X_3  X_4</span>
-<span class="co">#&gt; X_1 1.00 0.85 0.81 0.57</span>
-<span class="co">#&gt; X_2 0.85 1.00 0.76 0.54</span>
-<span class="co">#&gt; X_3 0.81 0.76 1.00 0.51</span>
-<span class="co">#&gt; X_4 0.57 0.54 0.51 1.00</span></code></pre></div>
+<span class="co">#&gt;        X_1   X_2    X_3  X_4</span>
+<span class="co">#&gt; X_1 1.0000 0.855 0.8075 0.57</span>
+<span class="co">#&gt; X_2 0.8550 1.000 0.7650 0.54</span>
+<span class="co">#&gt; X_3 0.8075 0.765 1.0000 0.51</span>
+<span class="co">#&gt; X_4 0.5700 0.540 0.5100 1.00</span></code></pre></div>
 <p>Presented formally, the model-implied correlations are:</p>
 <p><span class="math display">\[R_{X} \approx \begin{bmatrix}
 1 &amp; .85 &amp; .81 &amp; .57\\
@@ -192,8 +192,8 @@ Example profile in a standard multivariate normal distribution.
 <p>We can construct this matrix with the <code>diag</code> function, which creates an identity matrix. This matrix is appended to a column of ones:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">w</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,
-            <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+            <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">v_names</span><span class="op">)</span>
 <span class="va">w</span>
 <span class="co">#&gt;     X_1 X_2 X_3 X_4 X_Composite</span>
@@ -211,14 +211,14 @@ Example profile in a standard multivariate normal distribution.
 3.23 &amp; 3.16 &amp; 3.08 &amp; 2.62 &amp; 12.09
 \end{bmatrix}\]</span></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">R_X</span> <span class="op">%*%</span> <span class="va">w</span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">R_X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">w</span><span class="op">)</span> 
 <span class="va">Sigma</span>
-<span class="co">#&gt;              X_1  X_2  X_3  X_4 X_Composite</span>
-<span class="co">#&gt; X_1         1.00 0.85 0.81 0.57         3.2</span>
-<span class="co">#&gt; X_2         0.85 1.00 0.76 0.54         3.2</span>
-<span class="co">#&gt; X_3         0.81 0.76 1.00 0.51         3.1</span>
-<span class="co">#&gt; X_4         0.57 0.54 0.51 1.00         2.6</span>
-<span class="co">#&gt; X_Composite 3.23 3.16 3.08 2.62        12.1</span></code></pre></div>
+<span class="co">#&gt;                X_1   X_2    X_3  X_4 X_Composite</span>
+<span class="co">#&gt; X_1         1.0000 0.855 0.8075 0.57      3.2325</span>
+<span class="co">#&gt; X_2         0.8550 1.000 0.7650 0.54      3.1600</span>
+<span class="co">#&gt; X_3         0.8075 0.765 1.0000 0.51      3.0825</span>
+<span class="co">#&gt; X_4         0.5700 0.540 0.5100 1.00      2.6200</span>
+<span class="co">#&gt; X_Composite 3.2325 3.160 3.0825 2.62     12.0950</span></code></pre></div>
 <p>Now we need to convert the covariance matrix to a correlation matrix. With matrix equations, we would need to create a matrix of with a vector of variances on the diagonal:</p>
 <p><span class="math display">\[D = \text{diag}(\Sigma)\]</span> Then we would take the square root, invert this matrix, and then pre-multiply it and post-multiply it by the covariance matrix.</p>
 <p><span class="math display">\[R_{All} = D^{-0.5}\Sigma D^{-0.5}\]</span></p>
@@ -231,35 +231,35 @@ Example profile in a standard multivariate normal distribution.
 \end{bmatrix}\]</span></p>
 <p>If we really want to use pure matrix algebra functions, we could do this:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">D_root_inverted</span> <span class="op">&lt;-</span> <span class="va">Sigma</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_names</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">D_root_inverted</span> <span class="op">&lt;-</span> <span class="va">Sigma</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_names</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
   <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">v_names</span><span class="op">)</span>
 
-<span class="va">R_all</span> <span class="op">&lt;-</span> <span class="va">D_root_inverted</span> <span class="op">%*%</span> <span class="va">Sigma</span> <span class="op">%*%</span> <span class="va">D_root_inverted</span> 
+<span class="va">R_all</span> <span class="op">&lt;-</span> <span class="va">D_root_inverted</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">Sigma</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">D_root_inverted</span> 
 
 <span class="va">R_all</span>
-<span class="co">#&gt;              X_1  X_2  X_3  X_4 X_Composite</span>
-<span class="co">#&gt; X_1         1.00 0.85 0.81 0.57        0.93</span>
-<span class="co">#&gt; X_2         0.85 1.00 0.76 0.54        0.91</span>
-<span class="co">#&gt; X_3         0.81 0.76 1.00 0.51        0.89</span>
-<span class="co">#&gt; X_4         0.57 0.54 0.51 1.00        0.75</span>
-<span class="co">#&gt; X_Composite 0.93 0.91 0.89 0.75        1.00</span></code></pre></div>
+<span class="co">#&gt;                   X_1       X_2       X_3       X_4 X_Composite</span>
+<span class="co">#&gt; X_1         1.0000000 0.8550000 0.8075000 0.5700000   0.9294705</span>
+<span class="co">#&gt; X_2         0.8550000 1.0000000 0.7650000 0.5400000   0.9086239</span>
+<span class="co">#&gt; X_3         0.8075000 0.7650000 1.0000000 0.5100000   0.8863396</span>
+<span class="co">#&gt; X_4         0.5700000 0.5400000 0.5100000 1.0000000   0.7533527</span>
+<span class="co">#&gt; X_Composite 0.9294705 0.9086239 0.8863396 0.7533527   1.0000000</span></code></pre></div>
 <p>However, I think it best to sidestep all this complication of converting covariances to correlations with the <code>cov2cor</code> function:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Convert covariance matrix to correlations </span>
 <span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov2cor</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span>
 
 <span class="va">R_all</span>
-<span class="co">#&gt;              X_1  X_2  X_3  X_4 X_Composite</span>
-<span class="co">#&gt; X_1         1.00 0.85 0.81 0.57        0.93</span>
-<span class="co">#&gt; X_2         0.85 1.00 0.76 0.54        0.91</span>
-<span class="co">#&gt; X_3         0.81 0.76 1.00 0.51        0.89</span>
-<span class="co">#&gt; X_4         0.57 0.54 0.51 1.00        0.75</span>
-<span class="co">#&gt; X_Composite 0.93 0.91 0.89 0.75        1.00</span></code></pre></div>
+<span class="co">#&gt;                   X_1       X_2       X_3       X_4 X_Composite</span>
+<span class="co">#&gt; X_1         1.0000000 0.8550000 0.8075000 0.5700000   0.9294705</span>
+<span class="co">#&gt; X_2         0.8550000 1.0000000 0.7650000 0.5400000   0.9086239</span>
+<span class="co">#&gt; X_3         0.8075000 0.7650000 1.0000000 0.5100000   0.8863396</span>
+<span class="co">#&gt; X_4         0.5700000 0.5400000 0.5100000 1.0000000   0.7533527</span>
+<span class="co">#&gt; X_Composite 0.9294705 0.9086239 0.8863396 0.7533527   1.0000000</span></code></pre></div>
 <div id="calculate-composite-scores" class="section level2">
 <h2 class="hasAnchor">
 <a href="#calculate-composite-scores" class="anchor"></a>Calculate composite scores</h2>
@@ -278,13 +278,13 @@ Example profile in a standard multivariate normal distribution.
 <span class="va">sd_X</span> <span class="op">&lt;-</span> <span class="fu">rep_along</span><span class="op">(</span><span class="va">X</span>, <span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Covariance Matrix</span>
-<span class="va">Sigma_X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">sd_X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">R_X</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">sd_X</span><span class="op">)</span>
+<span class="va">Sigma_X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">sd_X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">R_X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">sd_X</span><span class="op">)</span>
 
 <span class="co"># Vector of ones</span>
 <span class="va">ones</span> <span class="op">&lt;-</span> <span class="fu">rep_along</span><span class="op">(</span><span class="va">X</span>, <span class="fl">1</span><span class="op">)</span>
 
 <span class="co"># Standardized composite score</span>
-<span class="va">z_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ones</span> <span class="op">%*%</span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">mu_X</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">ones</span> <span class="op">%*%</span> <span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">ones</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">z_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">ones</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">mu_X</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">ones</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">ones</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="estimate-expected-test-scores-conditioned-on-a-composite-score" class="section level2">
 <h2 class="hasAnchor">
@@ -309,9 +309,9 @@ Example profile in a standard multivariate normal distribution.
 <p><span class="math inline">\(d_{M_C}\)</span> is the Conditional Mahalanobis Distance<br><span class="math inline">\(X\)</span> is a vector of subtest scores<br><span class="math inline">\(\hat{X}\)</span> is the vector of expected subtest scores<br><span class="math inline">\(\Sigma_{X}\)</span> is the covariance matrix of the subtest scores</p>
 </blockquote>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d_mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op">%*%</span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">d_mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">d_mc</span>
-<span class="co">#&gt; [1] 2.9</span></code></pre></div>
+<span class="co">#&gt; [1] 2.9246</span></code></pre></div>
 <p>Suppose there are <em>k</em> outcome scores, and <em>j</em> composite scores used to calculate the expected scores <span class="math inline">\(\hat{X}\)</span>. If multivariate normality of the subtest scores can be assumed, then the Conditional Mahalanobis Distance squared has a <em>χ</em><sup>2</sup> distribution with <em>k</em> − <em>j</em> degrees of freedom.</p>
 <p><span class="math display">\[d_{M_C}^{2} \sim\chi^{2}(k-j)\]</span></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -324,7 +324,7 @@ Example profile in a standard multivariate normal distribution.
 <span class="co"># Cumulative distribution function</span>
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq</a></span><span class="op">(</span><span class="va">d_mc</span> <span class="op">^</span> <span class="fl">2</span>, df <span class="op">=</span> <span class="va">k</span> <span class="op">-</span> <span class="va">j</span><span class="op">)</span>
 <span class="va">p</span>
-<span class="co">#&gt; [1] 0.96</span></code></pre></div>
+<span class="co">#&gt; [1] 0.9641406</span></code></pre></div>
 <p>If we can assume that the observed variables in <em>X</em> are multivariate normal, a profile of <em>X</em> = {2,3,1,2} is more unusual than 96% of profiles that also have a composite score of <em>z<sub>C</sub></em> = 2.3.</p>
 </div>
   </div>

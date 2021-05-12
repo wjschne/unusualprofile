@@ -44,9 +44,6 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-options(digits = 2)
-
-# library(extrafont)
 library(dplyr)
 library(tidyr)
 library(forcats)
@@ -59,10 +56,8 @@ library(knitr)
 library(kableExtra)
 library(ggplot2)
 library(glue)
-
 library(purrr)
 
-graphics::plot
 ```
 
 ```{r more-setup, echo=FALSE}
@@ -444,7 +439,6 @@ diag(drho) <- 1
 Rxx <- matrix(1)
 Ryx <- rho[1:4, 5, drop = F]
 cov_cond <- Ryy - Ryx %*% solve(Rxx) %*% t(Ryx)
-# d <- mvtnorm::rmvnorm(n = 30, sigma = cov_cond)  + rho[5,1:4]
 
 d <- matrix(c(1.62, 1.75,-.19,
               .82, .75, 1.07), nrow = 2, byrow = TRUE)

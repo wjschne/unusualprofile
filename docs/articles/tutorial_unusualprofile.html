@@ -97,7 +97,7 @@
       <h1 data-toc-skip>Introduction to the unusualprofile package</h1>
                         <h4 class="author">W. Joel Schneider &amp; Feng Ji</h4>
             
-            <h4 class="date">2021-05-10</h4>
+            <h4 class="date">2021-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/master/vignettes/tutorial_unusualprofile.Rmd"><code>vignettes/tutorial_unusualprofile.Rmd</code></a></small>
       <div class="hidden name"><code>tutorial_unusualprofile.Rmd</code></div>
@@ -178,7 +178,7 @@ A four-variable violin plot with a multivariate outlier.
 <p>Thus, if there are <em>k</em> normally distributed variables in vector <em>X</em>, the Mahalanobis distance squared for vector <em>X</em> has a χ<sup>2</sup> distribution with <em>k</em> degrees of freedom. In mathematical notation:</p>
 <p><span class="math display">\[d_M ^ 2 \sim \chi^2(k)\]</span></p>
 <p>Thus, if we can assume the profile variables are multivariate normal, we can use the cumulative distribution function of the χ<sup>2</sup> distribution to quantify how unusual a particular profile compares to the general population of profiles.</p>
-<p>Suppose that a Mahalanobis distance for a row of data from 5 standard normal variates is 15.5. The cumulative distribution function for the χ<sup>2</sup> distribution with 5 degrees of freedom is 0.99. Thus, the row of data is a multivariate outlier.</p>
+<p>Suppose that a Mahalanobis distance for a row of data from 5 standard normal variates is 15.5. The cumulative distribution function for the χ<sup>2</sup> distribution with 5 degrees of freedom is 0.992. Thus, the row of data is a multivariate outlier.</p>
 </div>
 </div>
 <div id="conditional-mahalanobis-distances" class="section level1">
@@ -328,30 +328,30 @@ Example profile in a standard multivariate normal distribution.
 <code class="sourceCode R"><span class="co"># Model-implied correlations of all variables</span>
 <span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_model_implied_correlations.html">get_model_implied_correlations</a></span><span class="op">(</span><span class="va">model</span>, composites <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">R_all</span>
-<span class="co">#&gt;              X_1  X_2  X_3  X_4 X_Composite</span>
-<span class="co">#&gt; X_1         1.00 0.85 0.81 0.57        0.93</span>
-<span class="co">#&gt; X_2         0.85 1.00 0.76 0.54        0.91</span>
-<span class="co">#&gt; X_3         0.81 0.76 1.00 0.51        0.89</span>
-<span class="co">#&gt; X_4         0.57 0.54 0.51 1.00        0.75</span>
-<span class="co">#&gt; X_Composite 0.93 0.91 0.89 0.75        1.00</span></code></pre></div>
+<span class="co">#&gt;                   X_1       X_2       X_3       X_4 X_Composite</span>
+<span class="co">#&gt; X_1         1.0000000 0.8550000 0.8075000 0.5700000   0.9294705</span>
+<span class="co">#&gt; X_2         0.8550000 1.0000000 0.7650000 0.5400000   0.9086239</span>
+<span class="co">#&gt; X_3         0.8075000 0.7650000 1.0000000 0.5100000   0.8863396</span>
+<span class="co">#&gt; X_4         0.5700000 0.5400000 0.5100000 1.0000000   0.7533527</span>
+<span class="co">#&gt; X_Composite 0.9294705 0.9086239 0.8863396 0.7533527   1.0000000</span></code></pre></div>
 <p>Using the same model, we can calculate composite scores from profile data like so:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create data.frame, and add the composite score</span>
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>X_1 <span class="op">=</span> <span class="fl">2</span>, 
                 X_2 <span class="op">=</span> <span class="fl">3</span>, 
                 X_3 <span class="op">=</span> <span class="fl">1</span>,
-                X_4 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+                X_4 <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">model</span><span class="op">)</span></code></pre></div>
 <p>This will result in a single row of data, with observed test scores and a composite variable:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span>
 <span class="co">#&gt;   X_1 X_2 X_3 X_4 X_Composite</span>
-<span class="co">#&gt; 1   2   3   1   2         2.3</span></code></pre></div>
+<span class="co">#&gt; 1   2   3   1   2    2.300314</span></code></pre></div>
 <p>Although we can enter the names of the variables into the <code>cond_maha</code> function by hand, with large models it is less tedious to do so programmatically. Here we select the independent variable <code>X_Composite</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Independent composite variable names</span>
-<span class="va">v_X_composite</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"Composite"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">v_X_composite</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"Composite"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="va">colnames</span>
 
 <span class="va">v_X_composite</span>
@@ -359,8 +359,8 @@ Example profile in a standard multivariate normal distribution.
 <p>Here we select the dependent variables:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Dependent variable names</span>
-<span class="va">v_X</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"Composite"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">v_X</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"Composite"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="va">colnames</span>
 
 <span class="va">v_X</span>
@@ -418,20 +418,20 @@ d_{CM}^2 +  \text{Independent}~d_M^2 &amp;= \text{Dependent}~d_M^2\\
   RC1 <span class="op">=</span> <span class="fl">90</span>,
   RC2 <span class="op">=</span> <span class="fl">94</span>,
   RC3 <span class="op">=</span> <span class="fl">99</span>
-<span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span>, CI <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span>, CI <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
 
-<span class="va">d_LB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_LB"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="va">d_UB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_UB"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="va">d_FS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_LB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_LB"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_UB</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_UB"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="op">~</span><span class="fu">str_remove</span><span class="op">(</span><span class="va">.</span>, <span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d_FS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">d_case</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">ends_with</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span>
   <span class="va">d_LB</span>,
   <span class="va">d_UB</span>,
-  <span class="va">d_FS</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">separate</span><span class="op">(</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ability"</span>, <span class="st">"Role"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Role</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="va">d_FS</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">separate</span><span class="op">(</span><span class="va">name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ability"</span>, <span class="st">"Role"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Role</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Ability</span>, <span class="va">FS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LB</span>, ymax <span class="op">=</span> <span class="va">UB</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
@@ -477,8 +477,8 @@ RC ~  0.05 * Ga + 0.40 * Gc  + 0.43 * RD
   RC1 <span class="op">=</span> <span class="fl">90</span>,
   RC2 <span class="op">=</span> <span class="fl">94</span>,
   RC3 <span class="op">=</span> <span class="fl">99</span>
-<span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_composite_scores.html">add_composite_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, mu <span class="op">=</span> <span class="fl">100</span>, sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <table class="table table table-striped">
 <caption>
@@ -504,7 +504,7 @@ p
 Ga (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-63
+62.53
 </td>
 <td style="text-align:right;font-weight: bold;">
 -2.50
@@ -518,7 +518,7 @@ Ga (Composite)
 Ga (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-67
+66.80
 </td>
 <td style="text-align:right;font-weight: bold;">
 -2.21
@@ -532,7 +532,7 @@ Ga (Factor Score)
 Ga1
 </td>
 <td style="text-align:right;">
-61
+61.00
 </td>
 <td style="text-align:right;">
 -2.60
@@ -546,7 +546,7 @@ Ga1
 Ga2
 </td>
 <td style="text-align:right;">
-65
+65.00
 </td>
 <td style="text-align:right;">
 -2.33
@@ -560,7 +560,7 @@ Ga2
 Ga3
 </td>
 <td style="text-align:right;">
-69
+69.00
 </td>
 <td style="text-align:right;">
 -2.07
@@ -574,7 +574,7 @@ Ga3
 Gc (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-103
+103.41
 </td>
 <td style="text-align:right;font-weight: bold;">
 0.23
@@ -588,7 +588,7 @@ Gc (Composite)
 Gc (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-100
+99.73
 </td>
 <td style="text-align:right;font-weight: bold;">
 -0.02
@@ -602,7 +602,7 @@ Gc (Factor Score)
 Gc1
 </td>
 <td style="text-align:right;">
-109
+109.00
 </td>
 <td style="text-align:right;">
 0.60
@@ -616,7 +616,7 @@ Gc1
 Gc2
 </td>
 <td style="text-align:right;">
-97
+97.00
 </td>
 <td style="text-align:right;">
 -0.20
@@ -630,7 +630,7 @@ Gc2
 Gc3
 </td>
 <td style="text-align:right;">
-103
+103.00
 </td>
 <td style="text-align:right;">
 0.20
@@ -644,7 +644,7 @@ Gc3
 RC (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-94
+93.89
 </td>
 <td style="text-align:right;font-weight: bold;">
 -0.41
@@ -658,7 +658,7 @@ RC (Composite)
 RC (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-92
+92.36
 </td>
 <td style="text-align:right;font-weight: bold;">
 -0.51
@@ -672,7 +672,7 @@ RC (Factor Score)
 RC1
 </td>
 <td style="text-align:right;">
-90
+90.00
 </td>
 <td style="text-align:right;">
 -0.67
@@ -686,7 +686,7 @@ RC1
 RC2
 </td>
 <td style="text-align:right;">
-94
+94.00
 </td>
 <td style="text-align:right;">
 -0.40
@@ -700,7 +700,7 @@ RC2
 RC3
 </td>
 <td style="text-align:right;">
-99
+99.00
 </td>
 <td style="text-align:right;">
 -0.07
@@ -714,7 +714,7 @@ RC3
 RD (Composite)
 </td>
 <td style="text-align:right;font-weight: bold;">
-74
+74.38
 </td>
 <td style="text-align:right;font-weight: bold;">
 -1.71
@@ -728,7 +728,7 @@ RD (Composite)
 RD (Factor Score)
 </td>
 <td style="text-align:right;font-weight: bold;">
-76
+75.51
 </td>
 <td style="text-align:right;font-weight: bold;">
 -1.63
@@ -742,7 +742,7 @@ RD (Factor Score)
 RD1
 </td>
 <td style="text-align:right;">
-77
+77.00
 </td>
 <td style="text-align:right;">
 -1.53
@@ -756,7 +756,7 @@ RD1
 RD2
 </td>
 <td style="text-align:right;">
-71
+71.00
 </td>
 <td style="text-align:right;">
 -1.93
@@ -770,7 +770,7 @@ RD2
 RD3
 </td>
 <td style="text-align:right;">
-81
+81.00
 </td>
 <td style="text-align:right;">
 -1.27
@@ -835,7 +835,7 @@ Conditional Distributions for Reading, Controlling for Cognitive Predictors
           v_dep <span class="op">=</span> <span class="va">v_reading_composite</span>, 
           v_ind <span class="op">=</span> <span class="va">v_cognitive_composite</span>, 
           mu <span class="op">=</span> <span class="fl">100</span>, 
-          sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+          sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="tutorial_unusualprofile_files/figure-html/composite-condmaha-1.png" alt="Conditional Distributions for Reading Composites, Controlling for Cognitive Composites" width="100%" height="100%"><p class="caption">
@@ -853,7 +853,7 @@ Conditional Distributions for Reading Composites, Controlling for Cognitive Comp
           v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">v_cognitive</span>, <span class="va">v_reading</span><span class="op">)</span>,
           v_ind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">v_cognitive_composite</span>, <span class="va">v_reading_composite</span><span class="op">)</span>,
           mu <span class="op">=</span> <span class="fl">100</span>,
-          sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+          sigma <span class="op">=</span> <span class="fl">15</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_unusualprofile_files/figure-html/plotreadingobserved-1.png" width="100%" height="100%"></p>
@@ -881,17 +881,17 @@ Conditional Distributions for Reading Composites, Controlling for Cognitive Comp
   RC1 <span class="op">=</span> <span class="fl">90</span>,
   RC2 <span class="op">=</span> <span class="fl">99</span>,
   RC3 <span class="op">=</span> <span class="fl">94</span>
-<span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/add_factor_scores.html">add_factor_scores</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m_reading</span>, 
                                  mu <span class="op">=</span> <span class="fl">100</span>, 
                                  sigma <span class="op">=</span> <span class="fl">15</span>, 
                                  CI <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 
-<span class="va">d_case</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">d_case</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"_FS"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>, 
                names_to <span class="op">=</span> <span class="st">"Variable"</span>, 
-               values_to <span class="op">=</span> <span class="st">"Score"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+               values_to <span class="op">=</span> <span class="st">"Score"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 12 x 2</span>
 <span class="co">#&gt;    Variable Score</span>
@@ -957,7 +957,7 @@ Factor score coefficients for the reading model
           mu <span class="op">=</span> <span class="fl">100</span>, 
           sigma <span class="op">=</span> <span class="va">s</span>, 
           v_dep <span class="op">=</span> <span class="va">ob_names</span>,
-          v_ind_composites <span class="op">=</span> <span class="va">fs_names</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+          v_ind_composites <span class="op">=</span> <span class="va">fs_names</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_unusualprofile_files/figure-html/display-reading1-1.png" width="100%" height="100%"></p>
 <p>A second interpretation of the factor scores is that they are best estimates of a latent variable. Here, we get the model-implied correlation matrix of observed and latent variables (instead of factor score estimates).</p>
@@ -969,13 +969,13 @@ Factor score coefficients for the reading model
 <span class="va">v_latent</span> <span class="op">&lt;-</span> <span class="va">m_names</span><span class="op">$</span><span class="va">v_latent</span>
 
 <span class="co"># Plot</span>
-<span class="va">d_case</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="op">~</span> <span class="fu">str_remove</span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_FS$"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">d_case</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="op">~</span> <span class="fu">str_remove</span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_FS$"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>R <span class="op">=</span> <span class="va">R_latent</span>, 
             mu <span class="op">=</span> <span class="fl">100</span>, 
             sigma <span class="op">=</span> <span class="fl">15</span>, 
             v_dep <span class="op">=</span> <span class="va">ob_names</span>,
-            v_ind <span class="op">=</span> <span class="va">v_latent</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+            v_ind <span class="op">=</span> <span class="va">v_latent</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="tutorial_unusualprofile_files/figure-html/display-reading2-1.png" width="100%" height="100%"></p>
 <p>Note that we had to rename the factor score variables from Ga_FS, Gc_FS, RD_FS, RC_FS to Ga, Gc, RD, RC. In addition, the latent variable are no longer composite variables, but independent variables.</p>

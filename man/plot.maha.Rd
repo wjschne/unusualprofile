@@ -24,6 +24,9 @@ using dependent variables only).}
 
 \item{score_digits}{Number of digits to round scores.}
 }
+\value{
+A ggplot2-object
+}
 \description{
 Plot objects of the maha class (i.e, the results of the cond_maha function
 using dependent variables only).

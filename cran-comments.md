@@ -14,13 +14,35 @@ R CMD check succeeded
 
 ## Addressing concerns from a previous build
 
-From Uwe Ligges:
+From Gregor Seyer:
 
-> "The unusualprofile packages calculates" is not grammatical and redundant, hence please omit it. Rather explain the methodology. Is there some reference about the method you can add in the Description field in the form Authors (year) <doi:.....>?
+> Please add () behind all function names in the description texts 
+(DESCRIPTION file). e.g: --> cond_maha()
+
+Done
+
+> Please omit the space within the doi specification to make it clickable.
+
+Done
+
+> Please add \value to .Rd files regarding exported methods and explain 
+the functions results in the documentation. Please write about the 
+structure of the output (class) and also what the output means. (If a 
+function does not return a value, please document that too, e.g. 
+\value{No return value, called for side effects} or similar)
+Missing Rd-tags:
+      plot.cond_maha.Rd: \value
+      plot.maha.Rd: \value
 
 
-Response:
+Rd-tags were completed for both functions
 
-The description field now reads:
+> Please always make sure to reset to user's options(), working directory 
+or par() after you changed it in examples and vignettes and demos.
+e.g.: inst/doc/..
+old <- options(digits = 3)
+...
+options(old)
 
-> Calculates a Mahalanobis distance for every row of a set of outcome variables (Mahalanobis, 1936 <doi: 10.1007/s13171-019-00164-5>). The conditional Mahalanobis distance is calculated using a conditional covariance matrix (i.e., a covariance matrix of the outcome variables after controlling for a set of predictors). Plotting the output of the cond_maha function can help identify which elements of a profile are unusual after controlling for the predictors.
+I removed the options() command.
+
