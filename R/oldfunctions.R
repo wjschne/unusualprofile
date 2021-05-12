@@ -99,22 +99,24 @@ unusualness <- function(
       label = "All Observed $\\leftarrow$ All Latent")
   ) %>%
     tibble::enframe(name = "Type") %>%
-    dplyr::mutate(v_dep = purrr::map(.data$value, "v_dep"),
-                  v_ind = purrr::map(.data$value, "v_ind"),
-                  label = purrr::map(.data$value, "label")) %>%
-    dplyr::select(-.data$value,-.data$Type) %>%
+    dplyr::mutate(
+      v_dep = purrr::map(.data$value, "v_dep"),
+      v_ind = purrr::map(.data$value, "v_ind"),
+      label = purrr::map(.data$value, "label")
+    ) %>%
+    dplyr::select(-.data$value, -.data$Type) %>%
     purrr::pmap(.f = cond_maha,
                 d = data,
                 R = sm$Correlations$R_all)
 
 
   tibble::tibble(
-    Measure = purrr::map_chr(cm_all,"label"),
-    dCM = purrr::map_dbl(cm_all,"dCM"),
-    `dCM Percentile` = purrr::map_dbl(cm_all,"dCM_p"),
+    Measure = purrr::map_chr(cm_all, "label"),
+    dCM = purrr::map_dbl(cm_all, "dCM"),
+    `dCM Percentile` = purrr::map_dbl(cm_all, "dCM_p"),
     `dCM Level` = p2label(.data$`dCM Percentile`),
-    dM = purrr::map_dbl(cm_all,"dM_dep"),
-    `dM Percentile` = purrr::map_dbl(cm_all,"dM_dep_p"),
+    dM = purrr::map_dbl(cm_all, "dM_dep"),
+    `dM Percentile` = purrr::map_dbl(cm_all, "dM_dep_p"),
     `dM Level` = p2label(.data$`dM Percentile`)
   )
 
@@ -156,7 +158,7 @@ dcm_cor <- function(model, v_dep, v_ind, n = 10000) {
       n = n,
       factor_scores = TRUE)
 
-    R_all  = simstandard::sim_standardized_matrices(model)$Correlations$R_all
+    R_all <- simstandard::sim_standardized_matrices(model)$Correlations$R_all
 
     # get the true CMahalanobis
     dCM_true <- cond_maha(
@@ -170,8 +172,8 @@ dcm_cor <- function(model, v_dep, v_ind, n = 10000) {
     dCM_estimated <- cond_maha(
       data = sm,
       R = R_all,
-      v_dep = paste0(v_dep,"_FS"),
-      v_ind = paste0(v_ind,"_FS")
+      v_dep = paste0(v_dep, "_FS"),
+      v_ind = paste0(v_ind, "_FS")
     )$dCM
     stats::cor(dCM_true, dCM_estimated)
 
@@ -241,7 +243,7 @@ boot_dcm <- function(model,
     factor_scores = TRUE,
     errors = FALSE, observed = FALSE)
 
-  R_all  = simstandard::sim_standardized_matrices(model)$Correlations$R_all
+  R_all <- simstandard::sim_standardized_matrices(model)$Correlations$R_all
 
   tidyr::crossing(id = 1:sample_size, sample_id = 1:replications) %>%
     dplyr::bind_cols(sm) %>%

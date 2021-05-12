@@ -144,11 +144,9 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of data", {
 
 
 test_that("v_ind, v_ind_composites, and v_dep are in colnames of R", {
-
   d1 <- d %>% mutate(fred = 1)
 
-
-  expect_error(
+    expect_error(
     cond_maha(
       data = d1,
       R = R,
@@ -158,8 +156,6 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of R", {
     ),
     "Some variables in v_ind are not in R: fred"
   )
-
-
 
   expect_error(
     cond_maha(
@@ -189,7 +185,7 @@ test_that("v_ind and v_dep have no overlapping names", {
       data = d,
       R = R,
       v_dep = v_dep,
-      v_ind <- "X_1",
+      v_ind = "X_1",
       v_ind_composites = v_ind_composites
     )
   )
@@ -244,7 +240,7 @@ test_that("Measures not singular", {
     )
   )
 
-  expect_true(is_singular(matrix(1,2,2)))
+  expect_true(is_singular(matrix(1, 2, 2)))
 })
 
 # Variable Metrics ----
@@ -258,7 +254,8 @@ test_that("Metric does not matter", {
       v_ind_composites = v_ind_composites
     )$dCM,
     cond_maha(
-      data = d %>% mutate_all(function(x) x * 15 + 100),
+      data = d %>% mutate_all(function(x)
+        x * 15 + 100),
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
@@ -272,25 +269,91 @@ test_that("Metric does not matter", {
 test_that("Propround", {
   expect_equal(
     proportion_round(
-      c(-1,-.0001, 0,.000012,0.012,0.12,0.98,0.99,0.991,0.999,0.9991, 1, 1.001,2,NA)),
-    c("-1.00","-0.00",".00",".000012",".01",".12",".98",".99",".991",".999",".9991","1.00","1.00","2.00", NA_character_))
+      c(
+        -1,
+        -.0001,
+        0,
+        .000012,
+        0.012,
+        0.12,
+        0.98,
+        0.99,
+        0.991,
+        0.999,
+        0.9991,
+        1,
+        1.001,
+        2,
+        NA
+      )
+    ),
+    c(
+      "-1.00",
+      "-0.00",
+      ".00",
+      ".000012",
+      ".01",
+      ".12",
+      ".98",
+      ".99",
+      ".991",
+      ".999",
+      ".9991",
+      "1.00",
+      "1.00",
+      "2.00",
+      NA_character_
+    )
+  )
 
   expect_equal(
     proportion_round(
-      c(-1,-.00012, 0,.00001234,0.01234,0.1234,0.9111, 0.99,0.991111,0.999,0.9991111, 1, 1.001234,2,NA), digits = 3),
-    c("-1.000","-0.000",".000",".000012",".012",".123",".911",".990",".991",".999",".9991","1.000","1.001","2.000", NA_character_))
+      c(
+        -1,
+        -.00012,
+        0,
+        .00001234,
+        0.01234,
+        0.1234,
+        0.9111,
+        0.99,
+        0.991111,
+        0.999,
+        0.9991111,
+        1,
+        1.001234,
+        2,
+        NA
+      ), digits = 3),
+    c(
+      "-1.000",
+      "-0.000",
+      ".000",
+      ".000012",
+      ".012",
+      ".123",
+      ".911",
+      ".990",
+      ".991",
+      ".999",
+      ".9991",
+      "1.000",
+      "1.001",
+      "2.000",
+      NA_character_
+    ))
 
   expect_equal(
-    proportion2percentile(c(0.001,0.01,.5,.99,.992)),
-    c(".1","1","50","99","99.2")
+    proportion2percentile(c(0.001, 0.01, .5, .99, .992)),
+    c(".1", "1", "50", "99", "99.2")
   )
 })
 
-test_that("Labeling",{
+test_that("Labeling", {
   expect_equal(
     p2label(
       pnorm(
-        seq(60,140,10),
+        seq(60, 140, 10),
         mean = 100,
         sd = 15)),
     c("Extremely Low",
@@ -303,4 +366,3 @@ test_that("Labeling",{
       "Very High",
       "Extremely High"))
 })
-

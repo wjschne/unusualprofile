@@ -21,34 +21,59 @@
 #' \itemize{
 #' \item{`dCM` = Conditional Mahalanobis distance}
 #' \item{`dCM_df` = Degrees of freedom for the conditional Mahalanobis distance}
-#' \item{`dCM_p` = A proportion that indicates how unusual this profile is compared to profiles with the same independent variable values. For example, if `dCM_p` = 0.88, this profile is more unusual than 88 percent of profiles after controlling for the independent variables.}
+#' \item{`dCM_p` = A proportion that indicates how unusual this profile is
+#' compared to profiles with the same independent variable values. For example,
+#' if `dCM_p` = 0.88, this profile is more unusual than 88 percent of profiles
+#' after controlling for the independent variables.}
 #' \item{`dM_dep` = Mahalanobis distance of just the dependent variables}
-#' \item{`dM_dep_df` = Degrees of freedom for the Mahalanobis distance of the dependent variables}
-#' \item{`dM_dep_p` = Proportion associated with the Mahalanobis distance of the dependent variables}
+#' \item{`dM_dep_df` = Degrees of freedom for the Mahalanobis distance of
+#' the dependent variables}
+#' \item{`dM_dep_p` = Proportion associated with the Mahalanobis distance
+#' of the dependent variables}
 #' \item{`dM_ind` = Mahalanobis distance of just the independent variables}
-#' \item{`dM_ind_df` = Degrees of freedom for the Mahalanobis distance of the independent variables}
-#' \item{`dM_ind_p` = Proportion associated with the Mahalanobis distance of the independent variables}
+#' \item{`dM_ind_df` = Degrees of freedom for the Mahalanobis distance of
+#' the independent variables}
+#' \item{`dM_ind_p` = Proportion associated with the Mahalanobis distance
+#' of the independent variables}
 #' \item{`v_dep` = Dependent variable names}
 #' \item{`v_ind` = Independent variable names}
-#' \item{`v_ind_singular` = Independent variables that can be perfectly predicted from the dependent variables (e.g., composite scores)}
-#' \item{`v_ind_nonsingular` = Independent variables that are not perfectly predicted from the dependent variables}
+#' \item{`v_ind_singular` = Independent variables that can be perfectly
+#' predicted from the dependent variables (e.g., composite scores)}
+#' \item{`v_ind_nonsingular` = Independent variables that are not perfectly
+#' predicted from the dependent variables}
 #' \item{`data` = data used in the calculations}
 #' \item{`d_ind` = independent variable data}
-#' \item{`d_inp_p` = Assuming normality, cumulative distribution function of the independent variables}
+#' \item{`d_inp_p` = Assuming normality, cumulative distribution function
+#' of the independent variables}
 #' \item{`d_dep` = dependent variable data}
 #' \item{`d_dep_predicted` = predicted values of the dependent variables}
-#' \item{`d_dep_deviations = d_dep - d_dep_predicted` (i.e., residuals of the dependent variables)}
-#' \item{`d_dep_residuals_z` = standardized residuals of the dependent variables}
-#' \item{`d_dep_cp` = conditional proportions associated with standardized residuals}
-#' \item{`d_dep_p` = Assuming normality, cumulative distribution function of the dependent variables}
-#' \item{`R2` = Proportion of variance in each dependent variable explained by the independent variables}
+#' \item{`d_dep_deviations = d_dep - d_dep_predicted` (i.e., residuals of
+#' the dependent variables)}
+#' \item{`d_dep_residuals_z` = standardized residuals of the dependent
+#' variables}
+#' \item{`d_dep_cp` = conditional proportions associated with
+#' standardized residuals}
+#' \item{`d_dep_p` = Assuming normality, cumulative distribution function
+#' of the dependent variables}
+#' \item{`R2` = Proportion of variance in each dependent variable explained
+#' by the independent variables}
 #' \item{`SEE` = Standard error of the estimate for each dependent variable}
-#' \item{`ConditionalCovariance` = Covariance matrix of the dependent variables after controlling for the independent variables}
-#' \item{`distance_reduction = 1 - (dCM / dM_dep)` (Degree to which the independent variables decrease the Mahalanobis distance of the dependent variables. Negative reductions mean that the profile is more unusual after controlling for the independent variables. Returns 0 if `dM_dep` is 0.)}
-#' \item{`variability_reduction = 1 - sum((X_dep - predicted_dep) ^ 2) / sum((X_dep - mu_dep) ^ 2)` (Degree to which the independent variables decrease the variability the dependent variables (`X_dep`). Negative reductions mean that the profile is more variable after controlling for the independent variables. Returns 0 if `X_dep == mu_dep`)}
+#' \item{`ConditionalCovariance` = Covariance matrix of the dependent
+#' variables after controlling for the independent variables}
+#' \item{`distance_reduction = 1 - (dCM / dM_dep)` (Degree to which the
+#' independent variables decrease the Mahalanobis distance of the dependent
+#' variables. Negative reductions mean that the profile is more unusual
+#' after controlling for the independent variables. Returns 0
+#' if `dM_dep` is 0.)}
+#' \item{`variability_reduction = 1 - sum((X_dep - predicted_dep) ^ 2) /
+#' sum((X_dep - mu_dep) ^ 2)` (Degree to which the independent variables
+#' decrease the variability the dependent variables (`X_dep`).
+#' Negative reductions mean that the profile is more variable after
+#' controlling for the independent variables. Returns 0 if `X_dep == mu_dep`)}
 #' \item{`mu` = Variable means}
 #' \item{`sigma` = Variable standard deviations}
-#' \item{`d_person` = Data frame consisting of Mahalanobis distance data for each person}
+#' \item{`d_person` = Data frame consisting of Mahalanobis distance data for
+#' each person}
 #' \item{`d_variable` = Data frame consisting of variable characteristics}
 #' \item{`label` = label slot}
 #' }
@@ -254,8 +279,11 @@ cond_maha <- function(data,
 
   # if use_sample_stats, estimate R, mu, and sigma from data
   if (use_sample_stats) {
-    if (nrow(data) < 3) stop("Sample statistics cannot be calculated with fewer than 3 rows of data. For accurate statistics, much more than 3 rows are needed.")
-    d_estimate <- data[stats::complete.cases(data),v_all, drop = FALSE]
+    if (nrow(data) < 3) stop(
+      paste0("Sample statistics cannot be calculated with fewer ",
+             "than 3 rows of data. For accurate statistics, much ",
+             "more than 3 rows are needed."))
+    d_estimate <- data[stats::complete.cases(data), v_all, drop = FALSE]
     R <- stats::cor(d_estimate)
     mu <- colMeans(d_estimate)
     sigma <- apply(d_estimate, 2, stats::sd)
@@ -265,12 +293,12 @@ cond_maha <- function(data,
 
   mu <- matrix(mu,
                ncol = 1,
-               dimnames = list(names(mu),NULL))[v_all,, drop = FALSE]
+               dimnames = list(names(mu), NULL))[v_all, , drop = FALSE]
   sigma <- matrix(sigma,
                   ncol = 1,
-                  dimnames = list(names(sigma)))[v_all,, drop = FALSE]
-  mu_dep <- mu[v_dep,, drop = FALSE]
-  sigma_dep <- sigma[v_dep,, drop = FALSE]
+                  dimnames = list(names(sigma)))[v_all, , drop = FALSE]
+  mu_dep <- mu[v_dep, , drop = FALSE]
+  sigma_dep <- sigma[v_dep, , drop = FALSE]
 
 
 
@@ -280,13 +308,14 @@ cond_maha <- function(data,
   # Check if R is a correlation matrix
   # Check if R has ones on the diagonal
   if (!all(diag(R) == 1)) {
-    stop("R has values on its diagonal that are not ones.")}
+    stop("R has values on its diagonal that are not ones.")
+    }
   # Check if R is symmetric
   if (!isSymmetric(R)) stop("R is not symmetric")
   # Check if all values in R are between -1 and 1
   if (!all(R <= 1 & R >= -1)) {
-    stop("Some values of R are outside the range of 1 and -1.")}
-
+    stop("Some values of R are outside the range of 1 and -1.")
+    }
 
   # Make z-scores ----
   n <- nrow(data)
@@ -367,10 +396,10 @@ cond_maha <- function(data,
     d_predicted_z <- d_ind_z %*% reg_beta
     d_deviations_z <- d_dep_z - d_predicted_z
     d_predicted <- d_predicted_z * colsigma[, v_dep, drop = FALSE] +
-      colmu[,v_dep, drop = FALSE]
+      colmu[, v_dep, drop = FALSE]
     d_deviations <- d_dep - d_predicted
-    variability_reduction <- 1 -  sum(d_deviations ^ 2) / sum((d_dep - mu_dep[,1, drop = TRUE]) ^ 2)
-
+    variability_reduction <- 1 -  sum(d_deviations ^ 2) /
+      sum((d_dep - mu_dep[, 1, drop = TRUE]) ^ 2)
 
     # Conditional Variance
     cov_cond <- Ryy - Ryx %*% iRxx %*% Rxy
@@ -473,8 +502,8 @@ cond_maha <- function(data,
       SEE = SEE) %>%
       dplyr::bind_rows(
         tibble::tibble(Variable = v_ind,
-               mu = mu_ind[,1],
-               sigma = sigma_ind[,1]))
+               mu = mu_ind[, 1],
+               sigma = sigma_ind[, 1]))
 
     d_score <- dplyr::bind_rows(
       d_dep %>%
@@ -509,9 +538,12 @@ cond_maha <- function(data,
             tibble::rowid_to_column("id") %>%
             dplyr::mutate(type = "p")) %>%
           dplyr::mutate(Role = "Independent") %>%
-          tidyr::pivot_longer(!!v_ind, names_to = "Variable", values_to = "Value")
+          tidyr::pivot_longer(!!v_ind,
+                              names_to = "Variable",
+                              values_to = "Value")
         ) %>%
-      tidyr::pivot_wider(names_from = .data$type, values_from = .data$Value) %>%
+      tidyr::pivot_wider(names_from = .data$type,
+                         values_from = .data$Value) %>%
       dplyr::left_join(d_variable, by = "Variable") %>%
       dplyr::mutate(Variable = factor(.data$Variable, levels = v_all))
 
@@ -555,7 +587,7 @@ cond_maha <- function(data,
     )
 
 
-    class(CM) <- c("cond_maha",class(CM))
+    class(CM) <- c("cond_maha", class(CM))
     CM
 
 
@@ -571,7 +603,7 @@ cond_maha <- function(data,
             mu = mu[v_dep, 1],
             sigma = sigma[v_dep, 1],
             label = label)
-  class(M) <- c("maha",class(M))
+  class(M) <- c("maha", class(M))
   M
   }
 }
@@ -633,8 +665,8 @@ print.maha <- function(x, ...) cat(format(x, ...))
 #' @return label string
 p2label <- function(p) {
   thresholds <- purrr::map_int(p, function(x) {
-    sum(x > stats::pnorm(seq(60,90,10), 100, 15)) +
-      sum(x >= stats::pnorm(seq(110,140,10), 100, 15)) + 1L})
+    sum(x > stats::pnorm(seq(60, 90, 10), 100, 15)) +
+      sum(x >= stats::pnorm(seq(110, 140, 10), 100, 15)) + 1L})
   vlabels <- c(
     "Extremely Low",
     "Very Low",
@@ -717,7 +749,7 @@ proportion2percentile <- function(p,
   }
 
   if (add_percent_character) {
-    p1 <- paste0(p1,"%")
+    p1 <- paste0(p1, "%")
   }
 
   p1
@@ -745,7 +777,9 @@ plot.cond_maha <- function(x,
   break_width <- max(x$sigma)
   break_min <- min(x$mu - 10 * x$sigma)
   break_max <- max(x$mu + 10 * x$sigma)
-  minor_break_width <- ifelse(break_width %% 3 == 0, break_width / 3, break_width / 2)
+  minor_break_width <- ifelse(break_width %% 3 == 0,
+                              break_width / 3,
+                              break_width / 2)
   major_breaks <- seq(break_min, break_max, break_width)
   minor_breaks <- seq(break_min, break_max, minor_break_width)
 
@@ -841,12 +875,19 @@ plot.cond_maha <- function(x,
     ggplot2::scale_x_discrete(NULL,
                      expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
-      Conditional ~ Mahalanobis ~ Distance ~ (italic(d[CM])) == .(formatC(x$dCM, 2, format = "f")),
+      Conditional ~ Mahalanobis ~ Distance ~ (italic(d[CM])) == .(formatC(
+        x$dCM,
+        digits = 2,
+        format = "f")),
       italic(p) == .(proportion_round(x$dCM_p))
     )),
     subtitle = bquote(list(
-      Mahalanobis ~ Distance ~ Reduction == .(paste0(round(100 * x$distance_reduction), "%")),
-      Euclidean ~ Distance ~ Reduction == .(paste0(round(100 * x$variability_reduction), "%"))
+      Mahalanobis ~ Distance ~ Reduction == .(paste0(
+        round(100 * x$distance_reduction),
+        "%")),
+      Euclidean ~ Distance ~ Reduction == .(paste0(
+        round(100 * x$variability_reduction),
+        "%"))
     )),
     caption = expression(
       list(
@@ -882,7 +923,9 @@ plot.maha <- function(x,
   break_width <- max(x$sigma)
   break_min <- min(x$mu - 10 * x$sigma)
   break_max <- max(x$mu + 10 * x$sigma)
-  minor_break_width <- ifelse(break_width %% 3 == 0, break_width / 3, break_width / 2)
+  minor_break_width <- ifelse(break_width %% 3 == 0,
+                              break_width / 3,
+                              break_width / 2)
   major_breaks <- seq(break_min, break_max, break_width)
   minor_breaks <- seq(break_min, break_max, minor_break_width)
 

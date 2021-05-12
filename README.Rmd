@@ -13,7 +13,6 @@ knitr::opts_chunk$set(
   fig.width = 7.2916667,
   fig.height = 7.2916667
 )
-options(digits = 2)
 library(unusualprofile)
 ```
 
