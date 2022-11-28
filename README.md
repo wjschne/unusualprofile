@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# unusualprofile [<img src="vignettes/logo.png" style="float: right;" width="139" alt="logo" />](https://wjschne.github.io/unusualprofile/)
+# unusualprofile <img src="man/figures/logo.png" align="right" height="120" />
 
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/unusualprofile)](https://cran.r-project.org/package=unusualprofile)
+checks](https://cranchecks.info/badges/summary/unusualprofile)](https://cran.r-project.org/web/checks/check_results_unusualprofile.html)
 [![stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg)](https://github.com/wjschne/unusualprofile/actions)
 <!-- badges: end -->
@@ -87,4 +87,4 @@ cm
 plot(cm)
 ```
 
-<img src="man/figures/README-example-1.svg" width="100%" />
+<img src="man/figures/README-example-1.png" width="100%" />

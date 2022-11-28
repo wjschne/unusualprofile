@@ -542,8 +542,8 @@ cond_maha <- function(data,
                               names_to = "Variable",
                               values_to = "Value")
         ) %>%
-      tidyr::pivot_wider(names_from = .data$type,
-                         values_from = .data$Value) %>%
+      tidyr::pivot_wider(names_from = "type",
+                         values_from = "Value") %>%
       dplyr::left_join(d_variable, by = "Variable") %>%
       dplyr::mutate(Variable = factor(.data$Variable, levels = v_all))
 

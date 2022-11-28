@@ -33,9 +33,9 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  # dev = "ragg_png",
-  # dpi = 300,
-  dev = "svg",
+  dev = "ragg_png",
+  dpi = 300,
+  # dev = "svg",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,

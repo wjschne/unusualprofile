@@ -1,7 +1,7 @@
 Type: Package
 Package: unusualprofile
 Title: Calculates Conditional Mahalanobis Distances
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person(given = "W. Joel",
              family = "Schneider",
@@ -42,21 +42,20 @@ Suggests:
     glue,
     kableExtra,
     knitr,
-    lavaan,
-    lifecycle,
     mvtnorm,
     patchwork,
-    ragg,
     rmarkdown,
     roxygen2,
     scales,
     simstandard (>= 0.6.3),
     stringr,
-    testthat
+    testthat,
+    sysfonts,
+    extrafont
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 Language: en-US
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.2
