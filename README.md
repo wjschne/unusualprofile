@@ -27,9 +27,9 @@ remotes::install_github("wjschne/unusualprofile")
 
 # Example
 
-To use the unusualprofile package, all that is needed is to know the
-correlations, means, and standard deviations among a set of continuous
-variables and at least one row of data from that set of variables.
+To use the unusualprofile package, one needs to know the correlations,
+means, and standard deviations among a set of continuous variables and
+at least one row of data from that set of variables.
 
 Suppose we have set of variables that have the following relationships:
 

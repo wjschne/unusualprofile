@@ -48,7 +48,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">unusualprofile</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -97,8 +97,7 @@
   <div class="contents col-md-9">
 
 <div class="section level1">
-<div class="page-header"><h1 id="unusualprofile-">unusualprofile <a href="https://wjschne.github.io/unusualprofile/" class="external-link"><img src="articles/logo.png" style="float: right;" width="139" alt="logo"></a>
-<a class="anchor" aria-label="anchor" href="#unusualprofile-"></a>
+<div class="page-header"><h1 id="unusualprofile-">unusualprofile <img src="reference/figures/logo.png" align="right" height="120"><a class="anchor" aria-label="anchor" href="#unusualprofile-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -109,8 +108,8 @@
 </h1>
 <p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"wjschne/unusualprofile"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"wjschne/unusualprofile"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -122,42 +121,42 @@
 </div>
 <p>First, we load the unusualprofile package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile" class="external-link">unusualprofile</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile" class="external-link">unusualprofile</a></span><span class="op">)</span></span></code></pre></div>
 <p>Included with the unusualprofile package, the <code>d_example</code> data set has a single row of data generated from the path diagram depicted above.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        X_1     X_2      X_3      Y_1        Y_2      Y_3        X        Y</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1.999498 1.44683 2.703249 1.664106 -0.8427126 1.811528 2.273441 1.201208</span></span></code></pre></div>
 <p>Also included with the unusualprofile package is the path diagram’s model-implied correlation matrix:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">R_example</span>
-<span class="co">#&gt;       X_1  X_2   X_3   Y_1   Y_2   Y_3    X    Y</span>
-<span class="co">#&gt; X_1 1.000 0.35 0.560 0.336 0.294 0.378 0.70 0.42</span>
-<span class="co">#&gt; X_2 0.350 1.00 0.400 0.240 0.210 0.270 0.50 0.30</span>
-<span class="co">#&gt; X_3 0.560 0.40 1.000 0.384 0.336 0.432 0.80 0.48</span>
-<span class="co">#&gt; Y_1 0.336 0.24 0.384 1.000 0.560 0.720 0.48 0.80</span>
-<span class="co">#&gt; Y_2 0.294 0.21 0.336 0.560 1.000 0.630 0.42 0.70</span>
-<span class="co">#&gt; Y_3 0.378 0.27 0.432 0.720 0.630 1.000 0.54 0.90</span>
-<span class="co">#&gt; X   0.700 0.50 0.800 0.480 0.420 0.540 1.00 0.60</span>
-<span class="co">#&gt; Y   0.420 0.30 0.480 0.800 0.700 0.900 0.60 1.00</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">R_example</span></span>
+<span><span class="co">#&gt;       X_1  X_2   X_3   Y_1   Y_2   Y_3    X    Y</span></span>
+<span><span class="co">#&gt; X_1 1.000 0.35 0.560 0.336 0.294 0.378 0.70 0.42</span></span>
+<span><span class="co">#&gt; X_2 0.350 1.00 0.400 0.240 0.210 0.270 0.50 0.30</span></span>
+<span><span class="co">#&gt; X_3 0.560 0.40 1.000 0.384 0.336 0.432 0.80 0.48</span></span>
+<span><span class="co">#&gt; Y_1 0.336 0.24 0.384 1.000 0.560 0.720 0.48 0.80</span></span>
+<span><span class="co">#&gt; Y_2 0.294 0.21 0.336 0.560 1.000 0.630 0.42 0.70</span></span>
+<span><span class="co">#&gt; Y_3 0.378 0.27 0.432 0.720 0.630 1.000 0.54 0.90</span></span>
+<span><span class="co">#&gt; X   0.700 0.50 0.800 0.480 0.420 0.540 1.00 0.60</span></span>
+<span><span class="co">#&gt; Y   0.420 0.30 0.480 0.800 0.700 0.900 0.60 1.00</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="using-the-cond_maha-function">Using the <code>cond_maha</code> function<a class="anchor" aria-label="anchor" href="#using-the-cond_maha-function"></a>
 </h2>
 <p>We can specify the correlations (<code>R</code>), means (<code>mu</code>), standard deviations (<code>sigma</code>). independent variables (<code>v_ind</code>), and dependent variables (<code>v_dep</code>). In this case, the independent variables are composite scores summarizing the dependent variables.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Conditional Mahalanobis distance</span>
-<span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_example</span>, 
-          R <span class="op">=</span> <span class="va">R_example</span>,
-          mu <span class="op">=</span> <span class="fl">0</span>,
-          sigma <span class="op">=</span> <span class="fl">1</span>,
-          v_ind_composites <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>,
-          v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,
-                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">cm</span>
-<span class="co">#&gt; Conditional Mahalanobis Distance = 3.5167, df = 4, p = 0.9852</span>
-
-<span class="co"># Plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-example-1.svg" width="100%"></p>
+<code class="sourceCode R"><span><span class="co"># Conditional Mahalanobis distance</span></span>
+<span><span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cond_maha.html">cond_maha</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_example</span>, </span>
+<span>          R <span class="op">=</span> <span class="va">R_example</span>,</span>
+<span>          mu <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>          sigma <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>          v_ind_composites <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>,</span>
+<span>          v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X_1"</span>, <span class="st">"X_2"</span>, <span class="st">"X_3"</span>,</span>
+<span>                    <span class="st">"Y_1"</span>, <span class="st">"Y_2"</span>, <span class="st">"Y_3"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cm</span></span>
+<span><span class="co">#&gt; Conditional Mahalanobis Distance = 3.5167, df = 4, p = 0.9852</span></span>
+<span></span>
+<span><span class="co"># Plot</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
 </div>
 
@@ -200,7 +199,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=unusualprofile" class="external-link"><img src="https://www.r-pkg.org/badges/version/unusualprofile" alt="CRAN status"></a></li>
+<li><a href="https://cran.r-project.org/web/checks/check_results_unusualprofile.html" class="external-link"><img src="https://cranchecks.info/badges/summary/unusualprofile" alt="CRAN checks"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="stable"></a></li>
 <li><a href="https://github.com/wjschne/unusualprofile/actions" class="external-link"><img src="https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
@@ -217,7 +216,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

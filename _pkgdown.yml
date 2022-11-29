@@ -2,10 +2,8 @@ template:
   params:
     bootswatch: cosmo
 figures:
-  dev: svg
   dpi: 300
   dev.args: []
-  fig.ext: svg
   fig.width: 7.2916667
   fig.height: ~
   fig.retina: 2

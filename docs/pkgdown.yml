@@ -1,8 +1,8 @@
-pandoc: 2.14.0.3
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   tutorial_unusualprofile: tutorial_unusualprofile.html
   unusualprofile_calculations: unusualprofile_calculations.html
-last_built: 2022-03-28T03:05Z
+last_built: 2022-11-29T15:28Z
 

@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 library(unusualprofile)
 ```
 
-
 # unusualprofile <img src="man/figures/logo.png" align="right" height="120" />
 
 <!-- badges: start -->
@@ -40,7 +39,7 @@ remotes::install_github("wjschne/unusualprofile")
 
 # Example
 
-To use the unusualprofile package, all that is needed is to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables.
+To use the unusualprofile package, one needs to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables.
 
 Suppose we have set of variables that have the following relationships:
 
@@ -68,7 +67,7 @@ R_example
 
 We can specify the correlations (`R`), means (`mu`), standard deviations (`sigma`). independent variables (`v_ind`), and dependent variables (`v_dep`). In this case, the independent variables are composite scores summarizing the dependent variables.
 
-```{r example}
+```{r example, dev='ragg_png', dpi=300}
 # Conditional Mahalanobis distance
 cm <- cond_maha(data = d_example, 
           R = R_example,

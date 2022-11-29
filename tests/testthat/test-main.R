@@ -23,7 +23,7 @@ d <- sim_standardized(
 
 # Model-implied correlation matrix
 v_dep <- c("X_1", "X_2", "X_3",
-          "Y_1", "Y_2", "Y_3")
+           "Y_1", "Y_2", "Y_3")
 v_ind_composites <- c("X_Composite", "Y_Composite")
 v_ind <- NULL
 v_all <- c(v_ind, v_ind_composites, v_dep)
@@ -52,7 +52,7 @@ test_that("data as matrix okay", {
 
 test_that("data as vector okay", {
   expect_silent(cond_maha(
-    as.matrix(d)[1, ],
+    as.matrix(d)[1,],
     R = R,
     v_dep = v_dep,
     v_ind_composites = v_ind_composites
@@ -146,7 +146,7 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of data", {
 test_that("v_ind, v_ind_composites, and v_dep are in colnames of R", {
   d1 <- d %>% mutate(fred = 1)
 
-    expect_error(
+  expect_error(
     cond_maha(
       data = d1,
       R = R,
@@ -324,7 +324,9 @@ test_that("Propround", {
         1.001234,
         2,
         NA
-      ), digits = 3),
+      ),
+      digits = 3
+    ),
     c(
       "-1.000",
       "-0.000",
@@ -341,22 +343,22 @@ test_that("Propround", {
       "1.001",
       "2.000",
       NA_character_
-    ))
-
-  expect_equal(
-    proportion2percentile(c(0.001, 0.01, .5, .99, .992)),
-    c(".1", "1", "50", "99", "99.2")
+    )
   )
+
+  expect_equal(proportion2percentile(c(0.001, 0.01, .5, .99, .992)),
+               c(".1", "1", "50", "99", "99.2"))
 })
 
 test_that("Labeling", {
   expect_equal(
-    p2label(
-      pnorm(
-        seq(60, 140, 10),
-        mean = 100,
-        sd = 15)),
-    c("Extremely Low",
+    p2label(pnorm(
+      seq(60, 140, 10),
+      mean = 100,
+      sd = 15
+    )),
+    c(
+      "Extremely Low",
       "Very Low",
       "Low",
       "Low Average",
@@ -364,5 +366,17 @@ test_that("Labeling", {
       "High Average",
       "High",
       "Very High",
-      "Extremely High"))
+      "Extremely High"
+    )
+  )
+})
+
+test_that("ind and ind_composite together", {
+  expect_silent(cond_maha(
+    data = d,
+    R = R,
+    v_dep = c("Y_1", "Y_2", "Y_3"),
+    v_ind = c("X_1", "X_2", "X_3"),
+    v_ind_composites = "Y_Composite"
+  ))
 })

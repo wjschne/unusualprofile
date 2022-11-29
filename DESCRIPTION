@@ -2,16 +2,11 @@ Type: Package
 Package: unusualprofile
 Title: Calculates Conditional Mahalanobis Distances
 Version: 0.1.1
-Authors@R: 
-    c(person(given = "W. Joel",
-             family = "Schneider",
-             role = c("aut", "cre"),
-             email = "w.joel.schneider@gmail.com",
-             comment = c(ORCID = "0000-0002-8393-5316")),
-      person(given = "Feng",
-             family = "Ji",
-             role = "aut",
-             email = "fengji@berkeley.edu"))
+Authors@R: c(
+    person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8393-5316")),
+    person("Feng", "Ji", , "fengji@berkeley.edu", role = "aut")
+  )
 Description: Calculates a Mahalanobis distance for every row of a set of
     outcome variables (Mahalanobis, 1936
     <doi:10.1007/s13171-019-00164-5>). The conditional Mahalanobis
@@ -38,20 +33,21 @@ Imports:
 Suggests: 
     bookdown,
     covr,
+    extrafont,
     forcats,
     glue,
     kableExtra,
     knitr,
     mvtnorm,
     patchwork,
+    ragg,
     rmarkdown,
     roxygen2,
     scales,
     simstandard (>= 0.6.3),
     stringr,
-    testthat,
     sysfonts,
-    extrafont
+    testthat
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

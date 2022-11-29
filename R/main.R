@@ -153,9 +153,12 @@ cond_maha <- function(data,
       v_ind_not_in_d <- paste(v_ind_composites[!(v_ind_composites %in%
                                                    colnames(data))],
                               collapse = ", ")
-      stop(paste0("Some variables in v_ind_composites are not in data: ",
-                  v_ind_not_in_d))
-    }}
+      stop(paste0(
+        "Some variables in v_ind_composites are not in data: ",
+        v_ind_not_in_d
+      ))
+    }
+  }
 
   # Check if v_ind_composites are in R
   if (!is.null(v_ind_composites)) {
@@ -163,9 +166,12 @@ cond_maha <- function(data,
       v_ind_not_in_d <- paste(v_ind_composites[!(v_ind_composites %in%
                                                    colnames(R))],
                               collapse = ", ")
-      stop(paste0("Some variables in v_ind_composites are not in R: ",
-                  v_ind_not_in_d))
-    }}
+      stop(paste0(
+        "Some variables in v_ind_composites are not in R: ",
+        v_ind_not_in_d
+      ))
+    }
+  }
 
   # Check if v_ind are in colnames of data
   if (!is.null(v_ind)) {
@@ -212,7 +218,7 @@ cond_maha <- function(data,
   data <- data[, v_all, drop = FALSE]
 
   # If data have no means specified
-  if (is.null(mu) & !use_sample_stats) {
+  if (is.null(mu) && !use_sample_stats) {
     mu <- rep(0, data_k)
     names(mu) <- colnames(data)
   } else {
@@ -227,7 +233,7 @@ cond_maha <- function(data,
 
 
     # If length of mu is unequal to the number of variables in data
-    if (mu_k != data_k & mu_k > 1) {
+    if (mu_k != data_k && mu_k > 1) {
       stop(
         paste0(
           "There are ",
@@ -245,7 +251,7 @@ cond_maha <- function(data,
 
 
   # If data have no standard deviations specified
-  if (is.null(sigma) & !use_sample_stats) {
+  if (is.null(sigma) && !use_sample_stats) {
     sigma <- rep(1, data_k)
     names(sigma) <- v_all
   } else {
@@ -259,7 +265,7 @@ cond_maha <- function(data,
     }
 
     # If length of sigma is unequal to the number of variables in data
-    if (sigma_k != data_k & sigma_k > 1) {
+    if ((sigma_k != data_k) && (sigma_k > 1)) {
       stop(
         paste0(
           "There are ",
@@ -279,11 +285,16 @@ cond_maha <- function(data,
 
   # if use_sample_stats, estimate R, mu, and sigma from data
   if (use_sample_stats) {
-    if (nrow(data) < 3) stop(
-      paste0("Sample statistics cannot be calculated with fewer ",
-             "than 3 rows of data. For accurate statistics, much ",
-             "more than 3 rows are needed."))
-    d_estimate <- data[stats::complete.cases(data), v_all, drop = FALSE]
+    if (nrow(data) < 3)
+      stop(
+        paste0(
+          "Sample statistics cannot be calculated with fewer ",
+          "than 3 rows of data. For accurate statistics, much ",
+          "more than 3 rows are needed."
+        )
+      )
+    d_estimate <-
+      data[stats::complete.cases(data), v_all, drop = FALSE]
     R <- stats::cor(d_estimate)
     mu <- colMeans(d_estimate)
     sigma <- apply(d_estimate, 2, stats::sd)
@@ -309,13 +320,14 @@ cond_maha <- function(data,
   # Check if R has ones on the diagonal
   if (!all(diag(R) == 1)) {
     stop("R has values on its diagonal that are not ones.")
-    }
+  }
   # Check if R is symmetric
-  if (!isSymmetric(R)) stop("R is not symmetric")
+  if (!isSymmetric(R))
+    stop("R is not symmetric")
   # Check if all values in R are between -1 and 1
   if (!all(R <= 1 & R >= -1)) {
     stop("Some values of R are outside the range of 1 and -1.")
-    }
+  }
 
   # Make z-scores ----
   n <- nrow(data)
@@ -407,7 +419,8 @@ cond_maha <- function(data,
     dCM_df <- k_dep
 
     # Initialize predictor vectors
-    if (is.null(v_ind_composites)) v_ind_composites <- character(0)
+    if (is.null(v_ind_composites))
+      v_ind_composites <- character(0)
     v_ind_singular <- v_ind_composites
     v_ind_nonsingular <- character(0)
     v_ind_try <- setdiff(v_ind, v_ind_singular)
@@ -423,7 +436,7 @@ cond_maha <- function(data,
         Ryx <- R[v_dep, vInd]
         iRxx <- solve(Rxx)
         cov_cond <- Ryy - Ryx %*% iRxx %*% Rxy
-        !is_singular(cov_cond)
+        ! is_singular(cov_cond)
       }
 
       # Add predictors that do not make conditional
@@ -444,8 +457,9 @@ cond_maha <- function(data,
         Ryx <- R[v_dep, v_ind_nonsingular]
         iRxx <- solve(Rxx)
         cov_cond <- Ryy - Ryx %*% iRxx %*% Rxy
-      } else
+      } else {
         cov_cond <- Ryy
+      }
     }
 
 
@@ -460,10 +474,11 @@ cond_maha <- function(data,
     dCM_p <- stats::pchisq(dCM ^ 2, dCM_df)
 
     # Calculate Mahalanobis distance of independent variables
-    dM_ind <- (((d_ind_z %*% solve(Rxx)) * d_ind_z) %*%
-                 matrix(1, nrow = k_ind)) %>%
+    dM_ind <-
+      (((d_ind_z %*% solve(R[v_ind, v_ind, drop = FALSE])) * d_ind_z) %*%
+         matrix(1, nrow = k_ind)) %>%
       sqrt %>%
-      as.vector
+      as.vector()
 
     # Probability for Mahalanobis distance of independent variables
     dM_ind_p <- stats::pchisq(dM_ind ^ 2, df = k_ind)
@@ -477,7 +492,6 @@ cond_maha <- function(data,
 
     # Dependent p
     d_dep_p <- stats::pnorm(d_dep_z)
-
 
 
 
@@ -499,11 +513,13 @@ cond_maha <- function(data,
       mu = mu_dep[, 1],
       sigma = sigma_dep[, 1],
       R2 = R2,
-      SEE = SEE) %>%
-      dplyr::bind_rows(
-        tibble::tibble(Variable = v_ind,
-               mu = mu_ind[, 1],
-               sigma = sigma_ind[, 1]))
+      SEE = SEE
+    ) %>%
+      dplyr::bind_rows(tibble::tibble(
+        Variable = v_ind,
+        mu = mu_ind[, 1],
+        sigma = sigma_ind[, 1]
+      ))
 
     d_score <- dplyr::bind_rows(
       d_dep %>%
@@ -522,7 +538,7 @@ cond_maha <- function(data,
         tibble::as_tibble() %>%
         tibble::rowid_to_column("id") %>%
         dplyr::mutate(type = "Predicted")
-      ) %>%
+    ) %>%
       dplyr::mutate(Role = "Dependent") %>%
       tidyr::pivot_longer(!!v_dep,
                           names_to = "Variable",
@@ -536,12 +552,13 @@ cond_maha <- function(data,
           d_ind_p %>%
             tibble::as_tibble() %>%
             tibble::rowid_to_column("id") %>%
-            dplyr::mutate(type = "p")) %>%
+            dplyr::mutate(type = "p")
+        ) %>%
           dplyr::mutate(Role = "Independent") %>%
           tidyr::pivot_longer(!!v_ind,
                               names_to = "Variable",
                               values_to = "Value")
-        ) %>%
+      ) %>%
       tidyr::pivot_wider(names_from = "type",
                          values_from = "Value") %>%
       dplyr::left_join(d_variable, by = "Variable") %>%
@@ -594,15 +611,17 @@ cond_maha <- function(data,
 
 } else {
   # If there are no independent variables
-  M <- list(dM_dep = dM_dep,
-            dM_dep_df = k_dep,
-            dM_dep_p = dM_dep_p,
-            d_dep = tibble::as_tibble(d_dep),
-            v_dep = v_dep,
-            data = tibble::as_tibble(data),
-            mu = mu[v_dep, 1],
-            sigma = sigma[v_dep, 1],
-            label = label)
+  M <- list(
+    dM_dep = dM_dep,
+    dM_dep_df = k_dep,
+    dM_dep_p = dM_dep_p,
+    d_dep = tibble::as_tibble(d_dep),
+    v_dep = v_dep,
+    data = tibble::as_tibble(data),
+    mu = mu[v_dep, 1],
+    sigma = sigma[v_dep, 1],
+    label = label
+  )
   class(M) <- c("maha", class(M))
   M
   }
@@ -615,12 +634,14 @@ cond_maha <- function(data,
 #' @keywords internal
 #' @export
 format.cond_maha <- function(x, ...) {
-  paste0("Conditional Mahalanobis Distance = ",
-         formatC(x$dCM, 4, format = "f"),
-         ", df = ",
-         x$dCM_df,
-         ", p = ",
-         formatC(x$dCM_p, 4, format = "f"))
+  paste0(
+    "Conditional Mahalanobis Distance = ",
+    formatC(x$dCM, 4, format = "f"),
+    ", df = ",
+    x$dCM_df,
+    ", p = ",
+    formatC(x$dCM_p, 4, format = "f")
+  )
 }
 
 #' Print cond_maha class
@@ -629,7 +650,9 @@ format.cond_maha <- function(x, ...) {
 #' @noRd
 #' @keywords internal
 #' @export
-print.cond_maha <- function(x, ...) cat(format(x, ...), "\n")
+print.cond_maha <- function(x, ...) {
+  cat(format(x, ...), "\n")
+}
 
 
 #' Format maha class
@@ -639,12 +662,14 @@ print.cond_maha <- function(x, ...) cat(format(x, ...), "\n")
 #' @keywords internal
 #' @export
 format.maha <- function(x, ...) {
-  paste0("Mahalanobis Distance = ",
-         formatC(x$dM_dep, 4, format = "f"),
-         ", df = ",
-         x$dM_dep_df,
-         ", p = ",
-         formatC(x$dM_dep_p, 4, format = "f"))
+  paste0(
+    "Mahalanobis Distance = ",
+    formatC(x$dM_dep, 4, format = "f"),
+    ", df = ",
+    x$dM_dep_df,
+    ", p = ",
+    formatC(x$dM_dep_p, 4, format = "f")
+  )
 }
 
 #' Print maha class
@@ -653,7 +678,9 @@ format.maha <- function(x, ...) {
 #' @noRd
 #' @keywords internal
 #' @export
-print.maha <- function(x, ...) cat(format(x, ...))
+print.maha <- function(x, ...) {
+  cat(format(x, ...))
+}
 
 
 
@@ -666,7 +693,8 @@ print.maha <- function(x, ...) cat(format(x, ...))
 p2label <- function(p) {
   thresholds <- purrr::map_int(p, function(x) {
     sum(x > stats::pnorm(seq(60, 90, 10), 100, 15)) +
-      sum(x >= stats::pnorm(seq(110, 140, 10), 100, 15)) + 1L})
+      sum(x >= stats::pnorm(seq(110, 140, 10), 100, 15)) + 1L
+  })
   vlabels <- c(
     "Extremely Low",
     "Very Low",
@@ -676,7 +704,8 @@ p2label <- function(p) {
     "High Average",
     "High",
     "Very High",
-    "Extremely High")
+    "Extremely High"
+  )
   vlabels[thresholds]
 }
 
@@ -703,21 +732,24 @@ is_singular <- function(x) {
 #' proportion_round(0.01111)
 
 proportion_round <- function(p, digits = 2) {
-
   lower_limit <- 0.95 * 10 ^ (-1 * digits)
   upper_limit <- 1 - lower_limit
 
   p1 <- dplyr::if_else(p < 0.5, p, 1 - p)
 
-  r <- dplyr::if_else(p <= 0 | p >= 1 | p > lower_limit & p < upper_limit,
-                      true = digits,
-                      false = -floor(log10(abs(p1))) + (p < lower_limit))
+  r <-
+    dplyr::if_else(
+      p <= 0 | p >= 1 | p > lower_limit & p < upper_limit,
+      true = digits,
+      false = -floor(log10(abs(p1))) + (p < lower_limit)
+    )
   r <- dplyr::if_else(r > 1 & p < 1 & p > 0 & !is.na(p), r, digits)
 
   p2 <- stringr::str_replace(
     string = purrr::map2_chr(p, r, formatC, format = "f"),
     pattern = "^0\\.",
-    replacement = ".")
+    replacement = "."
+  )
   dplyr::if_else(is.na(p), NA_character_, p2)
 
 }
@@ -771,8 +803,8 @@ plot.cond_maha <- function(x,
                            p_tail = 0,
                            family = "serif",
                            score_digits = ifelse(min(x$sigma) >= 10, 0, 2)) {
-
-  if (length(unique(x$d_score$id)) > 1) stop("Can only plot one case at a time")
+  if (length(unique(x$d_score$id)) > 1)
+    stop("Can only plot one case at a time")
 
   break_width <- max(x$sigma)
   break_min <- min(x$mu - 10 * x$sigma)
@@ -783,56 +815,74 @@ plot.cond_maha <- function(x,
   major_breaks <- seq(break_min, break_max, break_width)
   minor_breaks <- seq(break_min, break_max, minor_break_width)
 
-  label_independent <- paste0("list(Independent~italic(d[M])==\"",
-                              formatC(x$dM_ind,
-                                   digits = 2,
-                                   format = "f"),
-                              "\",italic(p)==\"",
-                              proportion_round(x$dM_ind_p),
-                              "\")")
+  label_independent <- paste0(
+    "list(Independent~italic(d[M])==\"",
+    formatC(x$dM_ind,
+            digits = 2,
+            format = "f"),
+    "\",italic(p)==\"",
+    proportion_round(x$dM_ind_p),
+    "\")"
+  )
 
 
-  label_dependent <- paste0("list(Dependent~italic(d[M])==\"",
-                            formatC(x$dM_dep,
-                                    digits = 2,
-                                    format = "f"),
-                            "\",italic(p)==\"",
-                            proportion_round(x$dM_dep_p),
-                            "\")")
+  label_dependent <- paste0(
+    "list(Dependent~italic(d[M])==\"",
+    formatC(x$dM_dep,
+            digits = 2,
+            format = "f"),
+    "\",italic(p)==\"",
+    proportion_round(x$dM_dep_p),
+    "\")"
+  )
 
   x$d_score %>%
-    dplyr::mutate(SD = ifelse(test = is.na(.data$SEE),
-                              yes = .data$sigma,
-                              no = .data$SEE * .data$sigma),
-           yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
-           id = factor(.data$id),
-           Role = factor(.data$Role,
-                         levels = c("Independent", "Dependent"),
-                         labels = c(label_independent, label_dependent))) %>%
-    ggplot2::ggplot(ggplot2::aes(x = .data$Variable,
-                                 y = .data$Score,
-                                 fill = .data$Role)) +
-    ggplot2::facet_grid(cols = ggplot2::vars(!!quote(Role)),
-               scales = "free",
-               space = "free",
-               labeller = ggplot2::label_parsed) +
+    dplyr::mutate(
+      SD = ifelse(
+        test = is.na(.data$SEE),
+        yes = .data$sigma,
+        no = .data$SEE * .data$sigma
+      ),
+      yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
+      id = factor(.data$id),
+      Role = factor(
+        .data$Role,
+        levels = c("Independent", "Dependent"),
+        labels = c(label_independent, label_dependent)
+      )
+    ) %>%
+    ggplot2::ggplot(ggplot2::aes(
+      x = .data$Variable,
+      y = .data$Score,
+      fill = .data$Role
+    )) +
+    ggplot2::facet_grid(
+      cols = ggplot2::vars(!!quote(Role)),
+      scales = "free",
+      space = "free",
+      labeller = ggplot2::label_parsed
+    ) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$yhat,
         sigma = .data$SD,
         face_right = .data$Role == label_dependent,
-        face_left = .data$Role != label_dependent),
+        face_left = .data$Role != label_dependent
+      ),
       p_tail = p_tail,
       fill = "gray68",
-      width = 0.85) +
+      width = 0.85
+    ) +
     ggnormalviolin::geom_normalviolin(
       mapping = ggplot2::aes(
         mu = .data$mu,
         sigma = .data$sigma,
-        face_right = .data$Role != label_dependent),
+        face_right = .data$Role != label_dependent
+      ),
       fill = "gray88",
       width = 0.85,
-      p_tail = p_tail) +
+      p_tail = p_tail
+    ) +
     ggplot2::geom_point(mapping = ggplot2::aes(color = .data$id)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
@@ -848,47 +898,49 @@ plot.cond_maha <- function(x,
         label = dplyr::if_else(
           .data$Role == label_independent,
           "",
-          paste0(
-            "italic(c*p)=='",
-            proportion_round(.data$cp),
-            "'"))),
+          paste0("italic(c*p)=='",
+                 proportion_round(.data$cp),
+                 "'")
+        )
+      ),
       vjust = 2.3,
       size = 3,
       parse = TRUE,
-      family = family) +
+      family = family
+    ) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
         color = .data$id,
-        label = paste0(
-          "italic(phantom(c)*p)=='",
-            proportion_round(.data$p),
-          "'"
-        )
+        label = paste0("italic(phantom(c)*p)=='",
+                       proportion_round(.data$p),
+                       "'")
       ),
       vjust = 1.3,
       size = 3,
       parse = TRUE,
-      family = family) +
+      family = family
+    ) +
     ggplot2::scale_y_continuous("Scores",
                                 breaks = major_breaks,
                                 minor_breaks = minor_breaks) +
     ggplot2::scale_x_discrete(NULL,
-                     expand = ggplot2::expansion(add = 1)) +
+                              expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
       Conditional ~ Mahalanobis ~ Distance ~ (italic(d[CM])) == .(formatC(
         x$dCM,
         digits = 2,
-        format = "f")),
+        format = "f"
+      )),
       italic(p) == .(proportion_round(x$dCM_p))
     )),
-    subtitle = bquote(list(
-      Mahalanobis ~ Distance ~ Reduction == .(paste0(
-        round(100 * x$distance_reduction),
-        "%")),
-      Euclidean ~ Distance ~ Reduction == .(paste0(
-        round(100 * x$variability_reduction),
-        "%"))
-    )),
+    # subtitle = bquote(list(
+    #   Mahalanobis ~ Distance ~ Reduction == .(paste0(
+    #     round(100 * x$distance_reduction),
+    #     "%")),
+    #   Euclidean ~ Distance ~ Reduction == .(paste0(
+    #     round(100 * x$variability_reduction),
+    #     "%"))
+    # )),
     caption = expression(
       list(
         italic(p) == "Population proportion",
@@ -917,8 +969,8 @@ plot.maha <- function(x,
                       p_tail = 0,
                       family = "serif",
                       score_digits = ifelse(min(x$sigma) >= 10, 0, 2)) {
-
-  if (nrow(x$d_dep) > 1) stop("Can only plot one case at a time")
+  if (nrow(x$d_dep) > 1)
+    stop("Can only plot one case at a time")
 
   break_width <- max(x$sigma)
   break_min <- min(x$mu - 10 * x$sigma)
@@ -929,7 +981,10 @@ plot.maha <- function(x,
   major_breaks <- seq(break_min, break_max, break_width)
   minor_breaks <- seq(break_min, break_max, minor_break_width)
 
-  d_stats <- tibble::tibble(Variable = x$v_dep, mu = x$mu, sigma = x$sigma)
+  d_stats <-
+    tibble::tibble(Variable = x$v_dep,
+                   mu = x$mu,
+                   sigma = x$sigma)
 
   x$d_dep %>%
     tibble::rownames_to_column("id") %>%
@@ -941,15 +996,21 @@ plot.maha <- function(x,
     dplyr::mutate(
       z = (.data$Score - .data$mu) / .data$sigma,
       z_p = stats::pnorm(.data$z),
-      in_tail = .data$z_p < p_tail / 2 | .data$z_p > (1 - p_tail / 2)) %>%
+      in_tail = .data$z_p < p_tail / 2 |
+        .data$z_p > (1 - p_tail / 2)
+    ) %>%
     ggplot2::ggplot(ggplot2::aes(.data$Variable, .data$Score)) +
-    ggnormalviolin::geom_normalviolin(data = d_stats,
-                                      ggplot2::aes(x = .data$Variable,
-                                          mu = .data$mu,
-                                          sigma = .data$sigma),
-                                      inherit.aes = FALSE,
-                                      fill = "gray65",
-                                      p_tail = p_tail) +
+    ggnormalviolin::geom_normalviolin(
+      data = d_stats,
+      ggplot2::aes(
+        x = .data$Variable,
+        mu = .data$mu,
+        sigma = .data$sigma
+      ),
+      inherit.aes = FALSE,
+      fill = "gray65",
+      p_tail = p_tail
+    ) +
     ggplot2::geom_point(mapping = ggplot2::aes(shape = .data$in_tail)) +
     ggplot2::geom_text(
       mapping = ggplot2::aes(
@@ -960,14 +1021,16 @@ plot.maha <- function(x,
       family = family
     ) +
     ggplot2::geom_text(
-      mapping = ggplot2::aes(
-        label = paste0("italic(p)=='",
-                       proportion_round(.data$z_p),
-                       "'")),
+      mapping = ggplot2::aes(label = paste0(
+        "italic(p)=='",
+        proportion_round(.data$z_p),
+        "'"
+      )),
       vjust = 1.3,
       size = 3,
       parse = TRUE,
-      family = family) +
+      family = family
+    ) +
     ggplot2::theme_minimal(base_family = family) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::scale_color_grey() +
@@ -981,9 +1044,5 @@ plot.maha <- function(x,
       Mahalanobis == .(formatC(x$dM_dep, 2, format = "f")),
       italic(p) == .(proportion_round(x$dM_dep_p))
     )),
-    caption = expression(
-      list(
-        italic(p) == "Population proportion"
-      )
-    ))
-  }
+    caption = expression(list(italic(p) == "Population proportion")))
+}

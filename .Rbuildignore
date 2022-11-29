@@ -15,3 +15,4 @@
 ^LICENSE\.md$
 ^CRAN-RELEASE$
 ^\.github$
+^vignettes/tutorial_unusualprofile.Rmd$

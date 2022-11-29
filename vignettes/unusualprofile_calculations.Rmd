@@ -5,8 +5,6 @@ date: "`r Sys.Date()`"
 as_is: true
 output: 
   rmarkdown::html_vignette: default
-bibliography: bibliography.bib
-csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
 font-family: 'Titillium Web'
 vignette: >
@@ -68,27 +66,28 @@ PropRound <- function(p, maxDigits = 10) {
   d <- rep(2, length(p))
   pp <- rep(0, length(p))
   for (i in seq(1, length(p))) {
-    if (p[i] > 0.99 | p[i] < 0.01) {
+    if (p[i] > 0.99 || p[i] < 0.01) {
       d[i] <-
         min(maxDigits, 1 - 1 - floor(log10(abs(
           ifelse(p[i] < 0.5, p[i], 1 - p[i])
         ))))
     }
-    pp[i] = formatC(round(p[i], digits = d[i]), digits = d[i], flag = "")
+    pp[i] <-
+      formatC(round(p[i], digits = d[i]), digits = d[i], flag = "")
     if (round(p[i], digits = maxDigits) == 0) {
-      pp[i] = 0
+      pp[i] <- 0
     }
     if (round(p[i], digits = maxDigits) == 1) {
-      pp[i] = 1
+      pp[i] <- 1
     }
     gsub(" ", "", pp[i])
   }
-
+  
   return(gsub(" ", "", pp))
 }
 
 numText <- function(x, digits = 2) {
-  str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
+  str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-", "−")
 }
 
 bmatrix <- function(x, digits = 2) {
@@ -96,12 +95,16 @@ bmatrix <- function(x, digits = 2) {
   x_formatted <- apply(x_formatted, 1, str_remove, pattern = "^0")
   x_formatted[x == 0] <- "0"
   x_formatted[x == 1] <- "1"
-  paste0("\\begin{bmatrix}\n", 
-         paste0(apply(x_formatted,
-                      MARGIN = 1,
-                      FUN = paste0, 
-                      collapse = " & "), 
-                collapse = "\\\\\n"), 
+  paste0("\\begin{bmatrix}\n",
+         paste0(
+           apply(
+             x_formatted,
+             MARGIN = 1,
+             FUN = paste0,
+             collapse = " & "
+           ),
+           collapse = "\\\\\n"
+         ),
          "\n\\end{bmatrix}")
 }
 
@@ -118,17 +121,19 @@ model <- "X =~ 0.95 * X_1 +
 
 ```{r worked-data, echo = FALSE}
 # Create data.frame, and add the composite score
-d <- data.frame(X_1 = 2, 
-                X_2 = 3, 
-                X_3 = 1,
-                X_4 = 2) %>% 
+d <- data.frame(
+  X_1 = 2,
+  X_2 = 3,
+  X_3 = 1,
+  X_4 = 2
+) %>%
   simstandard::add_composite_scores(m = model)
 
 ```
 
 ```{r standardized-scores, echo=FALSE}
 # Standardized observed scores
-X <- d[1,-5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
+X <- d[1, -5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
 
 ```
 
@@ -145,20 +150,34 @@ $$X=\{X_1,X_2, X_3, X_4\} = \{`r paste0(X, collapse = ",")`\}. $$
 
 
 
-As seen in Figure&nbsp;\@ref(fig:example-profile), this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
+As seen in Figure 1, this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
 
-```{r example-profile, echo = F, fig.cap="Example profile in a standard multivariate normal distribution."}
-tibble(Variable = paste0("italic(X)[",1:4,"]"), Score = X,
-       vjust = c(1.5, -0.5, 1.5, 1.5)) %>% 
-  ggplot(aes(Variable, Score)) + 
+```{r example-profile, echo = F, fig.cap="Figure 1. Example profile in a standard multivariate normal distribution."}
+tibble(
+  Variable = paste0("italic(X)[", 1:4, "]"),
+  Score = X,
+  vjust = c(1.5,-0.5, 1.5, 1.5)
+) %>%
+  ggplot(aes(Variable, Score)) +
   geom_normalviolin(aes(mu = 0, sigma = 1), fill = "gray", alpha = .4) +
   geom_line(aes(group = 1), color = "firebrick") +
   geom_point(pch = 16, color = "firebrick", size = 2) +
   geom_text(aes(label = Score, vjust = vjust), color = "firebrick") +
   geom_hline(yintercept = d$X_Composite) +
-  scale_x_discrete(NULL, labels = function(l) parse(text=l)) +
-  scale_y_continuous() + 
-  annotate("text", x = 3.5, y = d$X_Composite, label = paste0("Composite = ", formatC(d$X_Composite, 2, format = "f")), vjust = -.6, size = 4.5)
+  scale_x_discrete(
+    NULL,
+    labels = function(l)
+      parse(text = l)
+  ) +
+  scale_y_continuous() +
+  annotate(
+    geom = "text",
+    x = 3.5,
+    y = d$X_Composite,
+    label = paste0("Composite = ", formatC(d$X_Composite, 2, format = "f")),
+    vjust = -.6,
+    size = 4.5
+  )
 ```
 
 How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? For your reference, we will do everything "by hand" using matrix algebra.
@@ -166,10 +185,12 @@ How can we calculate the Mahalanobis distance for profiles that all have the sam
 In r, we can make a named vector of scores like so:
 
 ```{r X-vector}
-X <- c(X_1 = 2, 
-       X_2 = 3, 
-       X_3 = 1,
-       X_4 = 2)
+X <- c(
+  X_1 = 2,
+  X_2 = 3,
+  X_3 = 1,
+  X_4 = 2
+)
 
 X
 ```
@@ -186,9 +207,9 @@ v_names <- c(v_observed, v_composite)
 We can create a matrix of factor loadings:
 
 ```{r matrix-loadings}
-lambda <- c(0.95, 0.90, 0.85, 0.60) %>% 
-  matrix() %>% 
-  `rownames<-`(v_observed) %>% 
+lambda <- c(0.95, 0.90, 0.85, 0.60) %>%
+  matrix() %>%
+  `rownames<-`(v_observed) %>%
   `colnames<-`(v_latent)
 
 lambda
@@ -199,7 +220,7 @@ Now we calculate the model-implied correlations among the observed variables:
 
 ```{r R-X}
 # Observed Correlations
-R_X <- lambda %*% t(lambda) %>% 
+R_X <- lambda %*% t(lambda) %>%
   `diag<-`(1)
 
 R_X
@@ -208,7 +229,7 @@ R_X
 Presented formally, the model-implied correlations are:
 
 ```{r implied-corelations, results='asis', echo = FALSE}
-cat(paste0("$$R_{X} \\approx ",bmatrix(R_X),"$$"))
+cat(paste0("$$R_{X} \\approx ", bmatrix(R_X), "$$"))
 ```
 
 We need to use this matrix to create a new 5 × 5 correlation matrix that includes the correlations among the four variables and also each variable's correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps.
@@ -228,8 +249,8 @@ We can construct this matrix with the `diag` function, which creates an identity
 
 ```{r weight-matrix}
 w <-  cbind(diag(4),
-            rep(1,4)) %>% 
-  `rownames<-`(v_observed) %>% 
+            rep(1, 4)) %>%
+  `rownames<-`(v_observed) %>%
   `colnames<-`(v_names)
 w
 ```
@@ -239,12 +260,12 @@ Now we can use the weight matrix *w* to calculate the covariance matrix:
 $$\Sigma = w'R_{X}w$$
 
 ```{r sigma-calculations, include= FALSE}
-Sigma <- (t(w) %*% R_X %*% w) 
+Sigma <- (t(w) %*% R_X %*% w)
 Sigma
 ```
 
 ```{r Sigma-matrix, results='asis', echo = FALSE}
-cat(paste0("$$\\Sigma \\approx ",bmatrix(Sigma),"$$"))
+cat(paste0("$$\\Sigma \\approx ", bmatrix(Sigma), "$$"))
 ```
 
 ```{r, ref.label="sigma-calculations", echo = TRUE}
@@ -261,27 +282,29 @@ $$D = \text{diag}(\Sigma)$$ Then we would take the square root, invert this matr
 $$R_{All} = D^{-0.5}\Sigma D^{-0.5}$$
 
 ```{r R-matrix, results='asis', echo = FALSE}
-cat(paste0("$$R_{All} \\approx ",bmatrix(round(cov2cor(Sigma), 2)),"$$"))
+cat(paste0("$$R_{All} \\approx ",
+           bmatrix(round(cov2cor(Sigma), 2)),
+           "$$"))
 ```
 
 
 If we really want to use pure matrix algebra functions, we could do this:
 
 ```{r matrix-purist, echo = TRUE}
-D_root_inverted <- Sigma %>% 
-  diag() %>% 
-  sqrt() %>% 
-  diag() %>% 
-  solve() %>% 
+D_root_inverted <- Sigma %>%
+  diag() %>%
+  sqrt() %>%
+  diag() %>%
+  solve() %>%
   `rownames<-`(v_names) %>%
   `colnames<-`(v_names)
 
-R_all <- D_root_inverted %*% Sigma %*% D_root_inverted 
+R_all <- D_root_inverted %*% Sigma %*% D_root_inverted
 
 R_all
 ```
 
-However, I think it best to sidestep all this complication of converting covariances to correlations with the `cov2cor` function:
+However, it is probably best to sidestep all this complication of converting covariances to correlations with the `cov2cor` function:
 
 ```{r cor2cov}
 # Convert covariance matrix to correlations 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">unusualprofile</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -66,17 +66,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cond_maha</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">R</span>,
-  <span class="va">v_dep</span>,
-  v_ind <span class="op">=</span> <span class="cn">NULL</span>,
-  v_ind_composites <span class="op">=</span> <span class="cn">NULL</span>,
-  mu <span class="op">=</span> <span class="fl">0</span>,
-  sigma <span class="op">=</span> <span class="fl">1</span>,
-  use_sample_stats <span class="op">=</span> <span class="cn">FALSE</span>,
-  label <span class="op">=</span> <span class="cn">NA</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cond_maha</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">R</span>,</span>
+<span>  <span class="va">v_dep</span>,</span>
+<span>  v_ind <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  v_ind_composites <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mu <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  use_sample_stats <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">NA</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,32 +84,51 @@
     <dl><dt>data</dt>
 <dd><p>Data.frame with the independent and dependent variables.
 Unless mu and sigma are specified, data are assumed to be z-scores.</p></dd>
+
+
 <dt>R</dt>
 <dd><p>Correlation among all variables.</p></dd>
+
+
 <dt>v_dep</dt>
 <dd><p>Vector of names of the dependent variables in your profile.</p></dd>
+
+
 <dt>v_ind</dt>
 <dd><p>Vector of names of independent variables you would like to
 control for.</p></dd>
+
+
 <dt>v_ind_composites</dt>
 <dd><p>Vector of names of independent variables that are
 composites of dependent variables</p></dd>
+
+
 <dt>mu</dt>
 <dd><p>A vector of means. A single value means that all variables have
 the same mean.</p></dd>
+
+
 <dt>sigma</dt>
 <dd><p>A vector of standard deviations. A single value means that
 all variables have the same standard deviation</p></dd>
+
+
 <dt>use_sample_stats</dt>
 <dd><p>If TRUE, estimate R, mu, and sigma from data.
 Only complete cases are used (i.e., no missing values in v_dep, v_ind,
 v_ind_composites).</p></dd>
+
+
 <dt>label</dt>
 <dd><p>optional tag for labeling output</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a list with the conditional Mahalanobis distance</p><ul><li><p><code>dCM</code> = Conditional Mahalanobis distance</p></li>
+    
+
+<p>a list with the conditional Mahalanobis distance</p><ul><li><p><code>dCM</code> = Conditional Mahalanobis distance</p></li>
 <li><p><code>dCM_df</code> = Degrees of freedom for the conditional Mahalanobis distance</p></li>
 <li><p><code>dCM_p</code> = A proportion that indicates how unusual this profile is
 compared to profiles with the same independent variable values. For example,
@@ -169,30 +188,30 @@ each person</p></li>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile" class="external-link">unusualprofile</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/simstandard" class="external-link">simstandard</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="st">"</span>
-<span class="r-in">Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3</span>
-<span class="r-in">Gf =~ 0.8 * Gf1 + 0.9 * Gf2 + 0.8 * Gf3</span>
-<span class="r-in">Gs =~ 0.7 * Gs1 + 0.8 * Gs2 + 0.8 * Gs3</span>
-<span class="r-in">Read =~ 0.66 * Read1 + 0.85 * Read2 + 0.91 * Read3</span>
-<span class="r-in">Math =~ 0.4 * Math1 + 0.9 * Math2 + 0.7 * Math3</span>
-<span class="r-in">Gc ~ 0.6 * Gf + 0.1 * Gs</span>
-<span class="r-in">Gf ~ 0.5 * Gs</span>
-<span class="r-in">Read ~ 0.4 * Gc + 0.1 * Gf</span>
-<span class="r-in">Math ~ 0.2 * Gc + 0.3 * Gf + 0.1 * Gs"</span></span>
-<span class="r-in"><span class="co"># Generate 10 cases</span></span>
-<span class="r-in"><span class="va">d_demo</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized.html" class="external-link">sim_standardized</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Get model-implied correlation matrix</span></span>
-<span class="r-in"><span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized_matrices.html" class="external-link">sim_standardized_matrices</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">$</span><span class="va">Correlations</span><span class="op">$</span><span class="va">R_all</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">cond_maha</span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_demo</span>,</span>
-<span class="r-in">          R <span class="op">=</span> <span class="va">R_all</span>,</span>
-<span class="r-in">          v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Math"</span>, <span class="st">"Read"</span><span class="op">)</span>,</span>
-<span class="r-in">          v_ind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gf"</span>, <span class="st">"Gs"</span>, <span class="st">"Gc"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Conditional Mahalanobis Distance = 0.9344, df = 2, p = 0.3537 Conditional Mahalanobis Distance = 1.6306, df = 2, p = 0.7354 Conditional Mahalanobis Distance = 0.7829, df = 2, p = 0.2640 Conditional Mahalanobis Distance = 1.6495, df = 2, p = 0.7435 Conditional Mahalanobis Distance = 1.7875, df = 2, p = 0.7976 Conditional Mahalanobis Distance = 1.2643, df = 2, p = 0.5503 Conditional Mahalanobis Distance = 0.8847, df = 2, p = 0.3239 Conditional Mahalanobis Distance = 0.4982, df = 2, p = 0.1167 Conditional Mahalanobis Distance = 2.7891, df = 2, p = 0.9795 Conditional Mahalanobis Distance = 0.3942, df = 2, p = 0.0748 </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile" class="external-link">unusualprofile</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/simstandard" class="external-link">simstandard</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="st">"</span></span></span>
+<span class="r-in"><span><span class="st">Gc =~ 0.85 * Gc1 + 0.68 * Gc2 + 0.8 * Gc3</span></span></span>
+<span class="r-in"><span><span class="st">Gf =~ 0.8 * Gf1 + 0.9 * Gf2 + 0.8 * Gf3</span></span></span>
+<span class="r-in"><span><span class="st">Gs =~ 0.7 * Gs1 + 0.8 * Gs2 + 0.8 * Gs3</span></span></span>
+<span class="r-in"><span><span class="st">Read =~ 0.66 * Read1 + 0.85 * Read2 + 0.91 * Read3</span></span></span>
+<span class="r-in"><span><span class="st">Math =~ 0.4 * Math1 + 0.9 * Math2 + 0.7 * Math3</span></span></span>
+<span class="r-in"><span><span class="st">Gc ~ 0.6 * Gf + 0.1 * Gs</span></span></span>
+<span class="r-in"><span><span class="st">Gf ~ 0.5 * Gs</span></span></span>
+<span class="r-in"><span><span class="st">Read ~ 0.4 * Gc + 0.1 * Gf</span></span></span>
+<span class="r-in"><span><span class="st">Math ~ 0.2 * Gc + 0.3 * Gf + 0.1 * Gs"</span></span></span>
+<span class="r-in"><span><span class="co"># Generate 10 cases</span></span></span>
+<span class="r-in"><span><span class="va">d_demo</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized.html" class="external-link">sim_standardized</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get model-implied correlation matrix</span></span></span>
+<span class="r-in"><span><span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/sim_standardized_matrices.html" class="external-link">sim_standardized_matrices</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">$</span><span class="va">Correlations</span><span class="op">$</span><span class="va">R_all</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">cond_maha</span><span class="op">(</span>data <span class="op">=</span> <span class="va">d_demo</span>,</span></span>
+<span class="r-in"><span>          R <span class="op">=</span> <span class="va">R_all</span>,</span></span>
+<span class="r-in"><span>          v_dep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Math"</span>, <span class="st">"Read"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          v_ind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gf"</span>, <span class="st">"Gs"</span>, <span class="st">"Gc"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Conditional Mahalanobis Distance = 0.8368, df = 2, p = 0.2954 Conditional Mahalanobis Distance = 2.3603, df = 2, p = 0.9383 Conditional Mahalanobis Distance = 0.1476, df = 2, p = 0.0108 Conditional Mahalanobis Distance = 1.9176, df = 2, p = 0.8410 Conditional Mahalanobis Distance = 1.5030, df = 2, p = 0.6768 Conditional Mahalanobis Distance = 1.7455, df = 2, p = 0.7820 Conditional Mahalanobis Distance = 1.3419, df = 2, p = 0.5936 Conditional Mahalanobis Distance = 0.7247, df = 2, p = 0.2310 Conditional Mahalanobis Distance = 1.1866, df = 2, p = 0.5054 Conditional Mahalanobis Distance = 0.7915, df = 2, p = 0.2689 </span>
 </code></pre></div>
     </div>
   </div>
@@ -207,7 +226,7 @@ each person</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

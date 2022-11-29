@@ -9,10 +9,10 @@ bibliography: bibliography.bib
 csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
 font-family: 'Titillium Web'
-vignette: >
-  %\VignetteIndexEntry{Introduction to the unusualprofile package}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+# vignette: >
+#   %\VignetteIndexEntry{Introduction to the unusualprofile package}
+#   %\VignetteEngine{knitr::rmarkdown}
+#   %\VignetteEncoding{UTF-8}
 ---
 
 ```{css, echo = FALSE}
@@ -63,7 +63,8 @@ library(patchwork)
 ```{r more-setup, echo=FALSE}
 # myfont <- "sans"
 myfont <- "Titillium Web"
-plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha, family = !!myfont)
+plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha,
+                                 family = !!myfont)
 sysfonts::font_add_google(myfont, myfont)
 extrafont::loadfonts(device = "win")
 theme_set(theme_minimal(16, base_family = myfont))
@@ -78,18 +79,18 @@ PropRound <- function(p, maxDigits = 10) {
   d <- rep(2, length(p))
   pp <- rep(0, length(p))
   for (i in seq(1, length(p))) {
-    if (p[i] > 0.99 | p[i] < 0.01) {
+    if (p[i] > 0.99 || p[i] < 0.01) {
       d[i] <-
         min(maxDigits, 1 - 1 - floor(log10(abs(
           ifelse(p[i] < 0.5, p[i], 1 - p[i])
         ))))
     }
-    pp[i] = formatC(round(p[i], digits = d[i]), digits = d[i], flag = "")
+    pp[i] <- formatC(round(p[i], digits = d[i]), digits = d[i], flag = "")
     if (round(p[i], digits = maxDigits) == 0) {
-      pp[i] = 0
+      pp[i] <- 0
     }
     if (round(p[i], digits = maxDigits) == 1) {
-      pp[i] = 1
+      pp[i] <- 1
     }
     gsub(" ", "", pp[i])
   }
@@ -98,7 +99,7 @@ PropRound <- function(p, maxDigits = 10) {
 }
 
 numText <- function(x, digits = 2) {
-  str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-","−")
+  str_replace(formatC(x, digits = digits, format = "f"), pattern = "\\-", "−")
 }
 
 bmatrix <- function(x, digits = 2) {
@@ -106,101 +107,14 @@ bmatrix <- function(x, digits = 2) {
   x_formatted <- apply(x_formatted, 1, str_remove, pattern = "^0")
   x_formatted[x == 0] <- "0"
   x_formatted[x == 1] <- "1"
-  paste0("\\begin{bmatrix}\n", 
+  paste0("\\begin{bmatrix}\n",
          paste0(apply(x_formatted,
                       MARGIN = 1,
-                      FUN = paste0, 
-                      collapse = " & "), 
-                collapse = "\\\\\n"), 
+                      FUN = paste0,
+                      collapse = " & "),
+                collapse = "\\\\\n"),
          "\n\\end{bmatrix}")
 }
-
-# d_fig <- tibble(refs = character(0),
-#                 fig_nums = integer(0),
-#                 captions = character(0))
-
-# add_fig <- function(caption, ref = opts_current$get("label"), quiet = FALSE) {
-#   # New figure number
-#   k <- as.integer(nrow(d_fig)) + 1L
-#   # Assign empty ref
-#   if (is.null(ref)) ref = paste0("fig_", k)
-#   # Check for duplicate ref
-#   if (filter(d_fig, refs == ref) %>% nrow > 0) {
-#     stop(paste0("'",ref, "' is already in d_fig. Figure reference names must be unique."))
-#   }
-#   
-#   # Add row to d_fig
-#   d_fig <<- d_fig %>% 
-#     add_row(refs = ref,
-#             fig_nums = k,
-#             captions = caption)
-#   # Print caption
-#   if (!quiet) glue::glue("*Figure {nrow(d_fig)}*. {caption}")
-# }
-# 
-# 
-# get_fig <- function(ref, add_prefix = TRUE, prefix = "Figure") {
-#   fig_num <- filter(d_fig, refs == ref) %>% pull(fig_nums) 
-#   if (add_prefix) fig_num <- paste0(prefix, "&nbsp;", fig_num) 
-#   fig_num
-#   } 
-# 
-# get_fig_caption <- function(ref, include_figure_number = TRUE) {
-#   cap <- filter(d_fig, refs == ref) %>% pull(captions)
-#   if (include_figure_number) {
-#     cap <- paste0("*Figure ", 
-#                   get_fig(ref, 
-#                           add_prefix = FALSE), 
-#                   "*. ", 
-#                   cap)
-#     }
-#   
-#   cap
-#   }
-# 
-# 
-# 
-# d_tab <- tibble(refs = character(0),
-#                 tab_nums = integer(0),
-#                 captions = character(0))
-# 
-# add_tab <- function(caption, ref = opts_current$get("label"), quiet = FALSE) {
-#   # New table number
-#   k <- as.integer(nrow(d_tab)) + 1L
-#   # Assign empty ref
-#   if (is.null(ref)) ref = paste0("tab_", k)
-#   # Check for duplicate ref
-#   if (filter(d_tab, refs == ref) %>% nrow > 0) {
-#     stop(paste0("'",
-#                 ref, 
-#                 "' is already in d_tab. Table reference names must be unique."))
-#   }
-#   
-#   # Add row to d_tab
-#   d_tab <<- d_tab %>% 
-#     add_row(refs = ref,
-#             tab_nums = k,
-#             captions = caption)
-#   # Print caption
-#   if (!quiet) glue::glue("*Table {nrow(d_tab)}*. {caption}")
-#   }
-# 
-# get_tab <- function(ref, add_prefix = TRUE, prefix = "Table") {
-#   tab_num <- filter(d_tab, refs == ref) %>% pull(tab_nums) 
-#   if (add_prefix) paste0(prefix, "&nbsp;", tab_num) else tab_num
-#   } 
-# 
-# get_tab_caption <- function(ref, include_table_number = TRUE) {
-#   cap <- filter(d_tab, refs == ref) %>% pull(captions)
-#   if (include_table_number) {
-#     cap <- paste0("*Table ", 
-#                   get_tab(ref, 
-#                           add_prefix = FALSE), 
-#                   "*. ", 
-#                   cap)}
-#   
-#   cap
-#   }
 
 ```
 
@@ -213,25 +127,30 @@ A univariate outlier is far from most of the other scores in a distribution. You
 ```{r univariate, echo=FALSE, fig.cap="A histogram with a univariate outlier."}
 set.seed(1)
 
-data.frame(x = c(rnorm(100), 10)) %>% 
-  mutate(Outlier = between(x,-5,5) %>%
-           factor(levels = c(FALSE, TRUE),
-                  labels = c("Outlier", 
-                             "Non-Outliers"))) %>% 
-  ggplot(aes(x = x, fill = Outlier)) + 
-  geom_histogram(binwidth = 0.5) + 
+data.frame(x = c(rnorm(100), 10)) %>%
+  mutate(Outlier = between(x,-5, 5) %>%
+           factor(
+             levels = c(FALSE, TRUE),
+             labels = c("Outlier",
+                        "Non-Outliers")
+           )) %>%
+  ggplot(aes(x = x, fill = Outlier)) +
+  geom_histogram(binwidth = 0.5) +
   scale_fill_manual(NULL, values = c("firebrick", "gray40")) +
-  scale_x_continuous(NULL, breaks = seq(-4,10,2)) +
+  scale_x_continuous(NULL, breaks = seq(-4, 10, 2)) +
   theme(legend.position = "none") +
-  xlab(NULL) + 
+  xlab(NULL) +
   ylab(NULL) +
-  annotate(10,1, 
-           geom = "label", 
-           label = "Outlier", 
-           vjust = -0.5, 
-           label.size = 0, 
-           label.padding = unit(0,"mm"), 
-           family = myfont)
+  annotate(
+    x = 10,
+    y = 1,
+    geom = "label",
+    label = "Outlier",
+    vjust = -0.5,
+    label.size = 0,
+    label.padding = unit(0, "mm"),
+    family = myfont
+  )
 ```
 
 If we want to quantify the extremity of the univariate outlier, we could convert the outlier to a *z*-score, which indicates the outlier's distance from the population mean in standard deviation units. In this case, the outlier is 10 standard deviations from the mean of the other scores.
@@ -245,16 +164,26 @@ A multivariate outlier might not be unusual on any particular variable, but has 
 ```{r multivariate, echo=FALSE, warning=FALSE, fig.cap="A scatterplot with a multivariate outlier."}
 set.seed(5)
 
-d_mo <- mvtnorm::rmvnorm(n = 1000, sigma = matrix(c(1,0.95,0.95,1),2))
-d_mo[100,] <- c(-1,1)
+d_mo <- mvtnorm::rmvnorm(n = 1000,
+                         sigma = matrix(c(1, 0.95, 0.95, 1), 2))
+
+d_mo[100,] <- c(-1, 1)
 d_mo <- data.frame(d_mo)
-colnames(d_mo) <- c("x","y")
-ggplot(d_mo, aes(x, y)) + 
-  geom_point(alpha = 0.2, size = 2, pch = 16) + 
-  geom_point(data = d_mo[100,],color = "firebrick", size = 3) + 
-  coord_equal(xlim = c(-4,4), ylim = c(-4,4)) + 
-  theme(axis.title.y = element_text(angle = 0, vjust = .5, face = "italic"),
-        axis.title.x = element_text(face = "italic"))
+colnames(d_mo) <- c("x", "y")
+ggplot(d_mo, aes(x, y)) +
+  geom_point(alpha = 0.2, size = 2, pch = 16) +
+  geom_point(data = d_mo[100,],
+             color = "firebrick",
+             size = 3) +
+  coord_equal(xlim = c(-4, 4), ylim = c(-4, 4)) +
+  theme(
+    axis.title.y = element_text(
+      angle = 0,
+      vjust = .5,
+      face = "italic"
+    ),
+    axis.title.x = element_text(face = "italic")
+  )
 ```
 
 
@@ -262,41 +191,49 @@ Scatterplots are great for inspecting multivariate outliers with a small number 
 
 ```{r multivariate-outlier-2, echo= FALSE, fig.cap="A two-variable violin plot with a multivariate outlier."}
 k <- 400
-head(d_mo, k) %>% 
+head(d_mo, k) %>%
   rowid_to_column("id") %>%
-  as_tibble(.name_repair = "unique") %>% 
-  gather(key, value, -id) %>% 
-  mutate(Outlier = id == 100,
-         key = factor(key),
-           x = as.numeric(key) + 0.2 * runif(k,min = -1,1) * dnorm(value)) %>%
-  arrange(-Outlier) %>% 
-  ggplot(aes(key, value, group = id)) + 
+  as_tibble(.name_repair = "unique") %>%
+  gather(key, value, -id) %>%
+  mutate(
+    Outlier = id == 100,
+    key = factor(key),
+    x = as.numeric(key) + 0.2 * runif(k, min = -1, 1) * dnorm(value)
+  ) %>%
+  arrange(-Outlier) %>%
+  ggplot(aes(key, value, group = id)) +
   ggnormalviolin::geom_normalviolin(
     data = tibble(
-      mu = c(0,0), 
-      sigma = c(1,1), 
-      x = c("X","Y")), 
-    aes(
-      x = x, 
-      mu = mu, 
-      sigma = sigma), width = 0.2,
-    inherit.aes = F) + 
+      mu = c(0, 0),
+      sigma = c(1, 1),
+      x = c("X", "Y")
+    ),
+    aes(x = x,
+        mu = mu,
+        sigma = sigma),
+    width = 0.2,
+    inherit.aes = F
+  ) +
   geom_line(alpha = 0.25, size = 0.25, aes(x = x, group = id)) +
   geom_point(alpha = 0.25, size = 0.75, aes(x = x)) +
-  scale_size_manual(values = c(0.5,2)) + 
-  annotate(x = "X",  
-           y = -1, 
-           xend = "Y", 
-           yend = 1, 
-           geom = "segment", 
-           color = "firebrick",
-           size = 1) +
-  annotate(x = c("X","Y"), 
-           y = c(-1,1), 
-           color = "firebrick", 
-           geom = "point", 
-           size = 2) +
-  scale_x_discrete(NULL, expand = expansion(0,.25)) + 
+  scale_size_manual(values = c(0.5, 2)) +
+  annotate(
+    x = "X",
+    y = -1,
+    xend = "Y",
+    yend = 1,
+    geom = "segment",
+    color = "firebrick",
+    size = 1
+  ) +
+  annotate(
+    x = c("X", "Y"),
+    y = c(-1, 1),
+    color = "firebrick",
+    geom = "point",
+    size = 2
+  ) +
+  scale_x_discrete(NULL, expand = expansion(0, .25)) +
   scale_y_continuous(NULL) +
   theme(axis.text.x = element_text(face = "italic"))
 
@@ -305,50 +242,66 @@ head(d_mo, k) %>%
 Suppose that we have four variables, all standard normal. Because the four variables correlate at 0.99, the profiles are all quite flat. However, the red profile {1,1,−1,1} is much less flat, making it unusual in this context.
 
 ```{r multivariate-outlier-4, echo=FALSE, fig.cap="A four-variable violin plot with a multivariate outlier."}
-vnames <- paste0("X_",1:4)
+vnames <- paste0("X_", 1:4)
 n <- 300
-rho <- matrix(0.99, nrow = 4, ncol = 4, dimnames = list(vnames, vnames))
+rho <-
+  matrix(
+    0.99,
+    nrow = 4,
+    ncol = 4,
+    dimnames = list(vnames, vnames)
+  )
 diag(rho) <- 1
 
-d_4 <- mvtnorm::rmvnorm(sigma = rho, n = n) %>% 
-  `colnames<-`(vnames) %>% 
-  as_tibble() 
+d_4 <- mvtnorm::rmvnorm(sigma = rho, n = n) %>%
+  `colnames<-`(vnames) %>%
+  as_tibble()
 
 d_4[1,] <- list(1, 1, -1, 1)
 
-d_4 %>% 
-  mutate(id = 1:n) %>% 
-  gather(key, value, -id) %>% 
-  mutate(key = factor(key),
-           x = as.numeric(key) + 0.25 * runif(n,min = -1,1) * dnorm(value),
-         outlier = id == 1) %>% 
-  ggplot(aes(key, value, group = id)) + 
+d_4 %>%
+  mutate(id = 1:n) %>%
+  gather(key, value, -id) %>%
+  mutate(
+    key = factor(key),
+    x = as.numeric(key) + 0.25 * runif(n, min = -1, 1) * dnorm(value),
+    outlier = id == 1
+  ) %>%
+  ggplot(aes(key, value, group = id)) +
   ggnormalviolin::geom_normalviolin(
     data = tibble(
-      mu = 0, 
-      sigma = 1, 
-      x = paste0("X_", 1:4)),
-    aes(
-      x = x, 
-      mu = mu, 
-      sigma = sigma), 
+      mu = 0,
+      sigma = 1,
+      x = paste0("X_", 1:4)
+    ),
+    aes(x = x,
+        mu = mu,
+        sigma = sigma),
     width = 0.25,
-    inherit.aes = F) + 
-  geom_line(aes(group = id, x = x),
-            data = . %>% filter(id != 1),
-            alpha = 0.2, 
-            size = 0.25) + 
-  geom_point(aes(x = x),
-             data = . %>% filter(id != 1),
-             alpha = 0.3,
-             size = 0.75, ) + 
+    inherit.aes = F
+  ) +
+  geom_line(
+    aes(group = id, x = x),
+    data = . %>% filter(id != 1),
+    alpha = 0.2,
+    size = 0.25
+  ) +
+  geom_point(
+    aes(x = x),
+    data = . %>% filter(id != 1),
+    alpha = 0.3,
+    size = 0.75,
+    
+  ) +
   geom_line(data = . %>% filter(id == 1),
-            color = "firebrick", size = 0.5) +
+            color = "firebrick",
+            size = 0.5) +
   geom_point(data = . %>% filter(id == 1),
-             size = 1.5, color = "firebrick") + 
-  scale_x_discrete(NULL, 
-                   expand = c(0.06,0), 
-                   labels = parse(text = paste0("italic(X)[",1:4,"]"))) + 
+             size = 1.5,
+             color = "firebrick") +
+  scale_x_discrete(NULL,
+                   expand = c(0.06, 0),
+                   labels = parse(text = paste0("italic(X)[", 1:4, "]"))) +
   scale_y_continuous(NULL)
 ```
 
@@ -409,19 +362,17 @@ Suppose that we compare all profiles that have the same elevation but have diffe
 
 ```{r cor-table, echo = F}
 lambda <- c(0.95, 0.90, 0.85, 0.60)
-Ryy <- lambda %*% t(lambda) %>% 
-  `diag<-`(1) 
+Ryy <- lambda %*% t(lambda) %>%
+  `diag<-`(1)
 
-
-
-Ryy %>% 
-  apply(2, scales::number, accuracy = 0.01) %>% 
-  `diag<-`(1) %>% 
-  apply(2, str_remove_all, pattern = "^0") %>% 
-  `rownames<-`(paste0("*X*~", 1:4, "~")) %>% 
-  `colnames<-`(paste0("*X*~", 1:4, "~")) %>% 
-  kableExtra::kable(align = "cccc", caption = "Model-implied correlations among variables")
-
+Ryy %>%
+  apply(2, scales::number, accuracy = 0.01) %>%
+  `diag<-`(1) %>%
+  apply(2, str_remove_all, pattern = "^0") %>%
+  `rownames<-`(paste0("*X*~", 1:4, "~")) %>%
+  `colnames<-`(paste0("*X*~", 1:4, "~")) %>%
+  kableExtra::kable(align = "cccc",
+                    caption = "Model-implied correlations among variables")
 ```
 
 The correlations among the four variables are in the table above. Suppose from the population of profiles we select a subset of cases in which the profiles have an elevation of 1 (i.e., their composite score has a *z*-score of 1).
@@ -433,7 +384,7 @@ The correlations among the four variables are in the table above. Suppose from t
 library(ggnormalviolin)
 set.seed(1000)
 elevation <- 1
-w <- cbind(diag(4), rep(1,4))
+w <- cbind(diag(4), rep(1, 4))
 rho <- cov2cor(t(w) %*% Ryy %*% w)
 drho <- round(rho, 2)
 diag(drho) <- 1
@@ -442,157 +393,191 @@ Ryx <- rho[1:4, 5, drop = F]
 cov_cond <- Ryy - Ryx %*% solve(Rxx) %*% t(Ryx)
 
 d <- matrix(c(1.62, 1.75,-.19,
-              .82, .75, 1.07), nrow = 2, byrow = TRUE)
+              .82, .75, 1.07),
+            nrow = 2,
+            byrow = TRUE)
 d <- cbind(d, sum(rho[5, 1:4]) - rowSums(d))
 
-colnames(d) <- paste0("x",1:4)
-colnames(rho) <- rownames(rho) <- c("x1","x2","x3","x4","Composite")
-CM <- cond_maha(d %>% as_tibble(.name_repair = "unique") %>% mutate(Composite = 1), 
-          R = rho, 
-          v_dep = colnames(d)[-5], 
-          v_ind = "Composite")
+colnames(d) <- paste0("x", 1:4)
+colnames(rho) <-
+  rownames(rho) <- c("x1", "x2", "x3", "x4", "Composite")
+CM <-
+  cond_maha(
+    d %>% as_tibble(.name_repair = "unique") %>% mutate(Composite = 1),
+    R = rho,
+    v_dep = colnames(d)[-5],
+    v_ind = "Composite"
+  )
 
-d %>% 
-  as_tibble(.name_repair = "unique") %>% 
-  rowid_to_column(var = "id") %>% 
+d %>%
+  as_tibble(.name_repair = "unique") %>%
+  rowid_to_column(var = "id") %>%
   mutate(id = factor(id),
-         pdM = PropRound(CM$dCM_p)) %>% 
-  gather("Variable","X",-id, -pdM) %>% 
+         pdM = PropRound(CM$dCM_p)) %>%
+  gather("Variable", "X",-id, -pdM) %>%
   ggplot(aes(Variable, X)) +
   geom_normalviolin(
-    aes(
-      x = id,
-      mu = mu, sigma = sigma), 
-    data = tibble(id = factor(c("x1","x2","x3","x4")),
-                  mu = rho[5,1:4],
-                  sigma = sqrt(diag(cov_cond))), 
+    aes(x = id,
+        mu = mu, sigma = sigma),
+    data = tibble(
+      id = factor(c("x1", "x2", "x3", "x4")),
+      mu = rho[5, 1:4],
+      sigma = sqrt(diag(cov_cond))
+    ),
     inherit.aes = F,
-    alpha = 0.5, 
+    alpha = 0.5,
     upper_limit = 3,
-    face_left = F) +
-  geom_line(aes(group = id, 
-                color = id), 
-            alpha = 1, 
-            size = 1) + 
+    face_left = F
+  ) +
+  geom_line(aes(group = id,
+                color = id),
+            alpha = 1,
+            size = 1) +
   geom_hline(yintercept = 1) +
   geom_point(aes(color = id), size = 2.5) +
-  geom_text(aes(label = numText(X,2),
-                color = id,
-                vjust = if_else(X > 1, -0.8, 1.5)),
-            size = 5) +
-  # geom_text(data = . %>% filter(Variable == "x1"), 
-  #           aes(label = paste0("italic(p) == ", pdM),
-  #               color = id), 
-  #           parse = TRUE,
-  #           hjust = 1.15, 
-  #           size = 5) +
+  geom_text(aes(
+    label = numText(X, 2),
+    color = id,
+    vjust = if_else(X > 1, -0.8, 1.5)
+  ),
+  size = 5) +
   scale_y_continuous(NULL, breaks = -3:3) +
-  scale_x_discrete(
-    NULL, 
-    label = parse(text = paste0("italic(X)[",1:4,"]"))) +
-  scale_color_manual(values = c("steelblue","firebrick")) + 
-  annotate("text", 
-           x = 4.15, 
-           y = 1, 
-           label = "Composite == 1", 
-           parse = TRUE, 
-           vjust = -0.1,
-           size = 5) + 
+  scale_x_discrete(NULL,
+                   label = parse(text = paste0("italic(X)[", 1:4, "]"))) +
+  scale_color_manual(values = c("steelblue", "firebrick")) +
   annotate(
-    "label", 
-    x = 1.5, 
-    y = 2.75, 
+    "text",
+    x = 4.15,
+    y = 1,
+    label = "Composite == 1",
+    parse = TRUE,
+    vjust = -0.1,
+    size = 5
+  ) +
+  annotate(
+    "label",
+    x = 1.5,
+    y = 2.75,
     label = paste0(
-      "More unusual than ", 
-      round(CM$dCM_p[1] * 100), 
-      "% of\nprofiles with the same elevation"), 
-    color = "steelblue", 
-    label.padding = unit(0, "lines"), 
-    label.size = 0, 
-    size = 6, 
-    lineheight = 0.85) +
+      "More unusual than ",
+      round(CM$dCM_p[1] * 100),
+      "% of\nprofiles with the same elevation"
+    ),
+    color = "steelblue",
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    size = 6,
+    lineheight = 0.85
+  ) +
   annotate(
-    "label", 
-    x = 1.5, 
-    y = -0.75, 
+    "label",
+    x = 1.5,
+    y = -0.75,
     label = paste0(
-      "More unusual than ", 
-      round(CM$dCM_p[2] * 100), 
-      "% of\nprofiles with the same elevation"), 
-    color = "firebrick", 
-    label.padding = unit(0, "lines"), 
-    label.size = 0, 
-    size = 6, 
-    lineheight = 0.85) +
+      "More unusual than ",
+      round(CM$dCM_p[2] * 100),
+      "% of\nprofiles with the same elevation"
+    ),
+    color = "firebrick",
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    size = 6,
+    lineheight = 0.85
+  ) +
   annotate(
-    "label", 
-    x = 2.5, 
-    y = -1.75, 
-    label = "Population\nDistribution", 
-    color = "gray", 
-    label.padding = unit(0, "lines"), 
-    label.size = 0, 
+    "label",
+    x = 2.5,
+    y = -1.75,
+    label = "Population\nDistribution",
+    color = "gray",
+    label.padding = unit(0, "lines"),
+    label.size = 0,
     vjust = 0.5,
-    size = 5, 
-    lineheight = 0.85) + 
+    size = 5,
+    lineheight = 0.85
+  ) +
   annotate(
-    "label", 
-    x = 3.5, 
-    y = 1.75, 
-    label = "Conditional\nDistribution", 
-    color = "gray", 
-    label.padding = unit(0, "lines"), 
-    label.size = 0, 
+    "label",
+    x = 3.5,
+    y = 1.75,
+    label = "Conditional\nDistribution",
+    color = "gray",
+    label.padding = unit(0, "lines"),
+    label.size = 0,
     vjust = 0.5,
-    size = 5, 
-    lineheight = 0.85) +
+    size = 5,
+    lineheight = 0.85
+  ) +
   annotate(
-    "segment", 
-    x = 1.5, 
-    y = -0.4, 
-    xend = 1.55, 
+    "segment",
+    x = 1.5,
+    y = -0.4,
+    xend = 1.55,
     yend = 0.7,
-    size = 1, 
-    color = "firebrick", 
-    arrow = arrow(length = unit(0.35,"cm"), 
-                  angle = 17, type = "closed")) +
+    size = 1,
+    color = "firebrick",
+    arrow = arrow(
+      length = unit(0.35, "cm"),
+      angle = 17,
+      type = "closed"
+    )
+  ) +
   annotate(
-    "segment", 
-    x = 1.5, 
-    y = 2.4, 
-    xend = 1.56, 
-    yend = 1.75, 
-    size = 1, color = "steelblue", 
-    arrow = arrow(length = unit(0.35,"cm"), 
-                         angle = 17, type = "closed")) + 
+    "segment",
+    x = 1.5,
+    y = 2.4,
+    xend = 1.56,
+    yend = 1.75,
+    size = 1,
+    color = "steelblue",
+    arrow = arrow(
+      length = unit(0.35, "cm"),
+      angle = 17,
+      type = "closed"
+    )
+  ) +
   annotate(
-    "segment", 
-    x = 2.5, 
-    y = -1.55, 
-    xend = 2.8, 
-    yend = -1.2, 
-    size = 1, 
-    color = "gray", 
-    arrow = arrow(length = unit(0.35,"cm"), 
-                         angle = 17, type = "closed")) +
+    "segment",
+    x = 2.5,
+    y = -1.55,
+    xend = 2.8,
+    yend = -1.2,
+    size = 1,
+    color = "gray",
+    arrow = arrow(
+      length = unit(0.35, "cm"),
+      angle = 17,
+      type = "closed"
+    )
+  ) +
   annotate(
-    "segment", 
-    x = 3.5, 
-    y = 1.55, 
-    xend = 3.25, 
-    yend = 1.3, 
-    size = 1, 
-    color = "gray", 
-    arrow = arrow(length = unit(0.35,"cm"), 
-                         angle = 17, type = "closed")) +
-  ggtitle("Two profiles with the same elevation but different shapes") + 
+    "segment",
+    x = 3.5,
+    y = 1.55,
+    xend = 3.25,
+    yend = 1.3,
+    size = 1,
+    color = "gray",
+    arrow = arrow(
+      length = unit(0.35, "cm"),
+      angle = 17,
+      type = "closed"
+    )
+  ) +
+  ggtitle("Two profiles with the same elevation but different shapes") +
   theme(legend.position = "none") +
-  coord_cartesian(ylim = c(-3,3)) + 
-  geom_normalviolin(aes(mu = mu, sigma = sigma, x = Variable), 
-                    data = tibble(Variable = factor(c("x1","x2","x3","x4")), 
-                                  mu = 0, sigma = 1, X = 1), 
-                    alpha = 0.3, 
-                    face_right = F)
+  coord_cartesian(ylim = c(-3, 3)) +
+  geom_normalviolin(
+    aes(mu = mu, sigma = sigma, x = Variable),
+    data = tibble(
+      Variable = factor(c("x1", "x2", "x3", "x4")),
+      mu = 0,
+      sigma = 1,
+      X = 1
+    ),
+    alpha = 0.3,
+    face_right = FALSE
+  )
 
 ```
 
@@ -609,10 +594,12 @@ model <- "X =~ 0.95 * X_1 +
 
 ```{r worked-data, echo = FALSE}
 # Create data.frame, and add the composite score
-d <- data.frame(X_1 = 2, 
-                X_2 = 3, 
-                X_3 = 1,
-                X_4 = 2) %>% 
+d <- data.frame(
+  X_1 = 2,
+  X_2 = 3,
+  X_3 = 1,
+  X_4 = 2
+) %>%
   simstandard::add_composite_scores(m = model)
 
 ```
@@ -630,17 +617,31 @@ $$X=\{X_1,X_2, X_3, X_4\} = \{`r paste0(X, collapse = ",")`\}. $$
 As seen in the figure below, this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
 
 ```{r example-profile, echo = F, fig.cap="Example profile in a standard multivariate normal distribution."}
-tibble(Variable = paste0("italic(X)[",1:4,"]"), Score = X,
-       vjust = c(1.5, -0.5, 1.5, 1.5)) %>% 
-  ggplot(aes(Variable, Score)) + 
+tibble(
+  Variable = paste0("italic(X)[", 1:4, "]"),
+  Score = X,
+  vjust = c(1.5, -0.5, 1.5, 1.5)
+) %>%
+  ggplot(aes(Variable, Score)) +
   geom_normalviolin(aes(mu = 0, sigma = 1), fill = "gray", alpha = .4) +
   geom_line(aes(group = 1), color = "firebrick") +
   geom_point(pch = 16, color = "firebrick", size = 2) +
   geom_text(aes(label = Score, vjust = vjust), color = "firebrick") +
   geom_hline(yintercept = d$X_Composite) +
-  scale_x_discrete(NULL, labels = function(l) parse(text=l)) +
-  scale_y_continuous() + 
-  annotate("text", x = 3.5, y = d$X_Composite, label = paste0("Composite = ", formatC(d$X_Composite, 2, format = "f")), vjust = -.6, size = 4.5)
+  scale_x_discrete(
+    NULL,
+    labels = function(l)
+      parse(text = l)
+  ) +
+  scale_y_continuous() +
+  annotate(
+    "text",
+    x = 3.5,
+    y = d$X_Composite,
+    label = paste0("Composite = ", formatC(d$X_Composite, 2, format = "f")),
+    vjust = -.6,
+    size = 4.5
+  )
 ```
 
 How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? We will show how to do so in two ways. The easier of the two methods will be to use the [simstandard package](https://wjschne.github.io/simstandard/articles/simstandard_tutorial.html) to create the data and the unusualprofile package to calculate the conditional Mahalanobis distance. For your reference, we also see how to do everything "by hand" using matrix algebra in the [Calculations performed by the unusualprofile package vignette](https://wjschne.github.io/unusualprofile/articles/unusualprofile_calculations.html).
@@ -686,8 +687,8 @@ Although we can enter the names of the variables into the `cond_maha` function b
 
 ```{r composite-names}
 # Independent composite variable names
-v_X_composite <- d %>% 
-  select(ends_with("Composite")) %>% 
+v_X_composite <- d %>%
+  select(ends_with("Composite")) %>%
   colnames
 
 v_X_composite
@@ -697,8 +698,8 @@ Here we select the dependent variables:
 
 ```{r dependent-names}
 # Dependent variable names
-v_X <- d %>% 
-  select(!ends_with("Composite")) %>% 
+v_X <- d %>%
+  select(!ends_with("Composite")) %>%
   colnames
 
 v_X
@@ -708,10 +709,12 @@ Now we use the `cond_maha` function to calculate the conditional Mahalanobis dis
 
 ```{r worked-cm}
 # Calculate the conditional Mahalanobis distance
-cm <- cond_maha(data = d,
-                R = R_all,
-                v_dep = v_X,
-                v_ind_composites = v_X_composite)
+cm <- cond_maha(
+  data = d,
+  R = R_all,
+  v_dep = v_X,
+  v_ind_composites = v_X_composite
+)
 
 cm
 ```
@@ -775,8 +778,8 @@ d_case <- tibble(
   RC1 = 90,
   RC2 = 94,
   RC3 = 99
-) %>% 
-  simstandard::add_composite_scores(m = m_reading, mu = 100, sigma = 15) %>% 
+) %>%
+  simstandard::add_composite_scores(m = m_reading, mu = 100, sigma = 15) %>%
   simstandard::add_factor_scores(m = m_reading, mu = 100, sigma = 15)
 ```
 
@@ -795,20 +798,32 @@ d_case <- tibble(
   RC1 = 90,
   RC2 = 94,
   RC3 = 99
-) %>% 
-  simstandard::add_factor_scores(m = m_reading, mu = 100, sigma = 15, CI = T) %>% 
+) %>%
+  simstandard::add_factor_scores(m = m_reading,
+                                 mu = 100,
+                                 sigma = 15,
+                                 CI = TRUE) %>%
   simstandard::add_composite_scores(m = m_reading, mu = 100, sigma = 15)
 
-d_LB <- select(d_case, ends_with("_LB")) %>% rename_with(~str_remove(., "_FS")) %>% pivot_longer(cols = everything())
-d_UB <- select(d_case, ends_with("_UB")) %>% rename_with(~str_remove(., "_FS")) %>% pivot_longer(cols = everything())
-d_FS <- select(d_case, ends_with("_FS")) %>% pivot_longer(cols = everything())
+d_LB <-
+  select(d_case, ends_with("_LB")) %>%
+  rename_with( ~ str_remove(., "_FS")) %>%
+  pivot_longer(cols = everything())
 
-bind_rows(
-  d_LB,
-  d_UB,
-  d_FS) %>% 
-  separate(name, c("Ability", "Role")) %>% 
-  pivot_wider(names_from = Role, values_from = value) %>% 
+d_UB <-
+  select(d_case, ends_with("_UB")) %>%
+  rename_with( ~ str_remove(., "_FS")) %>%
+  pivot_longer(cols = everything())
+
+d_FS <-
+  select(d_case, ends_with("_FS")) %>%
+  pivot_longer(cols = everything())
+
+bind_rows(d_LB,
+          d_UB,
+          d_FS) %>%
+  separate(name, c("Ability", "Role")) %>%
+  pivot_wider(names_from = Role, values_from = value) %>%
   ggplot(aes(Ability, FS)) +
   geom_point() +
   geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.1)
@@ -821,8 +836,8 @@ bind_rows(
 mm <- simstandard::sim_standardized_matrices(m_reading)
 get_load <- function(m, construct) {
   m$RAM$A[mm$v_names$v_observed[grep(construct, mm$v_names$v_observed)],
-          construct] %>% 
-    scales::number(0.01) %>% 
+          construct] %>%
+    scales::number(0.01) %>%
     WJSmisc::remove_leading_zero()
 }
 
@@ -831,14 +846,14 @@ tikz_vector <- function(x) {
 }
 
 get_path <- function(m, from, to) {
-  m$RAM$A[to, from] %>% 
-    scales::number(0.01) %>% 
+  m$RAM$A[to, from] %>%
+    scales::number(0.01) %>%
     WJSmisc::remove_leading_zero()
 }
 
 get_cor <- function(m, from, to) {
-  m$RAM$S[to, from] %>% 
-    scales::number(0.01) %>% 
+  m$RAM$S[to, from] %>%
+    scales::number(0.01) %>%
     WJSmisc::remove_leading_zero()
 }
 
@@ -1028,16 +1043,18 @@ label/.style={
 \\node[xshift = 1ex] at (current bounding box.north east){};
 	\\end{tikzpicture}
 \\end{document}
-", .open = "`", 
+", .open = "`",
 .close = "`")
 
 latexfile <- "vignettes/Reading.tex"
-write(tex, file=latexfile)
+write(tex, file = latexfile)
 pdffile <- stringr::str_replace(latexfile, "\\.tex", ".pdf")
 svgfile <- stringr::str_replace(latexfile, "\\.tex", ".svg")
-shell(paste("xelatex -output-directory", 
-            here::here("vignettes"), 
-            here::here(latexfile)))
+shell(paste(
+  "xelatex -output-directory",
+  here::here("vignettes"),
+  here::here(latexfile)
+))
 
 shell(paste("pdf2svg", here::here(pdffile), here::here(svgfile)))
 ```
@@ -1075,78 +1092,100 @@ Here we enter the standard scores (Mean = 100, SD = 15) for a single person. The
 ```
 
 ```{r table-scores, echo=FALSE}
-d_case %>% 
-  select(-contains("_LB")) %>% 
-  select(-contains("_UB")) %>% 
-  pivot_longer(everything(), names_to = "Ability", values_to = "Score") %>% 
-  mutate(`z-score` = (Score - 100) / 15, 
-         p = unusualprofile::proportion_round(pnorm(`z-score`)),
-         Ability = str_replace(Ability, "\\_Composite", " (Composite)") %>% 
-           str_replace("\\_FS", " (Factor Score)")) %>%
-  arrange(Ability) %>% 
-  knitr::kable(digits = 2, 
-        caption = "Case Scores") %>%
-  kableExtra::kable_styling(., bootstrap_options = "striped") %>% 
-  kableExtra::row_spec(c(seq(1, 20, 5), seq(2, 20, 5)), bold = TRUE) %>% 
+d_case %>%
+  select(-contains("_LB")) %>%
+  select(-contains("_UB")) %>%
+  pivot_longer(everything(), names_to = "Ability", values_to = "Score") %>%
+  mutate(
+    `z-score` = (Score - 100) / 15,
+    p = unusualprofile::proportion_round(pnorm(`z-score`)),
+    Ability = str_replace(Ability, "\\_Composite", " (Composite)") %>%
+      str_replace("\\_FS", " (Factor Score)")
+  ) %>%
+  arrange(Ability) %>%
+  knitr::kable(digits = 2,
+               caption = "Case Scores") %>%
+  kableExtra::kable_styling(., bootstrap_options = "striped") %>%
+  kableExtra::row_spec(c(seq(1, 20, 5), seq(2, 20, 5)), bold = TRUE) %>%
   kableExtra::add_indent(setdiff(1:20, c(seq(1, 20, 5), seq(2, 20, 5))))
 ```
 
 
 ```{r plot-scores, fig.cap="Case Scores", echo=FALSE}
 library(patchwork)
-p1 <- ggplot(data = tibble(x = c(40, 160)), aes(x)) + 
-  stat_function(fun = dnorm, args = list(mean = 100, sd = 15), geom = "area", color = NA, fill = "gray70") + 
-  scale_y_continuous(NULL, breaks = NULL) + 
-    scale_x_continuous(NULL, 
-                     breaks = NULL, 
-                     minor_breaks = NULL, 
-                     limits = c(40, 160)) + 
-  coord_fixed(xlim = c(55, 145), ratio = 1000) + 
+p1 <- ggplot(data = tibble(x = c(40, 160)), aes(x)) +
+  stat_function(
+    fun = dnorm,
+    args = list(mean = 100, sd = 15),
+    geom = "area",
+    color = NA,
+    fill = "gray70"
+  ) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  scale_x_continuous(
+    NULL,
+    breaks = NULL,
+    minor_breaks = NULL,
+    limits = c(40, 160)
+  ) +
+  coord_fixed(xlim = c(55, 145), ratio = 1000) +
   theme_void()
 
 
-p2 <- d_case %>% 
-  select(-contains("_LB")) %>% 
-  select(-contains("_UB")) %>% 
-  pivot_longer(everything(), 
-               names_to = "Test", 
-               values_to = "SS") %>% 
-  mutate(Ability = factor(substr(Test, 1, 2), 
-                          levels = c("Ga", "Gc", "RD", "RC"),
-                          labels = c("Auditory\nProcessing",
-                                     "Comprehension-\nKnowledge",
-                                     "Reading\nDecoding",
-                                     "Reading\nComprehension")),
-         Type = case_when(str_detect(Test, "Composite") ~ "Composite", 
-                          str_detect(Test, "FS") ~ "Factor Score",
-                          TRUE ~ "Tests")) %>% 
-  arrange(Ability, Test) %>% 
-  ggplot(aes(SS, Type)) + 
-  geom_point(aes(color = Type), pch = 16) + 
-  geom_label(aes(label = round(SS), 
-                color = Type,
-                size = ifelse(Type != "Tests", 5, 4)), 
-            vjust = -0.5, 
-            label.padding = unit(0,"lines"), label.size = 0,
-            show.legend = F) +
-  # stat_function(fun = dnorm, 
-  #               args = list(mean = 100, sd = 15), 
-  #               geom = "area", 
-  #               color = NA, 
-  #               alpha = 0.15) +
-  facet_grid(rows = vars(Ability), scales = "free") + 
-  theme_light(base_family = myfont, base_size = 15) + 
-  # scale_y_continuous(NULL, breaks = NULL) +
-  scale_x_continuous("Scores", 
-                     breaks = seq(40, 160, 15), 
-                     minor_breaks = seq(40, 160, 5), 
-                     limits = c(40, 160), sec.axis = dup_axis(name = NULL)) + 
-  scale_y_discrete(NULL, expand = expansion(mult = c(0.15,0.3))) +
-  theme(legend.position = "none", 
-        legend.justification = c(1.02,1.02), 
-        strip.text.y = element_text(angle = 0, size = 12)) +
+p2 <- d_case %>%
+  select(-contains("_LB")) %>%
+  select(-contains("_UB")) %>%
+  pivot_longer(everything(),
+               names_to = "Test",
+               values_to = "SS") %>%
+  mutate(
+    Ability = factor(
+      substr(Test, 1, 2),
+      levels = c("Ga", "Gc", "RD", "RC"),
+      labels = c(
+        "Auditory\nProcessing",
+        "Comprehension-\nKnowledge",
+        "Reading\nDecoding",
+        "Reading\nComprehension"
+      )
+    ),
+    Type = case_when(
+      str_detect(Test, "Composite") ~ "Composite",
+      str_detect(Test, "FS") ~ "Factor Score",
+      TRUE ~ "Tests"
+    )
+  ) %>%
+  arrange(Ability, Test) %>%
+  ggplot(aes(SS, Type)) +
+  geom_point(aes(color = Type), pch = 16) +
+  geom_label(
+    aes(
+      label = round(SS),
+      color = Type,
+      size = ifelse(Type != "Tests", 5, 4)
+    ),
+    vjust = -0.5,
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    show.legend = F
+  ) +
+  facet_grid(rows = vars(Ability), scales = "free") +
+  theme_light(base_family = myfont, base_size = 15) +
+  scale_x_continuous(
+    "Scores",
+    breaks = seq(40, 160, 15),
+    minor_breaks = seq(40, 160, 5),
+    limits = c(40, 160),
+    sec.axis = dup_axis(name = NULL)
+  ) +
+  scale_y_discrete(NULL, expand = expansion(mult = c(0.15, 0.3))) +
+  theme(
+    legend.position = "none",
+    legend.justification = c(1.02, 1.02),
+    strip.text.y = element_text(angle = 0, size = 12)
+  ) +
   scale_color_grey(NULL, start = 0.1, end = 0.4) +
-  coord_cartesian(xlim = c(55, 145)) + 
+  coord_cartesian(xlim = c(55, 145)) +
   scale_size_identity()
 
 p1 / p2
@@ -1172,11 +1211,11 @@ Now let's see if the academic scores are unusual after controlling for the cogni
 
 ```{r dCM-observed}
 dCM <- cond_maha(
-  data = d_case, 
-  R = simstandard::get_model_implied_correlations(m_reading), 
-  mu = 100, 
+  data = d_case,
+  R = simstandard::get_model_implied_correlations(m_reading),
+  mu = 100,
   sigma = 15,
-  v_dep = v_reading, 
+  v_dep = v_reading,
   v_ind = v_cognitive)
 ```
 
@@ -1196,21 +1235,21 @@ First, we specify the composite score variable names to be the same as they are 
 
 ```{r reading-composite-names, echo=TRUE}
 # Independent variable names
-v_cognitive_composite <- paste0(c("Ga", "Gc"),"_Composite")
+v_cognitive_composite <- paste0(c("Ga", "Gc"), "_Composite")
 # Dependent variable names
-v_reading_composite <- paste0(c("RD", "RC"),"_Composite")
+v_reading_composite <- paste0(c("RD", "RC"), "_Composite")
 ```
 
 Now we plot the composite scores:
 
 ```{r composite-condmaha, echo=FALSE, fig.cap="Conditional Distributions for Reading Composites, Controlling for Cognitive Composites", echo=TRUE}
 # Conditional Reading Profile
-cond_maha(data = d_case, 
-          R = get_model_implied_correlations(m_reading, composites = TRUE), 
-          v_dep = v_reading_composite, 
-          v_ind = v_cognitive_composite, 
-          mu = 100, 
-          sigma = 15) %>% 
+cond_maha(data = d_case,
+          R = get_model_implied_correlations(m_reading, composites = TRUE),
+          v_dep = v_reading_composite,
+          v_ind = v_cognitive_composite,
+          mu = 100,
+          sigma = 15) %>%
   plot()
 ```
 
@@ -1219,13 +1258,15 @@ cond_maha(data = d_case,
 Suppose that we want to know if the observed Gc scores are unusual, given the composite Gc score we have estimated.
 
 ```{r plotreadingobserved, echo=TRUE}
-cond_maha(d_case,
-          R = get_model_implied_correlations(m_reading, composites = TRUE),
-          v_dep = c(v_cognitive, v_reading),
-          v_ind = c(v_cognitive_composite, v_reading_composite),
-          mu = 100,
-          sigma = 15) %>% 
-  plot() + 
+cond_maha(
+  d_case,
+  R = get_model_implied_correlations(m_reading, composites = TRUE),
+  v_dep = c(v_cognitive, v_reading),
+  v_ind = c(v_cognitive_composite, v_reading_composite),
+  mu = 100,
+  sigma = 15
+) %>%
+  plot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -1260,75 +1301,93 @@ d_case <- tibble(
   RC1 = 90,
   RC2 = 99,
   RC3 = 94
-) %>% 
-  simstandard::add_factor_scores(m = m_reading, 
-                                 mu = 100, 
-                                 sigma = 15, 
-                                 CI = T)
+) %>%
+  simstandard::add_factor_scores(m = m_reading,
+                                 mu = 100,
+                                 sigma = 15,
+                                 CI = TRUE)
 
-d_case %>% 
-  select(contains("_FS")) %>% 
-  pivot_longer(everything(), 
-               names_to = "Variable", 
-               values_to = "Score") %>% 
+d_case %>%
+  select(contains("_FS")) %>%
+  pivot_longer(everything(),
+               names_to = "Variable",
+               values_to = "Score") %>%
   arrange(Variable)
 ```
 
 Because factor scores are estimates, they are presented with confidence intervals in the figure below.
 
 ```{r factor-scores, fig.height=4.5, fig.cap="Estimated factor scores with 95% confidence intervals", echo = FALSE}
-d_factor_scores <- d_case %>% 
-  select(contains("_FS")) %>% 
-  pivot_longer(everything(), 
-               names_to = "Variable", 
-               values_to = "Score") %>% 
-  mutate(Variable = if_else(str_ends(Variable, "_FS"), 
-                            Variable, 
-                            str_remove(Variable, "_FS"))) %>% 
-  separate(Variable, c("Variable", "Type")) %>% 
-  pivot_wider(id_cols = Variable, 
-              names_from = Type, 
-              values_from = Score) %>% 
+d_factor_scores <- d_case %>%
+  select(contains("_FS")) %>%
+  pivot_longer(everything(),
+               names_to = "Variable",
+               values_to = "Score") %>%
+  mutate(Variable = if_else(
+    str_ends(Variable, "_FS"),
+    Variable,
+    str_remove(Variable, "_FS")
+  )) %>%
+  separate(Variable, c("Variable", "Type")) %>%
+  pivot_wider(id_cols = Variable,
+              names_from = Type,
+              values_from = Score) %>%
   mutate(se = get_factor_score_validity_se(m_reading) * 15)
 
-d_factor_scores %>% 
-  mutate(w = 1.25) %>% 
-  add_row(Variable = "Population", 
-          FS = 100, 
-          se = 15, 
-          LB = 100 + qnorm(.025) * 15,
-          UB = 100 + qnorm(.975) * 15,
-          w = 2) %>% 
-  mutate(Variable = factor(Variable, c("Population", "Ga", "Gc", "RD", "RC")) %>% fct_rev()) %>% 
+d_factor_scores %>%
+  mutate(w = 1.25) %>%
+  add_row(
+    Variable = "Population",
+    FS = 100,
+    se = 15,
+    LB = 100 + qnorm(.025) * 15,
+    UB = 100 + qnorm(.975) * 15,
+    w = 2
+  ) %>%
+  mutate(Variable = factor(Variable,
+                           levels = c("Population", "Ga", "Gc", "RD", "RC")) %>%
+           fct_rev()) %>%
   ggplot(aes(Variable, FS)) +
-  ggnormalviolin::geom_normalviolin(aes(mu = FS, sigma = se, width = w), face_left = F,p_tail = 0.05) + 
+  ggnormalviolin::geom_normalviolin(aes(mu = FS, sigma = se, width = w),
+                                    face_left = F,
+                                    p_tail = 0.05) +
   geom_point() +
-  # geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.075, color = "dodgerblue") + 
-  geom_label(aes(label = scales::number(FS, 1)), 
-             label.padding = unit(0, "lines"),
-             label.size = 0,
-             size = 4, 
-             hjust = 0.5,
-             vjust = 1,
-             nudge_x = -0.07,
-             color = "gray20",
-             fontface = "bold") + 
-  geom_label(aes(y = UB, label = scales::number(UB, 1)), 
-             label.padding = unit(0, "lines"),
-             label.size = 0, 
-             hjust = 0.5,
-             vjust = 1,
-             nudge_x = -0.07,
-             color = "gray30") + 
-  geom_label(aes(y = LB, label = scales::number(LB, 1)), 
-             label.padding = unit(0, "lines"),
-             label.size = 0, 
-             hjust = 0.5,
-             vjust = 1,
-             nudge_x = -0.07,
-             color = "gray30") +
-  scale_y_continuous("Factor Score (With 95% CI)", breaks = seq(40, 160, 15), minor_breaks = seq(40, 160, 5)) + 
-  scale_x_discrete(NULL, expand = expansion(c(.075,.2))) + 
+  # geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.075, color = "dodgerblue") +
+  geom_label(
+    aes(label = scales::number(FS, 1)),
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    size = 4,
+    hjust = 0.5,
+    vjust = 1,
+    nudge_x = -0.07,
+    color = "gray20",
+    fontface = "bold"
+  ) +
+  geom_label(
+    aes(y = UB, label = scales::number(UB, 1)),
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    hjust = 0.5,
+    vjust = 1,
+    nudge_x = -0.07,
+    color = "gray30"
+  ) +
+  geom_label(
+    aes(y = LB, label = scales::number(LB, 1)),
+    label.padding = unit(0, "lines"),
+    label.size = 0,
+    hjust = 0.5,
+    vjust = 1,
+    nudge_x = -0.07,
+    color = "gray30"
+  ) +
+  scale_y_continuous(
+    "Factor Score (With 95% CI)",
+    breaks = seq(40, 160, 15),
+    minor_breaks = seq(40, 160, 5)
+  ) +
+  scale_x_discrete(NULL, expand = expansion(c(.075, .2))) +
   coord_flip() 
 
 ```
@@ -1345,45 +1404,28 @@ simstandard::get_factor_score_coefficients(m_reading)
 
 ```{r, factor-score-coefficients, echo=FALSE, fig.cap="Factor score coefficients for the reading model"}
 
-simstandard::get_factor_score_coefficients(m_reading) %>% 
-  as.data.frame() %>% 
-  tibble::rownames_to_column("Observed") %>% 
-  pivot_longer(-Observed, names_to = "Latent", values_to = "Coefficient") %>% 
+simstandard::get_factor_score_coefficients(m_reading) %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Observed") %>%
+  pivot_longer(-Observed, names_to = "Latent", values_to = "Coefficient") %>%
   mutate(Latent = str_remove(Latent, "_FS$"),
-         Observed = fct_rev(Observed)) %>% 
+         Observed = fct_rev(Observed)) %>%
   ggplot(aes(Latent, Observed)) +
-  geom_tile(aes(fill = sqrt(Coefficient)), 
-            color = "gray40") + 
-  geom_text(aes(label = scales::number(Coefficient, .001) %>% 
-                str_remove("^0")), 
+  geom_tile(aes(fill = sqrt(Coefficient)),
+            color = "gray40") +
+  geom_text(aes(label = scales::number(Coefficient, .001) %>%
+                  str_remove("^0")),
             size = 4.5) +
   scale_fill_gradient2(low = "royalblue",
-                       high = "firebrick", 
-                       limits = c(-1, 1)) + 
-  scale_x_discrete(position = "top", 
+                       high = "firebrick",
+                       limits = c(-1, 1)) +
+  scale_x_discrete(position = "top",
                    expand = expansion(mult = 0)) +
   scale_y_discrete(expand = expansion(mult = 0)) +
-  theme(legend.position = "none", 
+  theme(legend.position = "none",
         panel.grid = element_blank())
 
 ```
-
-
-
-
-```{r, eval = F, echo=FALSE}
-Ga_coef <- simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1] %>% 
-  scales::number(.001) %>% str_remove("^0")
-
-Ga_names <- simstandard::sim_standardized_matrices(m_reading)$Coefficients$factor_score[,1] %>% names %>% 
-  str_replace("(?=\\d)", "}_") 
-
-Ga_equation <- paste0("\\text{Ga}=", paste0(Ga_coef, "\\text{", Ga_names, collapse = "+")) %>% 
-  str_replace("3\\+", "3}+ \\\\\\\\ ")
-
-```
-
-
 
 $$
 \begin{split}
@@ -1398,8 +1440,8 @@ Factor scores generally have a smaller standard deviation than the latent scores
 
 ```{r display-reading1}
 # Correlation matrix
-R_factor <- get_model_implied_correlations(m_reading, 
-                                           factor_scores = T)
+R_factor <- get_model_implied_correlations(m_reading,
+                                           factor_scores = TRUE)
 # Factor Score Validity
 fs_validity <- get_factor_score_validity(m_reading)
 
@@ -1416,12 +1458,14 @@ fs_names <- m_names$v_factor_score
 s <- 15 * c(rep(1, length(ob_names)), fs_validity)
 
 # Plot
-cond_maha(d_case, 
-          R = R_factor, 
-          mu = 100, 
-          sigma = s, 
-          v_dep = ob_names,
-          v_ind_composites = fs_names) %>% 
+cond_maha(
+  d_case,
+  R = R_factor,
+  mu = 100,
+  sigma = s,
+  v_dep = ob_names,
+  v_ind_composites = fs_names
+) %>%
   plot()
 ```
 
@@ -1429,19 +1473,21 @@ A second interpretation of the factor scores is that they are best estimates of 
 
 ```{r display-reading2}
 # Get model-implied correlations of observed and latent variables
-R_latent <- get_model_implied_correlations(m_reading, latent = T)
+R_latent <- get_model_implied_correlations(m_reading, latent = TRUE)
 
 # Latent variable names
 v_latent <- m_names$v_latent
 
 # Plot
-d_case %>% 
-  rename_with(.fn = ~ str_remove(.x, "_FS$")) %>% 
-  cond_maha(R = R_latent, 
-            mu = 100, 
-            sigma = 15, 
-            v_dep = ob_names,
-            v_ind = v_latent) %>% 
+d_case %>%
+  rename_with(.fn = ~ str_remove(.x, "_FS$")) %>%
+  cond_maha(
+    R = R_latent,
+    mu = 100,
+    sigma = 15,
+    v_dep = ob_names,
+    v_ind = v_latent
+  ) %>%
   plot()
 ```
 

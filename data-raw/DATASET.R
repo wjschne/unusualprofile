@@ -23,13 +23,10 @@ d_example <- sim_standardized(
   observed = TRUE,
   latent = TRUE,
   errors = FALSE,
-  composites = FALSE)
-
-
-
-
+  composites = FALSE
+)
 
 # Model-implied correlation matrix
-R_example <- get_model_implied_correlations(model, latent = T)
+R_example <- get_model_implied_correlations(model, latent = TRUE)
 
 usethis::use_data(R_example, d_example, overwrite = TRUE)
