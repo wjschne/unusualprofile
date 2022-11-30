@@ -38,6 +38,8 @@ Suggests:
     glue,
     kableExtra,
     knitr,
+    lavaan,
+    lifecycle,
     mvtnorm,
     patchwork,
     ragg,
