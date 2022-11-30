@@ -16,3 +16,4 @@
 ^CRAN-RELEASE$
 ^\.github$
 ^vignettes/tutorial_unusualprofile.Rmd$
+^CRAN-SUBMISSION$
