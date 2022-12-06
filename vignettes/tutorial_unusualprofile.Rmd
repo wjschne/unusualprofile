@@ -66,7 +66,7 @@ myfont <- "Titillium Web"
 plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha,
                                  family = !!myfont)
 sysfonts::font_add_google(myfont, myfont)
-extrafont::loadfonts(device = "win")
+# extrafont::loadfonts(device = "win")
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))
@@ -1456,6 +1456,7 @@ fs_names <- m_names$v_factor_score
 
 # Standard Deviations
 s <- 15 * c(rep(1, length(ob_names)), fs_validity)
+names(s) <- c(ob_names, names(fs_validity))
 
 # Plot
 cond_maha(

@@ -204,17 +204,10 @@ cond_maha <- function(data,
 
 
 
-  # Check if v_dep are in colnames of data
-  if (!all(v_dep %in% colnames(data))) {
-    v_Dep_not_in_d <- paste(v_dep[!(v_dep %in% colnames(data))],
-                            collapse = ", ")
-    stop(paste0("Some variables in v_dep are not in data: ",
-                v_Dep_not_in_d))
-  }
-
   v_all <- c(v_ind, v_dep)
   data_k <- length(v_all)
   # Select only variables that are used
+  v_data_original <- colnames(data)
   data <- data[, v_all, drop = FALSE]
 
   # If data have no means specified
@@ -245,7 +238,13 @@ cond_maha <- function(data,
         )
       )
     } else {
-      names(mu) <- v_all
+      if (is.null(names(mu))) {
+        # names in original order
+        names(mu) <- v_data_original[v_data_original %in% v_all]
+        # sort to new order
+        mu <- mu[v_all]
+      }
+
     }
   }
 
@@ -277,7 +276,13 @@ cond_maha <- function(data,
         )
       )
     } else {
-      names(sigma) <- colnames(data)
+      if (is.null(names(sigma))) {
+        # names in original order
+        names(sigma) <- v_data_original[v_data_original %in% v_all]
+        # sort to new order
+        sigma <- sigma[v_all]
+      }
+
     }
   }
 
@@ -419,8 +424,10 @@ cond_maha <- function(data,
     dCM_df <- k_dep
 
     # Initialize predictor vectors
-    if (is.null(v_ind_composites))
+    if (is.null(v_ind_composites)) {
       v_ind_composites <- character(0)
+    }
+
     v_ind_singular <- v_ind_composites
     v_ind_nonsingular <- character(0)
     v_ind_try <- setdiff(v_ind, v_ind_singular)
@@ -436,7 +443,7 @@ cond_maha <- function(data,
         Ryx <- R[v_dep, vInd]
         iRxx <- solve(Rxx)
         cov_cond <- Ryy - Ryx %*% iRxx %*% Rxy
-        ! is_singular(cov_cond)
+        !is_singular(cov_cond)
       }
 
       # Add predictors that do not make conditional
@@ -801,7 +808,7 @@ proportion2percentile <- function(p,
 plot.cond_maha <- function(x,
                            ...,
                            p_tail = 0,
-                           family = "serif",
+                           family = "sans",
                            score_digits = ifelse(min(x$sigma) >= 10, 0, 2)) {
   if (length(unique(x$d_score$id)) > 1)
     stop("Can only plot one case at a time")
@@ -967,7 +974,7 @@ plot.cond_maha <- function(x,
 plot.maha <- function(x,
                       ...,
                       p_tail = 0,
-                      family = "serif",
+                      family = "sans",
                       score_digits = ifelse(min(x$sigma) >= 10, 0, 2)) {
   if (nrow(x$d_dep) > 1)
     stop("Can only plot one case at a time")
@@ -989,7 +996,7 @@ plot.maha <- function(x,
   x$d_dep %>%
     tibble::rownames_to_column("id") %>%
     dplyr::mutate(id = factor(.data$id)) %>%
-    tidyr::pivot_longer(-.data$id,
+    tidyr::pivot_longer(-"id",
                         names_to = "Variable",
                         values_to = "Score") %>%
     dplyr::left_join(d_stats, by = "Variable") %>%

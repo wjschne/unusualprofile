@@ -31,15 +31,30 @@ R <- sim_standardized_matrices(model)$Correlations$R_all[v_all,
                                                          v_all,
                                                          drop = FALSE]
 
+
+cond_maha(
+  data = d,
+  R = R,
+  v_dep = v_dep,
+  v_ind_composites = v_ind_composites
+)
+
 # Works  and Input ----
 test_that("Example works", {
-  expect_silent(cond_maha(
-    data = d,
-    R = R,
-    v_dep = v_dep,
-    v_ind_composites = v_ind_composites
-  ))
+  expect_silent({
+    dcm <- cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )
+    dcm
+    plot(dcm)
+  })
+
 })
+
+
 
 test_that("data as matrix okay", {
   expect_silent(cond_maha(
@@ -168,6 +183,17 @@ test_that("v_ind, v_ind_composites, and v_dep are in colnames of R", {
     "Some variables in v_dep are not in R: fred"
   )
 
+  # v_ind_composites are null
+  expect_no_error(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = c("Y_1", "Y_2"),
+      v_ind = c("X_1", "X_2"),
+      v_ind_composites = NULL
+    )
+  )
+
   expect_error(
     cond_maha(
       data = d1,
@@ -213,6 +239,52 @@ test_that("Sample stats need at least 3 rows of data.", {
       use_sample_stats = TRUE
     )
   )
+
+  expect_no_error(
+    cond_maha(
+      data = sim_standardized(
+        model,
+        n = 100,
+        observed = TRUE,
+        latent = TRUE,
+        errors = FALSE,
+        composites = TRUE
+      ),
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      use_sample_stats = TRUE
+    )
+  )
+
+
+  expect_error(plot(cond_maha(
+    data = sim_standardized(
+      model,
+      n = 2,
+      observed = TRUE,
+      latent = TRUE,
+      errors = FALSE,
+      composites = TRUE
+    ),
+    R = R,
+    v_dep = v_dep,
+    v_ind_composites = v_ind_composites
+  )), "Can only plot one case at a time")
+
+  expect_error(plot(cond_maha(
+    data = sim_standardized(
+      model,
+      n = 2,
+      observed = TRUE,
+      latent = TRUE,
+      errors = FALSE,
+      composites = TRUE
+    ),
+    R = R,
+    v_dep = v_dep
+  )), "Can only plot one case at a time")
+
 })
 
 # Singularity ----
@@ -240,12 +312,23 @@ test_that("Measures not singular", {
     )
   )
 
+  expect_no_error(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = c("Y_1", "Y_2", "Y_3"),
+      v_ind = "X_Composite",
+      v_ind_composites = "Y_Composite"
+    )
+  )
+
   expect_true(is_singular(matrix(1, 2, 2)))
 })
 
 # Variable Metrics ----
 
 test_that("Metric does not matter", {
+  # All have different metric
   expect_equal(
     cond_maha(
       data = d,
@@ -263,6 +346,60 @@ test_that("Metric does not matter", {
       sigma = 15
     )$dCM
   )
+  # 1 dep has a different metric
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d %>% mutate(X_1 = X_1 * 15 + 100),
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = c(X_1 = 100, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0, X_Composite = 0, Y_Composite = 0),
+      sigma = c(X_1 = 15, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1, X_Composite = 1, Y_Composite = 1)
+    )$dCM
+  )
+
+  # 1 composite has a different metric
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d %>% mutate(X_Composite = X_Composite * 15 + 100),
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = c(X_1 = 0, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0, X_Composite = 100, Y_Composite = 0),
+      sigma = c(X_1 = 1, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1, X_Composite = 15, Y_Composite = 1)
+    )$dCM
+  )
+
+  # 1 ind has a different metric
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = c("Y_1", "Y_2", "Y_3"),
+      v_ind = c("X_1", "X_2", "X_3"),
+    )$dCM,
+    cond_maha(
+      data = d %>% mutate(X_3 = X_3 * 15 + 100),
+      R = R,
+      v_dep = c("Y_1", "Y_2", "Y_3"),
+      v_ind = c("X_1", "X_2", "X_3"),
+      mu = c(X_1 = 0, X_2 = 0, X_3 = 100, Y_1 = 0, Y_2 = 0, Y_3 = 0),
+      sigma = c(X_1 = 1, X_2 = 1, X_3 = 15, Y_1 = 1, Y_2 = 1, Y_3 = 1)
+    )$dCM
+  )
+
 })
 
 # Rounding ----
@@ -348,6 +485,9 @@ test_that("Propround", {
 
   expect_equal(proportion2percentile(c(0.001, 0.01, .5, .99, .992)),
                c(".1", "1", "50", "99", "99.2"))
+
+  expect_equal(proportion2percentile(c(0.001, 0.01, .5, .99, .992), add_percent_character = TRUE),
+               c(".1%", "1%", "50%", "99%", "99.2%"))
 })
 
 test_that("Labeling", {
@@ -371,6 +511,8 @@ test_that("Labeling", {
   )
 })
 
+# Independent and Independent Composite Together ----
+
 test_that("ind and ind_composite together", {
   expect_silent(cond_maha(
     data = d,
@@ -379,4 +521,118 @@ test_that("ind and ind_composite together", {
     v_ind = c("X_1", "X_2", "X_3"),
     v_ind_composites = "Y_Composite"
   ))
+})
+
+# Mu and sigma names not assigned
+
+test_that("mu and sigma names not assigned", {
+  # mu and sigma are null
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = NULL,
+      sigma = NULL
+    )$dCM
+  )
+
+
+
+  # mu and sigma are scalars
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = 0,
+      sigma = 1
+    )$dCM
+  )
+
+  # mu and sigma are unnamed vectors with equal values
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = rep(0,8),
+      sigma = rep(1,8)
+    )$dCM
+  )
+
+  # mu and sigma are unnamed vectors and not the same
+  expect_equal(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites
+    )$dCM,
+    cond_maha(
+      data = d %>% mutate(X_1 = X_1 * 15 + 100),
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = c(100, rep(0,7)),
+      sigma = c(15, rep(1,7))
+    )$dCM
+  )
+
+  # Too many mus
+  expect_error(
+       cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      mu = rep(0,10)
+    )$dCM,regexp = "There are 10 means in mu, but 8 columns in the data. Supply 1 mean for each variable."
+  )
+
+  # Too many sigmas
+  expect_error(
+    cond_maha(
+      data = d,
+      R = R,
+      v_dep = v_dep,
+      v_ind_composites = v_ind_composites,
+      sigma = rep(0,10)
+    )$dCM,regexp = "There are 10 means in sigma, but 8 columns in the data. Supply 1 mean for each variable."
+  )
+
+
+
+})
+
+# Mahalanobis
+test_that("No predictors", {
+  expect_no_error({
+    dm <- cond_maha(data = d,
+                    R = R,
+                    v_dep = v_dep)
+    dm
+    plot(dm)
+  })
 })
