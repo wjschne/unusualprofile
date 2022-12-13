@@ -8,7 +8,7 @@
   x,
   ...,
   p_tail = 0,
-  family = "serif",
+  family = "sans",
   score_digits = ifelse(min(x$sigma) >= 10, 0, 2)
 )
 }

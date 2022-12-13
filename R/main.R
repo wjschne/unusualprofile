@@ -571,9 +571,6 @@ cond_maha <- function(data,
       dplyr::left_join(d_variable, by = "Variable") %>%
       dplyr::mutate(Variable = factor(.data$Variable, levels = v_all))
 
-
-
-
     CM <- list(
       dCM = dCM,
       dCM_df = dCM_df,
@@ -940,14 +937,6 @@ plot.cond_maha <- function(x,
       )),
       italic(p) == .(proportion_round(x$dCM_p))
     )),
-    # subtitle = bquote(list(
-    #   Mahalanobis ~ Distance ~ Reduction == .(paste0(
-    #     round(100 * x$distance_reduction),
-    #     "%")),
-    #   Euclidean ~ Distance ~ Reduction == .(paste0(
-    #     round(100 * x$variability_reduction),
-    #     "%"))
-    # )),
     caption = expression(
       list(
         italic(p) == "Population proportion",
@@ -1048,7 +1037,7 @@ plot.maha <- function(x,
     ggplot2::scale_x_discrete(NULL,
                               expand = ggplot2::expansion(add = 1)) +
     ggplot2::labs(title = bquote(list(
-      Mahalanobis == .(formatC(x$dM_dep, 2, format = "f")),
+      Mahalanobis~Distance == .(formatC(x$dM_dep, 2, format = "f")),
       italic(p) == .(proportion_round(x$dM_dep_p))
     )),
     caption = expression(list(italic(p) == "Population proportion")))

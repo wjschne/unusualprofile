@@ -337,8 +337,10 @@ test_that("Metric does not matter", {
       v_ind_composites = v_ind_composites
     )$dCM,
     cond_maha(
-      data = d %>% mutate_all(function(x)
-        x * 15 + 100),
+      data = d %>% mutate_all(function(x) {
+        x * 15 + 100
+        }
+        ),
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
@@ -359,8 +361,10 @@ test_that("Metric does not matter", {
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
-      mu = c(X_1 = 100, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0, X_Composite = 0, Y_Composite = 0),
-      sigma = c(X_1 = 15, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1, X_Composite = 1, Y_Composite = 1)
+      mu = c(X_1 = 100, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0,
+             X_Composite = 0, Y_Composite = 0),
+      sigma = c(X_1 = 15, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1,
+                X_Composite = 1, Y_Composite = 1)
     )$dCM
   )
 
@@ -377,8 +381,10 @@ test_that("Metric does not matter", {
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
-      mu = c(X_1 = 0, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0, X_Composite = 100, Y_Composite = 0),
-      sigma = c(X_1 = 1, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1, X_Composite = 15, Y_Composite = 1)
+      mu = c(X_1 = 0, X_2 = 0, X_3 = 0, Y_1 = 0, Y_2 = 0, Y_3 = 0,
+             X_Composite = 100, Y_Composite = 0),
+      sigma = c(X_1 = 1, X_2 = 1, X_3 = 1, Y_1 = 1, Y_2 = 1, Y_3 = 1,
+                X_Composite = 15, Y_Composite = 1)
     )$dCM
   )
 
@@ -446,8 +452,7 @@ test_that("Propround", {
   expect_equal(
     proportion_round(
       c(
-        -1,
-        -.00012,
+        -1,-.00012,
         0,
         .00001234,
         0.01234,
@@ -486,8 +491,11 @@ test_that("Propround", {
   expect_equal(proportion2percentile(c(0.001, 0.01, .5, .99, .992)),
                c(".1", "1", "50", "99", "99.2"))
 
-  expect_equal(proportion2percentile(c(0.001, 0.01, .5, .99, .992), add_percent_character = TRUE),
-               c(".1%", "1%", "50%", "99%", "99.2%"))
+  expect_equal(
+    proportion2percentile(c(0.001, 0.01, .5, .99, .992),
+                          add_percent_character = TRUE),
+    c(".1%", "1%", "50%", "99%", "99.2%")
+  )
 })
 
 test_that("Labeling", {
@@ -577,8 +585,8 @@ test_that("mu and sigma names not assigned", {
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
-      mu = rep(0,8),
-      sigma = rep(1,8)
+      mu = rep(0, 8),
+      sigma = rep(1, 8)
     )$dCM
   )
 
@@ -595,20 +603,25 @@ test_that("mu and sigma names not assigned", {
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
-      mu = c(100, rep(0,7)),
-      sigma = c(15, rep(1,7))
+      mu = c(100, rep(0, 7)),
+      sigma = c(15, rep(1, 7))
     )$dCM
   )
 
   # Too many mus
   expect_error(
-       cond_maha(
+    cond_maha(
       data = d,
       R = R,
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
-      mu = rep(0,10)
-    )$dCM,regexp = "There are 10 means in mu, but 8 columns in the data. Supply 1 mean for each variable."
+      mu = rep(0, 10)
+    )$dCM,
+    regexp = paste0(
+      "There are 10 means in mu, ",
+      "but 8 columns in the data. ",
+      "Supply 1 mean for each variable."
+    )
   )
 
   # Too many sigmas
@@ -619,7 +632,9 @@ test_that("mu and sigma names not assigned", {
       v_dep = v_dep,
       v_ind_composites = v_ind_composites,
       sigma = rep(0,10)
-    )$dCM,regexp = "There are 10 means in sigma, but 8 columns in the data. Supply 1 mean for each variable."
+    )$dCM,regexp = paste0("There are 10 means in sigma, ",
+                          "but 8 columns in the data. ",
+                          "Supply 1 mean for each variable.")
   )
 
 

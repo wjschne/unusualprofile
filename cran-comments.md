@@ -10,7 +10,7 @@
 
 ## R CMD check results
 
-Duration: 26.8s
+Duration: 28.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 

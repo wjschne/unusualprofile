@@ -10,10 +10,11 @@
 ^README_files$
 ^data-raw$
 ^R/oldfunctions\.R$
-/.Rproj.user*
+\.Rproj.user*
 ^logo.png$
 ^LICENSE\.md$
 ^CRAN-RELEASE$
 ^\.github$
 ^vignettes/tutorial_unusualprofile.Rmd$
 ^CRAN-SUBMISSION$
+^\.lintr$

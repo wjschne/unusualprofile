@@ -1,6 +1,6 @@
 # unusualprofile 0.1.2 _2022-12-07_
 
-* Fixed bugs related to having scores with different means and standard deviations
+* Fixed plot.cond_maha bugs related to having scores with different means and standard deviations
 
 
 # unusualprofile 0.1.1 _2022-12-01_

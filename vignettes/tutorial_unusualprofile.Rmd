@@ -35,7 +35,6 @@ knitr::opts_chunk$set(
   comment = "#>",
   dev = "ragg_png",
   dpi = 300,
-  # dev = "svg",
   out.height = "100%",
   out.width = "100%",
   fig.width = 7.2916667,
@@ -61,12 +60,10 @@ library(patchwork)
 ```
 
 ```{r more-setup, echo=FALSE}
-# myfont <- "sans"
 myfont <- "Titillium Web"
 plot.cond_maha <- purrr::partial(unusualprofile:::plot.cond_maha,
                                  family = !!myfont)
-sysfonts::font_add_google(myfont, myfont)
-# extrafont::loadfonts(device = "win")
+# sysfonts::font_add_google(myfont, myfont)
 theme_set(theme_minimal(16, base_family = myfont))
 update_geom_defaults(geom = "text",
                      new = list(family = myfont))
@@ -128,7 +125,7 @@ A univariate outlier is far from most of the other scores in a distribution. You
 set.seed(1)
 
 data.frame(x = c(rnorm(100), 10)) %>%
-  mutate(Outlier = between(x,-5, 5) %>%
+  mutate(Outlier = between(x, -5, 5) %>%
            factor(
              levels = c(FALSE, TRUE),
              labels = c("Outlier",
@@ -212,7 +209,7 @@ head(d_mo, k) %>%
         mu = mu,
         sigma = sigma),
     width = 0.2,
-    inherit.aes = F
+    inherit.aes = FALSE
   ) +
   geom_line(alpha = 0.25, size = 0.25, aes(x = x, group = id)) +
   geom_point(alpha = 0.25, size = 0.75, aes(x = x)) +
@@ -278,7 +275,7 @@ d_4 %>%
         mu = mu,
         sigma = sigma),
     width = 0.25,
-    inherit.aes = F
+    inherit.aes = FALSE
   ) +
   geom_line(
     aes(group = id, x = x),
@@ -291,7 +288,6 @@ d_4 %>%
     data = . %>% filter(id != 1),
     alpha = 0.3,
     size = 0.75,
-    
   ) +
   geom_line(data = . %>% filter(id == 1),
             color = "firebrick",
@@ -389,10 +385,10 @@ rho <- cov2cor(t(w) %*% Ryy %*% w)
 drho <- round(rho, 2)
 diag(drho) <- 1
 Rxx <- matrix(1)
-Ryx <- rho[1:4, 5, drop = F]
+Ryx <- rho[1:4, 5, drop = FALSE]
 cov_cond <- Ryy - Ryx %*% solve(Rxx) %*% t(Ryx)
 
-d <- matrix(c(1.62, 1.75,-.19,
+d <- matrix(c(1.62, 1.75, -.19,
               .82, .75, 1.07),
             nrow = 2,
             byrow = TRUE)
@@ -414,7 +410,7 @@ d %>%
   rowid_to_column(var = "id") %>%
   mutate(id = factor(id),
          pdM = PropRound(CM$dCM_p)) %>%
-  gather("Variable", "X",-id, -pdM) %>%
+  gather("Variable", "X", -id, -pdM) %>%
   ggplot(aes(Variable, X)) +
   geom_normalviolin(
     aes(x = id,
@@ -424,10 +420,10 @@ d %>%
       mu = rho[5, 1:4],
       sigma = sqrt(diag(cov_cond))
     ),
-    inherit.aes = F,
+    inherit.aes = FALSE,
     alpha = 0.5,
     upper_limit = 3,
-    face_left = F
+    face_left = FALSE
   ) +
   geom_line(aes(group = id,
                 color = id),
@@ -606,7 +602,7 @@ d <- data.frame(
 
 ```{r standardized-scores, echo=FALSE}
 # Standardized observed scores
-X <- d[1,-5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
+X <- d[1, -5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
 
 ```
 
@@ -630,8 +626,9 @@ tibble(
   geom_hline(yintercept = d$X_Composite) +
   scale_x_discrete(
     NULL,
-    labels = function(l)
+    labels = function(l) {
       parse(text = l)
+    }
   ) +
   scale_y_continuous() +
   annotate(
@@ -807,12 +804,12 @@ d_case <- tibble(
 
 d_LB <-
   select(d_case, ends_with("_LB")) %>%
-  rename_with( ~ str_remove(., "_FS")) %>%
+  rename_with(~str_remove(., "_FS")) %>%
   pivot_longer(cols = everything())
 
 d_UB <-
   select(d_case, ends_with("_UB")) %>%
-  rename_with( ~ str_remove(., "_FS")) %>%
+  rename_with(~str_remove(., "_FS")) %>%
   pivot_longer(cols = everything())
 
 d_FS <-
@@ -1167,7 +1164,7 @@ p2 <- d_case %>%
     vjust = -0.5,
     label.padding = unit(0, "lines"),
     label.size = 0,
-    show.legend = F
+    show.legend = FALSE
   ) +
   facet_grid(rows = vars(Ability), scales = "free") +
   theme_light(base_family = myfont, base_size = 15) +
@@ -1349,10 +1346,9 @@ d_factor_scores %>%
            fct_rev()) %>%
   ggplot(aes(Variable, FS)) +
   ggnormalviolin::geom_normalviolin(aes(mu = FS, sigma = se, width = w),
-                                    face_left = F,
+                                    face_left = FALSE,
                                     p_tail = 0.05) +
   geom_point() +
-  # geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.075, color = "dodgerblue") +
   geom_label(
     aes(label = scales::number(FS, 1)),
     label.padding = unit(0, "lines"),
@@ -1388,7 +1384,7 @@ d_factor_scores %>%
     minor_breaks = seq(40, 160, 5)
   ) +
   scale_x_discrete(NULL, expand = expansion(c(.075, .2))) +
-  coord_flip() 
+  coord_flip()
 
 ```
 
