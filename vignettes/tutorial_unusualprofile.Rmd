@@ -1488,7 +1488,7 @@ d_case %>%
   plot()
 ```
 
-Note that we had to rename the factor score variables from `r m_names$v_factor_score` to `r m_names$v_latent`. In addition, the latent variable are no longer composite variables, but independent variables. 
+Note that we had to rename the factor score variables from `r m_names$v_factor_score` to `r m_names$v_latent`. In addition, the latent variables are no longer composite variables, but independent variables. 
 
 <!-- # Predicting a profile's extremity in a population -->
 

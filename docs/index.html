@@ -48,7 +48,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">unusualprofile</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
       </span>
     </div>
 
@@ -116,15 +116,14 @@
 </h1>
 <p>To use the unusualprofile package, one needs to know the correlations, means, and standard deviations among a set of continuous variables and at least one row of data from that set of variables.</p>
 <p>Suppose we have set of variables that have the following relationships:</p>
-<div class="figure">
-<img src="reference/figures/rm_model.svg" alt=""><p class="caption">Multivariate normal model</p>
-</div>
-<p>First, we load the unusualprofile package.</p>
+<figure><img src="reference/figures/rm_model.svg" alt="Multivariate normal model"><figcaption aria-hidden="true">
+Multivariate normal model
+</figcaption></figure><p>First, we load the unusualprofile package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/unusualprofile" class="external-link">unusualprofile</a></span><span class="op">)</span></span></code></pre></div>
 <p>Included with the unusualprofile package, the <code>d_example</code> data set has a single row of data generated from the path diagram depicted above.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        X_1     X_2      X_3      Y_1        Y_2      Y_3        X        Y</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1.999498 1.44683 2.703249 1.664106 -0.8427126 1.811528 2.273441 1.201208</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&gt;        X_1     X_2      X_3      Y_1        Y_2      Y_3        X        Y</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; 1 1.999498 1.44683 2.703249 1.664106 -0.8427126 1.811528 2.273441 1.201208</span></span></code></pre></div>
 <p>Also included with the unusualprofile package is the path diagram’s model-implied correlation matrix:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">R_example</span></span>
@@ -158,6 +157,17 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cm</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
+</div>
+<div class="section level1">
+<h1 id="shiny-app">Shiny App<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+</h1>
+<p>A user-friendly app that performs the functions of the unusualprofile package is <a href="https://w-joel-schneider.shinyapps.io/unusualprofile/" class="external-link">here</a>.</p>
+</div>
+<div class="section level1">
+<h1 id="publication">Publication<a class="anchor" aria-label="anchor" href="#publication"></a>
+</h1>
+<p>An introduction to the applications of conditional distributions and Mahalanobis distances:</p>
+<p>Schneider, W. J., &amp; Ji, F. (2023). <a href="https://rdcu.be/c5JkE" class="external-link">Detecting unusual score patterns in the context of relevant predictors</a>. Journal of Pediatric Neuropsychology, 9, 1–17. <a href="https://doi.org/10.1007/s40817-022-00137-x" class="external-link uri">https://doi.org/10.1007/s40817-022-00137-x</a></p>
 </div>
 
   </div>
@@ -199,10 +209,10 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/web/checks/check_results_unusualprofile.html" class="external-link"><img src="https://cranchecks.info/badges/summary/unusualprofile" alt="CRAN checks"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="stable"></a></li>
 <li><a href="https://github.com/wjschne/unusualprofile/actions" class="external-link"><img src="https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/wjschne/unusualprofile?branch=main" class="external-link"><img src="https://codecov.io/gh/wjschne/unusualprofile/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://CRAN.R-project.org/package=unusualprofile" class="external-link"><img src="https://www.r-pkg.org/badges/version/unusualprofile" alt="CRAN status"></a></li>
 </ul>
 </div>
 
@@ -217,7 +227,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

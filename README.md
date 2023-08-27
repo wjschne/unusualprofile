@@ -5,12 +5,12 @@
 
 <!-- badges: start -->
 
-[![CRAN
-checks](https://cranchecks.info/badges/summary/unusualprofile)](https://cran.r-project.org/web/checks/check_results_unusualprofile.html)
 [![stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg)](https://github.com/wjschne/unusualprofile/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wjschne/unusualprofile?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/unusualprofile)](https://CRAN.R-project.org/package=unusualprofile)
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
@@ -35,7 +35,10 @@ at least one row of data from that set of variables.
 
 Suppose we have set of variables that have the following relationships:
 
-![Multivariate normal model](man/figures/rm_model.svg)
+<figure>
+<img src="man/figures/rm_model.svg" alt="Multivariate normal model" />
+<figcaption aria-hidden="true">Multivariate normal model</figcaption>
+</figure>
 
 First, we load the unusualprofile package.
 
@@ -90,3 +93,19 @@ plot(cm)
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
+
+# Shiny App
+
+A user-friendly app that performs the functions of the unusualprofile
+package is
+[here](https://w-joel-schneider.shinyapps.io/unusualprofile/).
+
+# Publication
+
+An introduction to the applications of conditional distributions and
+Mahalanobis distances:
+
+Schneider, W. J., & Ji, F. (2023). [Detecting unusual score patterns in
+the context of relevant predictors](https://rdcu.be/c5JkE). Journal of
+Pediatric Neuropsychology, 9, 1–17.
+<https://doi.org/10.1007/s40817-022-00137-x>

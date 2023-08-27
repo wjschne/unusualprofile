@@ -1,16 +1,8 @@
-#' unusualprofile: Calculates Conditional Mahalanobis Distances
-#'
-#' @docType package
-#' @name unusualprofile
-#'
-#' @description
-#'
-#' The unusualprofile package calculates the unusualness of score profiles
-#' conditioned on a set of predictor variables
-#'
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-#' @author W. Joel Schneider
-#' @author Feng Ji
-#'
+## usethis namespace: end
 NULL

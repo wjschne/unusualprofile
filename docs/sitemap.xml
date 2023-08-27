@@ -19,22 +19,13 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>/LICENSE.html</loc>
   </url>
   <url>
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/boot_dcm.html</loc>
-  </url>
-  <url>
     <loc>/reference/cond_maha.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dcm_cor.html</loc>
   </url>
   <url>
     <loc>/reference/d_example.html</loc>
@@ -55,9 +46,6 @@
     <loc>/reference/plot.maha.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_cond_maha.html</loc>
-  </url>
-  <url>
     <loc>/reference/proportion2percentile.html</loc>
   </url>
   <url>
@@ -67,12 +55,6 @@
     <loc>/reference/R_example.html</loc>
   </url>
   <url>
-    <loc>/reference/tidyeval.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unusualness.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unusualprofile.html</loc>
+    <loc>/reference/unusualprofile-package.html</loc>
   </url>
 </urlset>
