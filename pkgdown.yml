@@ -1,0 +1,11 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  tutorial_unusualprofile: tutorial_unusualprofile.html
+  unusualprofile_calculations: unusualprofile_calculations.html
+last_built: 2024-02-14T19:21Z
+urls:
+  reference: https://wjschne.github.io/unusualprofile/reference
+  article: https://wjschne.github.io/unusualprofile/articles
+
