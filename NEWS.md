@@ -1,7 +1,11 @@
-# unusualprofile 0.1.3 _2022-12-07_
+# unusualprofile 0.1.4 _2024-02-14_
 
 * Added `zSEE` to output list from `cond_maha`. It contains the standardized standard error of the estimate.
 * Fixed bug where `SEE` slot in output lists from `cond_maha` was incorrectly reporting standardized standard error of the estimate---what what is now `zSEE`. The `SEE` slot now reports the (unstandardized) standard error of the estimate.
+
+# unusualprofile 0.1.3 _2023-08-27_
+
+* Minor fixes
 
 
 # unusualprofile 0.1.2 _2022-12-07_
