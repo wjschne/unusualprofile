@@ -106,6 +106,7 @@ An introduction to the applications of conditional distributions and
 Mahalanobis distances:
 
 Schneider, W. J., & Ji, F. (2023). [Detecting unusual score patterns in
-the context of relevant predictors](https://rdcu.be/c5JkE). Journal of
+the context of relevant
+predictors](https://doi.org/10.1007/s40817-022-00137-x). Journal of
 Pediatric Neuropsychology, 9, 1–17.
 <https://doi.org/10.1007/s40817-022-00137-x>
