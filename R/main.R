@@ -57,6 +57,8 @@
 #' of the dependent variables}
 #' \item{`R2` = Proportion of variance in each dependent variable explained
 #' by the independent variables}
+#' \item{`zSEE` = Standardized standard error of the estimate
+#' for each dependent variable}
 #' \item{`SEE` = Standard error of the estimate for each dependent variable}
 #' \item{`ConditionalCovariance` = Covariance matrix of the dependent
 #' variables after controlling for the independent variables}
@@ -102,7 +104,6 @@
 #'           R = R_all,
 #'           v_dep = c("Math", "Read"),
 #'           v_ind = c("Gf", "Gs", "Gc"))
-
 cond_maha <- function(data,
                       R,
                       v_dep,
@@ -120,9 +121,7 @@ cond_maha <- function(data,
   data <- as.matrix(data)
 
 
-  v_ind <- unique(
-    c(v_ind,
-      v_ind_composites))
+  v_ind <- unique(c(v_ind,v_ind_composites))
 
   # Checks ----
 
@@ -402,7 +401,8 @@ cond_maha <- function(data,
     R2 <- colSums(reg_beta * Rxy)
 
     # Make Standard Error of Estimate
-    SEE <- sqrt(1 - R2)
+    zSEE <- sqrt(1 - R2)
+    SEE <- zSEE * sigma_dep[, 1, drop = TRUE]
 
     # Data for just independent variables
     d_ind <- data[, v_ind, drop = FALSE]
@@ -492,7 +492,7 @@ cond_maha <- function(data,
 
 
     # Dependent standardized residuals (z-scores)
-    d_dep_residuals_z <- d_deviations_z / SEE
+    d_dep_residuals_z <- d_deviations_z / zSEE
 
     # Dependent cp
     d_dep_cp <- stats::pnorm(d_dep_residuals_z)
@@ -518,8 +518,9 @@ cond_maha <- function(data,
     d_variable <- tibble::tibble(
       Variable = v_dep,
       mu = mu_dep[, 1],
-      sigma = sigma_dep[, 1],
+      sigma = sigma_dep[, 1, drop = TRUE],
       R2 = R2,
+      zSEE = zSEE,
       SEE = SEE
     ) %>%
       dplyr::bind_rows(tibble::tibble(
@@ -595,6 +596,7 @@ cond_maha <- function(data,
       d_dep_cp = tibble::as_tibble(d_dep_cp),
       d_dep_p = tibble::as_tibble(d_dep_p),
       R2 = R2,
+      zSEE = zSEE,
       SEE = SEE,
       ConditionalCovariance = cov_cond,
       distance_reduction = ifelse(dM_dep == 0, 0, 1 - (dCM / dM_dep)),
@@ -843,9 +845,9 @@ plot.cond_maha <- function(x,
   x$d_score %>%
     dplyr::mutate(
       SD = ifelse(
-        test = is.na(.data$SEE),
+        test = is.na(.data$zSEE),
         yes = .data$sigma,
-        no = .data$SEE * .data$sigma
+        no = .data$zSEE * .data$sigma
       ),
       yhat = ifelse(is.na(.data$Predicted), .data$mu, .data$Predicted),
       id = factor(.data$id),

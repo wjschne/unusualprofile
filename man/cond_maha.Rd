@@ -83,6 +83,8 @@ standardized residuals}
 of the dependent variables}
 \item{\code{R2} = Proportion of variance in each dependent variable explained
 by the independent variables}
+\item{\code{zSEE} = Standardized standard error of the estimate
+for each dependent variable}
 \item{\code{SEE} = Standard error of the estimate for each dependent variable}
 \item{\code{ConditionalCovariance} = Covariance matrix of the dependent
 variables after controlling for the independent variables}

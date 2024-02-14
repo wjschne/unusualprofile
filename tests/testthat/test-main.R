@@ -651,3 +651,7 @@ test_that("No predictors", {
     plot(dm)
   })
 })
+
+
+
+

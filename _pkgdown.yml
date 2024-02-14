@@ -1,11 +1,4 @@
+url: https://wjschne.github.io/unusualprofile/
 template:
-  params:
-    bootswatch: cosmo
-figures:
-  dpi: 300
-  dev.args: []
-  fig.width: 7.2916667
-  fig.height: ~
-  fig.retina: 2
-  bg: NA
+  bootstrap: 5
 

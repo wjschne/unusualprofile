@@ -191,7 +191,7 @@ k <- 400
 head(d_mo, k) %>%
   rowid_to_column("id") %>%
   as_tibble(.name_repair = "unique") %>%
-  gather(key, value, -id) %>%
+  pivot_longer(-id, names_to = "key", values_to = "value") %>%
   mutate(
     Outlier = id == 100,
     key = factor(key),
@@ -258,7 +258,7 @@ d_4[1,] <- list(1, 1, -1, 1)
 
 d_4 %>%
   mutate(id = 1:n) %>%
-  gather(key, value, -id) %>%
+  pivot_longer(-id, names_to = "key", values_to = "value") %>%
   mutate(
     key = factor(key),
     x = as.numeric(key) + 0.25 * runif(n, min = -1, 1) * dnorm(value),
@@ -410,7 +410,7 @@ d %>%
   rowid_to_column(var = "id") %>%
   mutate(id = factor(id),
          pdM = PropRound(CM$dCM_p)) %>%
-  gather("Variable", "X", -id, -pdM) %>%
+  pivot_longer(x1:x4, names_to = "Variable", values_to = "X") %>% 
   ggplot(aes(Variable, X)) +
   geom_normalviolin(
     aes(x = id,
@@ -428,7 +428,7 @@ d %>%
   geom_line(aes(group = id,
                 color = id),
             alpha = 1,
-            size = 1) +
+            linewidth = 1) +
   geom_hline(yintercept = 1) +
   geom_point(aes(color = id), size = 2.5) +
   geom_text(aes(

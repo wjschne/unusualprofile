@@ -14,6 +14,7 @@ Calculates a Mahalanobis distance for every row of a set of outcome variables (M
 Useful links:
 \itemize{
   \item \url{https://github.com/wjschne/unusualprofile}
+  \item \url{https://wjschne.github.io/unusualprofile/}
   \item Report bugs at \url{https://github.com/wjschne/unusualprofile/issues}
 }
 
