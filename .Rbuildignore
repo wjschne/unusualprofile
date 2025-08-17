@@ -18,3 +18,4 @@
 ^vignettes/tutorial_unusualprofile.Rmd$
 ^CRAN-SUBMISSION$
 ^\.lintr$
+^vignettes/*_files$

@@ -15,8 +15,11 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="unusualprofile_calculations_files/libs/quarto-html/popper.min.js"></script><script src="unusualprofile_calculations_files/libs/quarto-html/tippy.umd.min.js"></script><link href="unusualprofile_calculations_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="unusualprofile_calculations_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Calculations performed by the unusualprofile package">
+<meta property="og:image" content="https://wjschne.github.io/unusualprofile/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -55,30 +58,29 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Calculations performed by the unusualprofile package</h1>
-                        <h4 data-toc-skip class="author">W. Joel
-Schneider &amp; Feng Ji</h4>
-            
-            <h4 data-toc-skip class="date">2025-08-16</h4>
-      
-      <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/HEAD/vignettes/unusualprofile_calculations.Rmd" class="external-link"><code>vignettes/unusualprofile_calculations.Rmd</code></a></small>
-      <div class="d-none name"><code>unusualprofile_calculations.Rmd</code></div>
+
+      <p class="author">W. Joel Schneider &amp; Feng Ji</p>
+      <p class="date">2025-08-16</p>
+
+      <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/HEAD/vignettes/unusualprofile_calculations.qmd" class="external-link"><code>vignettes/unusualprofile_calculations.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
+
+
+
+
+
+    <div class="cell">
 <style type="text/css">
 
 @import url('http://fonts.googleapis.com/css?family=Titillium+Web');
-body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif'; 
-      font-size:18px; 
+body {font-family: 'Titillium Web', 'Open Sans', 'sans-serif';
+      font-size:18px;
       line-height:1.25;}
 
 .caption {text-align:right; font-size:10pt}
@@ -86,31 +88,35 @@ table caption {text-align:left; font-size:10pt}
 
 img {border: none}
 </style>
-<p>Suppose that there are a set of variables
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-that are related to each other as seen in the model below:</p>
-<div class="figure" style="text-align: center">
-<img src="One_dimensional.svg" alt="A simple model with standardized loadings" width="300" height="100%"><p class="caption">
-A simple model with standardized loadings
-</p>
 </div>
-<p>Suppose that there is a profile of scores in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-such that:</p>
+<p>Suppose that there are a set of variables <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> that are related to each other as seen in <a href="#fig-onedimensional" class="quarto-xref">Figure 1</a>.</p>
+<div id="fig-onedimensional" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-onedimensional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="One_dimensional.svg" width="300">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-onedimensional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1: A simple model with standardized loadings
+</figcaption></figure>
+</div>
+<p>Suppose that there is a profile of scores in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> such that:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>,</mo><msub><mi>X</mi><mn>3</mn></msub><mo>,</mo><msub><mi>X</mi><mn>4</mn></msub><mo stretchy="false" form="postfix">}</mo><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">}</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">X=\{X_1,X_2, X_3, X_4\} = \{2,3,1,2\}. </annotation></semantics></math></p>
-<p>As seen in Figure 1, this profile of scores is summarized by a
-composite score of 2.30.</p>
-<div class="figure">
-<img src="unusualprofile_calculations_files/figure-html/example-profile-1.png" alt="Figure 1. Example profile in a standard multivariate normal distribution." width="100%" height="100%"><p class="caption">
-Figure 1. Example profile in a standard multivariate normal
-distribution.
-</p>
+<p>As seen in <a href="#fig-example-profile" class="quarto-xref">Figure 2</a>, this profile of scores is summarized by a composite score of 2.30.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-example-profile" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-example-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="unusualprofile_calculations_files/figure-html/fig-example-profile-1.png" style="width:100.0%;height:100.0%">
 </div>
-<p>How can we calculate the Mahalanobis distance for profiles that all
-have the same elevation (i.e., composite score)? For your reference, we
-will do everything “by hand” using matrix algebra.</p>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-example-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: Example profile in a standard multivariate normal distribution.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>How can we calculate the Mahalanobis distance for profiles that all have the same elevation (i.e., composite score)? For your reference, we will do everything “by hand” using matrix algebra.</p>
 <p>In r, we can make a named vector of scores like so:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  X_1 <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  X_2 <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -121,14 +127,18 @@ will do everything “by hand” using matrix algebra.</p>
 <span><span class="va">X</span></span>
 <span><span class="co">#&gt; X_1 X_2 X_3 X_4 </span></span>
 <span><span class="co">#&gt;   2   3   1   2</span></span></code></pre></div>
+</div>
 <p>We will need to store variable names:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">v_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
 <span><span class="va">v_latent</span> <span class="op">&lt;-</span> <span class="st">"X"</span></span>
 <span><span class="va">v_composite</span> <span class="op">&lt;-</span> <span class="st">"X_Composite"</span></span>
 <span><span class="va">v_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">v_observed</span>, <span class="va">v_composite</span><span class="op">)</span></span></code></pre></div>
+</div>
 <p>We can create a matrix of factor loadings:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.95</span>, <span class="fl">0.90</span>, <span class="fl">0.85</span>, <span class="fl">0.60</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -140,9 +150,10 @@ will do everything “by hand” using matrix algebra.</p>
 <span><span class="co">#&gt; X_2 0.90</span></span>
 <span><span class="co">#&gt; X_3 0.85</span></span>
 <span><span class="co">#&gt; X_4 0.60</span></span></code></pre></div>
-<p>Now we calculate the model-implied correlations among the observed
-variables:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</div>
+<p>Now we calculate the model-implied correlations among the observed variables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Observed Correlations</span></span>
 <span><span class="va">R_X</span> <span class="op">&lt;-</span> <span class="va">lambda</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">`diag&lt;-`</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -153,6 +164,7 @@ variables:</p>
 <span><span class="co">#&gt; X_2 0.8550 1.000 0.7650 0.54</span></span>
 <span><span class="co">#&gt; X_3 0.8075 0.765 1.0000 0.51</span></span>
 <span><span class="co">#&gt; X_4 0.5700 0.540 0.5100 1.00</span></span></code></pre></div>
+</div>
 <p>Presented formally, the model-implied correlations are:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>X</mi></msub><mo>≈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.85</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.85</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R_{X} \approx \begin{bmatrix}
 1 &amp; .85 &amp; .81 &amp; .57\\
@@ -160,28 +172,18 @@ variables:</p>
 .81 &amp; .76 &amp; 1 &amp; .51\\
 .57 &amp; .54 &amp; .51 &amp; 1
 \end{bmatrix}</annotation></semantics></math></p>
-<p>We need to use this matrix to create a new 5 × 5 correlation matrix
-that includes the correlations among the four variables and also each
-variable’s correlation with the general composite score (i.e., the
-standardized sum of four variables). Fortunately, such a matrix can be
-calculated with only a few steps.</p>
-<p>We will need a “weight” matrix that will select each variable
-individually and also the sum of the four variables.</p>
+<p>We need to use this matrix to create a new 5 × 5 correlation matrix that includes the correlations among the four variables and also each variable’s correlation with the general composite score (i.e., the standardized sum of four variables). Fortunately, such a matrix can be calculated with only a few steps.</p>
+<p>We will need a “weight” matrix that will select each variable individually and also the sum of the four variables.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">w=\begin{bmatrix}
 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1\\
 0 &amp; 1 &amp; 0 &amp; 0 &amp; 1\\
 0 &amp; 0 &amp; 1 &amp; 0 &amp; 1\\
 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
 \end{bmatrix}</annotation></semantics></math></p>
-<p>Notice that the first column of this matrix has a 1 in first position
-and zeroes elsewhere. It selects the first variable,
-<em>X</em><sub>1</sub>. The second column selects
-<em>X</em><sub>2</sub>, and so on to the fourth column. The last column
-is all ones, which will select all four variables and add them up.</p>
-<p>We can construct this matrix with the <code>diag</code> function,
-which creates an identity matrix. This matrix is appended to a column of
-ones:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>Notice that the first column of this matrix has a 1 in first position and zeroes elsewhere. It selects the first variable, <em>X</em><sub>1</sub>. The second column selects <em>X</em><sub>2</sub>, and so on to the fourth column. The last column is all ones, which will select all four variables and add them up.</p>
+<p>We can construct this matrix with the <code>diag</code> function, which creates an identity matrix. This matrix is appended to a column of ones:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">w</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">`rownames&lt;-`</span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -192,8 +194,8 @@ ones:</p>
 <span><span class="co">#&gt; X_2   0   1   0   0           1</span></span>
 <span><span class="co">#&gt; X_3   0   0   1   0           1</span></span>
 <span><span class="co">#&gt; X_4   0   0   0   1           1</span></span></code></pre></div>
-<p>Now we can use the weight matrix <em>w</em> to calculate the
-covariance matrix:</p>
+</div>
+<p>Now we can use the weight matrix <em>w</em> to calculate the covariance matrix:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>=</mo><mi>w</mi><mi>′</mi><msub><mi>R</mi><mi>X</mi></msub><mi>w</mi></mrow><annotation encoding="application/x-tex">\Sigma = w'R_{X}w</annotation></semantics></math></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Σ</mi><mo>≈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.85</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3.23</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.85</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3.16</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3.08</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.62</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>3.23</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3.16</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>3.08</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>2.62</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>12.09</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\Sigma \approx \begin{bmatrix}
 1 &amp; .85 &amp; .81 &amp; .57 &amp; 3.23\\
@@ -202,7 +204,8 @@ covariance matrix:</p>
 .57 &amp; .54 &amp; .51 &amp; 1 &amp; 2.62\\
 3.23 &amp; 3.16 &amp; 3.08 &amp; 2.62 &amp; 12.09
 \end{bmatrix}</annotation></semantics></math></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">R_X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">w</span><span class="op">)</span></span>
 <span><span class="va">Sigma</span></span>
 <span><span class="co">#&gt;                X_1   X_2    X_3  X_4 X_Composite</span></span>
@@ -211,12 +214,9 @@ covariance matrix:</p>
 <span><span class="co">#&gt; X_3         0.8075 0.765 1.0000 0.51      3.0825</span></span>
 <span><span class="co">#&gt; X_4         0.5700 0.540 0.5100 1.00      2.6200</span></span>
 <span><span class="co">#&gt; X_Composite 3.2325 3.160 3.0825 2.62     12.0950</span></span></code></pre></div>
-<p>Now we need to convert the covariance matrix to a correlation matrix.
-With matrix equations, we would need to create a matrix of with a vector
-of variances on the diagonal:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mtext mathvariant="normal">diag</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>Σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D = \text{diag}(\Sigma)</annotation></semantics></math>
-Then we would take the square root, invert this matrix, and then
-pre-multiply it and post-multiply it by the covariance matrix.</p>
+</div>
+<p>Now we need to convert the covariance matrix to a correlation matrix. With matrix equations, we would need to create a matrix of with a vector of variances on the diagonal:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mtext mathvariant="normal">diag</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>Σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D = \text{diag}(\Sigma)</annotation></semantics></math> Then we would take the square root, invert this matrix, and then pre-multiply it and post-multiply it by the covariance matrix.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>A</mi><mi>l</mi><mi>l</mi></mrow></msub><mo>=</mo><msup><mi>D</mi><mrow><mi>−</mi><mn>0.5</mn></mrow></msup><mi>Σ</mi><msup><mi>D</mi><mrow><mi>−</mi><mn>0.5</mn></mrow></msup></mrow><annotation encoding="application/x-tex">R_{All} = D^{-0.5}\Sigma D^{-0.5}</annotation></semantics></math></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>A</mi><mi>l</mi><mi>l</mi></mrow></msub><mo>≈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.86</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.93</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.86</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.91</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.81</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.76</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.89</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.57</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.54</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.51</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.75</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>.93</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.91</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.89</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>.75</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R_{All} \approx \begin{bmatrix}
 1 &amp; .86 &amp; .81 &amp; .57 &amp; .93\\
@@ -225,9 +225,9 @@ pre-multiply it and post-multiply it by the covariance matrix.</p>
 .57 &amp; .54 &amp; .51 &amp; 1 &amp; .75\\
 .93 &amp; .91 &amp; .89 &amp; .75 &amp; 1
 \end{bmatrix}</annotation></semantics></math></p>
-<p>If we really want to use pure matrix algebra functions, we could do
-this:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>If we really want to use pure matrix algebra functions, we could do this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">D_root_inverted</span> <span class="op">&lt;-</span> <span class="va">Sigma</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -245,10 +245,10 @@ this:</p>
 <span><span class="co">#&gt; X_3         0.8075000 0.7650000 1.0000000 0.5100000   0.8863396</span></span>
 <span><span class="co">#&gt; X_4         0.5700000 0.5400000 0.5100000 1.0000000   0.7533527</span></span>
 <span><span class="co">#&gt; X_Composite 0.9294705 0.9086239 0.8863396 0.7533527   1.0000000</span></span></code></pre></div>
-<p>However, it is probably best to sidestep all this complication of
-converting covariances to correlations with the <code>cov2cor</code>
-function:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+</div>
+<p>However, it is probably best to sidestep all this complication of converting covariances to correlations with the <code>cov2cor</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert covariance matrix to correlations</span></span>
 <span><span class="va">R_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov2cor</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span></span>
 <span></span>
@@ -259,30 +259,18 @@ function:</p>
 <span><span class="co">#&gt; X_3         0.8075000 0.7650000 1.0000000 0.5100000   0.8863396</span></span>
 <span><span class="co">#&gt; X_4         0.5700000 0.5400000 0.5100000 1.0000000   0.7533527</span></span>
 <span><span class="co">#&gt; X_Composite 0.9294705 0.9086239 0.8863396 0.7533527   1.0000000</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="calculate-composite-scores">Calculate composite scores<a class="anchor" aria-label="anchor" href="#calculate-composite-scores"></a>
+</div>
+<section class="level2"><h2 id="calculate-composite-scores">Calculate composite scores<a class="anchor" aria-label="anchor" href="#calculate-composite-scores"></a>
 </h2>
-<p>To calculate the standardized composite score
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math>,
-add each variable’s deviation from its own mean and divide by the square
-root of the sum of the observed score covariance matrix.</p>
+<p>To calculate the standardized composite score <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math>, add each variable’s deviation from its own mean and divide by the square root of the sum of the observed score covariance matrix.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>C</mi></msub><mo>=</mo><mfrac><mrow><mn>1</mn><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo>−</mo><msub><mi>μ</mi><mi>X</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msqrt><mrow><mn>1</mn><mi>′</mi><msub><mi>Σ</mi><mi>X</mi></msub><mn>1</mn></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">z_C=\frac{1'(X-\mu_X)}{\sqrt{1'\Sigma_X1}}</annotation></semantics></math></p>
 <p>Where</p>
 <blockquote>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math>
-is a standardized composite score.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-is a vector of observed scores.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mu_X</annotation></semantics></math>
-is the vector of means for the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-variables.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_X</annotation></semantics></math>
-is the covariance matrix of the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-variables.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
-is a vector of ones compatible with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_X</annotation></semantics></math>.</p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math> is a standardized composite score.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> is a vector of observed scores.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mu_X</annotation></semantics></math> is the vector of means for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> variables.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_X</annotation></semantics></math> is the covariance matrix of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> variables.<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math> is a vector of ones compatible with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_X</annotation></semantics></math>.</p>
 </blockquote>
 <p>The composite score is:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Population means of observed variables</span></span>
 <span><span class="va">mu_X</span> <span class="op">&lt;-</span> <span class="fu">rep_along</span><span class="op">(</span><span class="va">X</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
@@ -298,56 +286,37 @@ is a vector of ones compatible with
 <span><span class="co"># Standardized composite score</span></span>
 <span><span class="va">z_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">ones</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">mu_X</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">ones</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">ones</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="estimate-expected-test-scores-conditioned-on-a-composite-score">Estimate expected test scores conditioned on a composite score<a class="anchor" aria-label="anchor" href="#estimate-expected-test-scores-conditioned-on-a-composite-score"></a>
+</section><section class="level2"><h2 id="estimate-expected-test-scores-conditioned-on-a-composite-score">Estimate expected test scores conditioned on a composite score<a class="anchor" aria-label="anchor" href="#estimate-expected-test-scores-conditioned-on-a-composite-score"></a>
 </h2>
-<p>Given a particular composite score, we need to calculate a predicted
-score. That is, if the composite score is 1.5 standard deviations above
-the mean, what are the expected subtest scores?</p>
+<p>Given a particular composite score, we need to calculate a predicted score. That is, if the composite score is 1.5 standard deviations above the mean, what are the expected subtest scores?</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>X</mi><mo accent="true">̂</mo></mover><mo>=</mo><msub><mi>σ</mi><mi>X</mi></msub><msub><mi>z</mi><mi>C</mi></msub><msub><mi>r</mi><mrow><mi>X</mi><msub><mi>X</mi><mi>C</mi></msub></mrow></msub><mo>+</mo><msub><mi>μ</mi><mi>X</mi></msub></mrow><annotation encoding="application/x-tex">\hat{X}=\sigma_Xz_Cr_{XX_C}+\mu_X</annotation></semantics></math></p>
 <p>Where</p>
 <blockquote>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math>
-is the vector of expected subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\sigma_X</annotation></semantics></math>
-is the vector of standard deviations for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math><br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math>
-is the composite score<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>X</mi><msub><mi>X</mi><mi>C</mi></msub></mrow></msub><annotation encoding="application/x-tex">r_{XX_C}</annotation></semantics></math>
-is a vector of correlations of each variable in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-with the composite score
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math><br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mu_X</annotation></semantics></math>
-is the vector of means for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math><br></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math> is the vector of expected subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\sigma_X</annotation></semantics></math> is the vector of standard deviations for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math><br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math> is the composite score<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>X</mi><msub><mi>X</mi><mi>C</mi></msub></mrow></msub><annotation encoding="application/x-tex">r_{XX_C}</annotation></semantics></math> is a vector of correlations of each variable in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> with the composite score <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>C</mi></msub><annotation encoding="application/x-tex">z_C</annotation></semantics></math><br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\mu_X</annotation></semantics></math> is the vector of means for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math><br></p>
 </blockquote>
 <p>Thus,</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Predicted value of X, given composite score</span></span>
 <span><span class="va">X_hat</span> <span class="op">&lt;-</span> <span class="va">sd_X</span> <span class="op">*</span> <span class="va">z_C</span> <span class="op">*</span> <span class="va">R_all</span><span class="op">[</span><span class="va">v_observed</span>, <span class="va">v_composite</span><span class="op">]</span> <span class="op">+</span> <span class="va">mu_X</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="calculating-the-conditional-mahalanobis-distance">Calculating the Conditional Mahalanobis Distance<a class="anchor" aria-label="anchor" href="#calculating-the-conditional-mahalanobis-distance"></a>
+</section><section class="level2"><h2 id="calculating-the-conditional-mahalanobis-distance">Calculating the Conditional Mahalanobis Distance<a class="anchor" aria-label="anchor" href="#calculating-the-conditional-mahalanobis-distance"></a>
 </h2>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><msub><mi>M</mi><mi>C</mi></msub></msub><mo>=</mo><msqrt><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo>−</mo><mover><mi>X</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mi>′</mi><msubsup><mi>Σ</mi><mi>X</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo>−</mo><mover><mi>X</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">d_{M_C}=\sqrt{\left(X-\hat{X}\right)'\Sigma_{X}^{-1}\left(X-\hat{X}\right)}</annotation></semantics></math></p>
 <p>Where</p>
 <blockquote>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><msub><mi>M</mi><mi>C</mi></msub></msub><annotation encoding="application/x-tex">d_{M_C}</annotation></semantics></math>
-is the Conditional Mahalanobis Distance<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
-is a vector of subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math>
-is the vector of expected subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_{X}</annotation></semantics></math>
-is the covariance matrix of the subtest scores</p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><msub><mi>M</mi><mi>C</mi></msub></msub><annotation encoding="application/x-tex">d_{M_C}</annotation></semantics></math> is the Conditional Mahalanobis Distance<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> is a vector of subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math> is the vector of expected subtest scores<br><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mi>X</mi></msub><annotation encoding="application/x-tex">\Sigma_{X}</annotation></semantics></math> is the covariance matrix of the subtest scores</p>
 </blockquote>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d_mc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">Sigma_X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="op">(</span><span class="va">X</span> <span class="op">-</span> <span class="va">X_hat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">d_mc</span></span>
 <span><span class="co">#&gt; [1] 2.9246</span></span></code></pre></div>
-<p>Suppose there are <em>k</em> outcome scores, and <em>j</em> composite
-scores used to calculate the expected scores
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math>.
-If multivariate normality of the subtest scores can be assumed, then the
-Conditional Mahalanobis Distance squared has a <em>χ</em><sup>2</sup>
-distribution with <em>k</em> − <em>j</em> degrees of freedom.</p>
+</div>
+<p>Suppose there are <em>k</em> outcome scores, and <em>j</em> composite scores used to calculate the expected scores <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{X}</annotation></semantics></math>. If multivariate normality of the subtest scores can be assumed, then the Conditional Mahalanobis Distance squared has a <em>χ</em><sup>2</sup> distribution with <em>k</em> − <em>j</em> degrees of freedom.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>d</mi><msub><mi>M</mi><mi>C</mi></msub><mn>2</mn></msubsup><mo>∼</mo><msup><mi>χ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>k</mi><mo>−</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">d_{M_C}^{2} \sim\chi^{2}(k-j)</annotation></semantics></math></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Number of observed variables</span></span>
 <span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">v_observed</span><span class="op">)</span></span>
 <span></span>
@@ -358,15 +327,94 @@ distribution with <em>k</em> − <em>j</em> degrees of freedom.</p>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html" class="external-link">pchisq</a></span><span class="op">(</span><span class="va">d_mc</span> <span class="op">^</span> <span class="fl">2</span>, df <span class="op">=</span> <span class="va">k</span> <span class="op">-</span> <span class="va">j</span><span class="op">)</span></span>
 <span><span class="va">p</span></span>
 <span><span class="co">#&gt; [1] 0.9641406</span></span></code></pre></div>
-<p>If we can assume that the observed variables in <em>X</em> are
-multivariate normal, a profile of <em>X</em> = {2,3,1,2} is more unusual
-than 96% of profiles that also have a composite score of
-<em>z<sub>C</sub></em> = 2.3.</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+<p>If we can assume that the observed variables in <em>X</em> are multivariate normal, a profile of <em>X</em> = {2,3,1,2} is more unusual than 96% of profiles that also have a composite score of <em>z<sub>C</sub></em> = 2.3.</p>
+</section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
-
 
 
     <footer><div class="pkgdown-footer-left">

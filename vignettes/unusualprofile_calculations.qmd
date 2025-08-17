@@ -2,14 +2,17 @@
 title: "Calculations performed by the unusualprofile package"
 author: "W. Joel Schneider & Feng Ji"
 date: "`r Sys.Date()`"
-as_is: true
-output: 
-  rmarkdown::html_vignette: default
+format: 
+  html:
+    toc: true
+    html-math-method: mathjax
+bibliography: bibliography.bib
+csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
 font-family: 'Titillium Web'
 vignette: >
-  %\VignetteIndexEntry{Calculations performed by the unusualprofile package}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -137,11 +140,16 @@ X <- d[1, -5] %>% t %>% as.vector %>% `names<-`(colnames(d)[-5])
 ```
 
 
-Suppose that there are a set of variables $X$ that are related to each other as seen in the model below:
+Suppose that there are a set of variables $X$ that are related to each other as seen in @fig-onedimensional.
 
-```{r one-dimensional, echo = FALSE, fig.align='center', fig.cap="A simple model with standardized loadings", out.width=300}
-knitr::include_graphics("One_dimensional.svg")
-```
+:::{#fig-onedimensional}
+![](One_dimensional.svg){width=300}
+
+A simple model with standardized loadings
+
+:::
+
+
 
 Suppose that there is a profile of scores in $X$ such that:
 
@@ -149,9 +157,9 @@ $$X=\{X_1,X_2, X_3, X_4\} = \{`r paste0(X, collapse = ",")`\}. $$
 
 
 
-As seen in Figure 1, this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
+As seen in @fig-example-profile, this profile of scores is summarized by a composite score of `r formatC(d$X_Composite, 2, format = "f")`.
 
-```{r example-profile, echo = F, fig.cap="Figure 1. Example profile in a standard multivariate normal distribution."}
+```{r fig-example-profile, echo = F, fig.cap="Example profile in a standard multivariate normal distribution."}
 tibble(
   Variable = paste0("italic(X)[", 1:4, "]"),
   Score = X,

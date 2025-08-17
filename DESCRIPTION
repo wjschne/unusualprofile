@@ -51,7 +51,7 @@ Suggests:
     sysfonts,
     testthat
 VignetteBuilder: 
-    knitr
+    quarto
 Encoding: UTF-8
 Language: en-US
 LazyData: TRUE

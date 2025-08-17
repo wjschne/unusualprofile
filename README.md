@@ -1,16 +1,14 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # unusualprofile <img src="man/figures/logo.png" align="right" height="120" />
 
 <!-- badges: start -->
 
 [![stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![R-CMD-check](https://github.com/wjschne/unusualprofile/workflows/R-CMD-check/badge.svg)](https://github.com/wjschne/unusualprofile/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/wjschne/unusualprofile/branch/main/graph/badge.svg)](https://app.codecov.io/gh/wjschne/unusualprofile?branch=main)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/unusualprofile)](https://CRAN.R-project.org/package=unusualprofile)
+status](https://www.r-pkg.org/badges/version/unusualprofile.png)](https://CRAN.R-project.org/package=unusualprofile)
 <!-- badges: end -->
 
 The goal of unusualprofile is to calculate conditional Mahalanobis
@@ -35,10 +33,7 @@ at least one row of data from that set of variables.
 
 Suppose we have set of variables that have the following relationships:
 
-<figure>
-<img src="man/figures/rm_model.svg" alt="Multivariate normal model" />
-<figcaption aria-hidden="true">Multivariate normal model</figcaption>
-</figure>
+![Multivariate normal model](man/figures/rm_model.svg)
 
 First, we load the unusualprofile package.
 
@@ -92,7 +87,7 @@ cm
 plot(cm)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" style="width:100.0%" />
 
 # Shiny App
 
@@ -109,4 +104,4 @@ Schneider, W. J., & Ji, F. (2023). [Detecting unusual score patterns in
 the context of relevant
 predictors](https://doi.org/10.1007/s40817-022-00137-x). Journal of
 Pediatric Neuropsychology, 9, 1–17.
-<https://doi.org/10.1007/s40817-022-00137-x>
+https://doi.org/10.1007/s40817-022-00137-x
