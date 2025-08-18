@@ -35,6 +35,7 @@ Suggests:
     covr,
     extrafont,
     forcats,
+    ggdiagram (>= 0.1.0),
     glue,
     kableExtra,
     knitr,
@@ -58,3 +59,5 @@ Language: en-US
 LazyData: TRUE
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Remotes:  
+    wjschne/ggdiagram

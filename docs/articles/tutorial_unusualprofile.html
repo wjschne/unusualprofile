@@ -65,7 +65,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Introduction to the unusualprofile package</h1>
 
       <p class="author">W. Joel Schneider &amp; Feng Ji</p>
-      <p class="date">2025-08-16</p>
+      <p class="date">2025-08-17</p>
 
       <small class="dont-index">Source: <a href="https://github.com/wjschne/unusualprofile/blob/HEAD/vignettes/tutorial_unusualprofile.qmd" class="external-link"><code>vignettes/tutorial_unusualprofile.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -179,15 +179,19 @@ Figure 4: A four-variable violin plot with a multivariate outlier.
 <section class="level2"><h3 id="distinguishing-profile-shape-from-profile-elevation">Distinguishing Profile Shape from Profile Elevation<a class="anchor" aria-label="anchor" href="#distinguishing-profile-shape-from-profile-elevation"></a>
 </h3>
 <p>One way to define the profile elevation is to create a composite score from the sum of profile variables. All profiles that produce the same composite score are defined to have the same profile elevation. For ease of computation, the profile variables and the composite score can be re-scaled to have the same metric—preferably the <em>z</em>-score metric.</p>
+<div class="cell">
+<div class="cell-output-display">
 <div id="fig-onedimensional" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-onedimensional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="One_dimensional.svg" width="300">
+<img src="tutorial_unusualprofile_files/figure-html/fig-onedimensional-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-onedimensional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 5: A simple model with standardized loadings
 </figcaption></figure>
 </div>
-<p>Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model in <strong>?@fig-one-dimensional</strong>.</p>
+</div>
+</div>
+<p>Suppose that we compare all profiles that have the same elevation but have different profile shapes. Imagine that four standardized variables correlate according to the structural model in <a href="#fig-onedimensional" class="quarto-xref">Figure 5</a>.</p>
 <div class="cell">
 <div id="tbl-cor" class="cell quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-tbl"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cor-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -262,7 +266,7 @@ Table 1: Model-implied correlations among variables
 <img src="tutorial_unusualprofile_files/figure-html/fig-conditional-dist-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conditional-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: Conditional distributions for people with a composite score of 1.
+Figure 6: Conditional distributions for people with a composite score of 1
 </figcaption></figure>
 </div>
 </div>
@@ -449,9 +453,13 @@ d_{CM}^2 +  \text{Independent}~d_M^2 &amp;= \text{Dependent}~d_M^2\\
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LB</span>, ymax <span class="op">=</span> <span class="va">UB</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="tutorial_unusualprofile_files/figure-html/show-profile-1.png" style="width:100.0%;height:100.0%"></p>
-</figure>
+<div id="fig-show-profile" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-show-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tutorial_unusualprofile_files/figure-html/fig-show-profile-1.png" style="width:100.0%;height:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-show-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9: Estimated Factor Scores with Confidence Intervals
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -460,10 +468,10 @@ d_{CM}^2 +  \text{Independent}~d_M^2 &amp;= \text{Dependent}~d_M^2\\
 <img src="Reading.svg">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reading-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension
+Figure 10: General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga) Predict Reading Decoding and Reading Comprehension
 </figcaption></figure>
 </div>
-<p>Suppose we have a simplified model of reading ability and its predictors as shown in <a href="#fig-reading-model" class="quarto-xref">Figure 9</a>. The two predictors of reading ability are General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Ga is a stronger predictor of RD than of RC. For Gc, the reverse is true. Each cognitive and academic ability is measured with three tests each.</p>
+<p>Suppose we have a simplified model of reading ability and its predictors as shown in <a href="#fig-reading-model" class="quarto-xref">Figure 10</a>. The two predictors of reading ability are General Comprehension/Knowledge (Gc) and General Auditory Processing (Ga). These cognitive abilities are precursor abilities to Reading Decoding (RD) and Reading Comprehension (RC). Ga is a stronger predictor of RD than of RC. For Gc, the reverse is true. Each cognitive and academic ability is measured with three tests each.</p>
 <p>We want to know if a person’s pattern of reading scores are unusual, given the cognitive scores.</p>
 <p>Here we load packages we will need.</p>
 <div class="cell">
@@ -656,7 +664,7 @@ Table 2: Case Scores
 <img src="tutorial_unusualprofile_files/figure-html/fig-plot-scores-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plot-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Case Scores
+Figure 11: Case Scores
 </figcaption></figure>
 </div>
 </div>
@@ -695,7 +703,7 @@ Figure 10: Case Scores
 <img src="tutorial_unusualprofile_files/figure-html/fig-cond-reading-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cond-reading-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 11: Conditional Distributions for Reading, Controlling for Cognitive Predictors
+Figure 12: Conditional Distributions for Reading, Controlling for Cognitive Predictors
 </figcaption></figure>
 </div>
 </div>
@@ -728,7 +736,7 @@ Figure 11: Conditional Distributions for Reading, Controlling for Cognitive Pre
 <img src="tutorial_unusualprofile_files/figure-html/fig-composite-condmaha-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-composite-condmaha-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 12: Conditional Distributions for Reading Composites, Controlling for Cognitive Composites
+Figure 13: Conditional Distributions for Reading Composites, Controlling for Cognitive Composites
 </figcaption></figure>
 </div>
 </div>
@@ -749,12 +757,12 @@ Figure 12: Conditional Distributions for Reading Composites, Controlling for Co
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-plotreadingobserved" class="quarto-float quarto-figure quarto-figure-center" height="100%" width="100%">
+<div id="fig-plotreadingobserved" class="quarto-float quarto-figure quarto-figure-center" width="100%" height="100%">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-plotreadingobserved-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="tutorial_unusualprofile_files/figure-html/fig-plotreadingobserved-1.png" id="fig-plotreadingobserved" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-plotreadingobserved-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 13
+Figure 14
 </figcaption></figure>
 </div>
 </div>
@@ -811,7 +819,7 @@ Figure 13
 <span><span class="co">#&gt; 11 RD_FS_LB  67.9</span></span>
 <span><span class="co">#&gt; 12 RD_FS_UB  82.8</span></span></code></pre></div>
 </div>
-<p>Because factor scores are estimates, they are presented with confidence intervals in <a href="#fig-factor-scores" class="quarto-xref">Figure 14</a>.</p>
+<p>Because factor scores are estimates, they are presented with confidence intervals in <a href="#fig-factor-scores" class="quarto-xref">Figure 15</a>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-factor-scores" class="quarto-float quarto-figure quarto-figure-center">
@@ -819,13 +827,13 @@ Figure 13
 <img src="tutorial_unusualprofile_files/figure-html/fig-factor-scores-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-factor-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 14: Estimated factor scores with 95% confidence intervals
+Figure 15: Estimated factor scores with 95% confidence intervals
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>There are two ways we can think of factor scores. From one perspective, they are composite scores with each component given a different weight.</p>
-<p>For example, to make factor scores for the reading model, one would use the factor-score coefficients presented in <a href="#fig-factor-score-coefficients" class="quarto-xref">Figure 15</a>. The matrix of factor-score coefficients can be obtained like so:</p>
+<p>For example, to make factor scores for the reading model, one would use the factor-score coefficients presented in <a href="#fig-factor-score-coefficients" class="quarto-xref">Figure 16</a>. The matrix of factor-score coefficients can be obtained like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">simstandard</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/simstandard/man/get_factor_score_coefficients.html" class="external-link">get_factor_score_coefficients</a></span><span class="op">(</span><span class="va">m_reading</span><span class="op">)</span></span></code></pre></div>
@@ -837,7 +845,7 @@ Figure 14: Estimated factor scores with 95% confidence intervals
 <img src="tutorial_unusualprofile_files/figure-html/fig-factor-score-coefficients-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-factor-score-coefficients-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 15: Factor score coefficients for the reading model
+Figure 16: Factor score coefficients for the reading model
 </figcaption></figure>
 </div>
 </div>
@@ -915,7 +923,7 @@ Figure 15: Factor score coefficients for the reading model
 <img src="tutorial_unusualprofile_files/figure-html/fig-display-reading2-1.png" style="width:100.0%;height:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-display-reading2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 16: Scores Conditions on Estimated Latent Scores
+Figure 17: Scores Conditions on Estimated Latent Scores
 </figcaption></figure>
 </div>
 </div>
