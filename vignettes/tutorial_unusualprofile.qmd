@@ -11,7 +11,7 @@ csl: apa.csl
 font-import: https://fonts.googleapis.com/css?family=Titillium+ Web:100&amp;subset=latin-ext
 font-family: 'Titillium Web'
 vignette: >
-  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteIndexEntry{Introduction to the unusualprofile package}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---

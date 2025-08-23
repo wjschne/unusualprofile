@@ -19,3 +19,6 @@
 ^CRAN-SUBMISSION$
 ^\.lintr$
 ^vignettes/*_files$
+README.qmd
+^vignettes/*_cache$
+^vignettes/*_freeze$
